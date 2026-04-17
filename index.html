@@ -579,8 +579,13 @@
 
       update();
 
+      function getSlideHeight() {
+        return slides[0] ? slides[0].offsetHeight : 620;
+      }
+
       function update() {
-        track.style.transform = 'translateY(-' + (current * 620) + 'px)';
+        var slideHeight = getSlideHeight();
+        track.style.transform = 'translateY(-' + (current * slideHeight) + 'px)';
         for (var i = 0; i < total; i++) {
           slides[i].classList.toggle('active', i === current);
           slides[i].classList.remove('animating');

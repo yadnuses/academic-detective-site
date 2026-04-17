@@ -1487,21 +1487,37 @@ section {
 }
 
 @media (max-width: 640px) {
-  .slider-viewport { height: 480px; }
+  .slider-viewport { height: auto; }
   .slide {
-    min-height: 480px;
-    padding: 28px 24px;
+    min-height: auto;
+    height: auto;
+    max-height: 70vh;
+    padding: 24px 20px;
   }
-  .slide h3 { font-size: 20px; }
+  .slide h3 { font-size: 18px; }
+  .slide-body { font-size: 14px; }
   .slider-controls {
-    right: 8px;
-    gap: 12px;
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 16px;
   }
   .slider-btn {
-    width: 38px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
     font-size: 18px;
   }
+  .slider-dots {
+    position: relative;
+    bottom: auto;
+    margin-top: 12px;
+  }
+  .word-cloud { height: auto; max-height: 200px; }
+  .word-cloud-item { font-size: 12px !important; }
 }
 
 /* CTA Section */
