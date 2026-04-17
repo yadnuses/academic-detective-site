@@ -100,6 +100,31 @@
     background: rgba(240, 240, 250, 0.2);
     transform: scale(1.08);
   }
+  .menu-btn {
+    display: none; background: none; border: none;
+    color: var(--spectral-white); font-size: 20px;
+    cursor: pointer; margin-right: 12px;
+  }
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 95;
+  }
+  .sidebar-overlay.open { display: block; }
+  @media (max-width: 768px) {
+    .menu-btn { display: block; }
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      width: 260px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    #graph-container { left: 0; }
+    .header { padding: 0 16px; }
+    .header h1 { font-size: 15px; }
+    .header h1 span { display: none; }
+    .badge { font-size: 11px; padding: 2px 8px; }
+    .controls { bottom: 12px; right: 12px; }
+  }
   .filter-group { margin-bottom: 16px; }
   .filter-group label {
     display: flex; align-items: center; font-size: 13px;
@@ -118,9 +143,12 @@
 <body>
 
 <div class="header">
+  <button class="menu-btn" onclick="toggleSidebar()" aria-label="切换侧边栏">☰</button>
   <h1>张三 <span style="font-weight:400;color:#7f8c8d;">学术关系网络图谱</span></h1>
   <span class="badge">11 节点 / 10 关系</span>
 </div>
+
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
 <div class="sidebar">
   <h2>网络统计</h2>
@@ -188,6 +216,11 @@
 </div>
 
 <script>
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.querySelector('.sidebar-overlay').classList.toggle('open');
+}
+
 const networkData = {"nodes": [{"id": "scholar", "name": "张三", "type": "scholar", "institution": "北京大学", "detail": "调查对象: 张三 (北京大学)"}, {"id": "advisor_李四", "name": "李四", "type": "advisor", "institution": "清华大学", "detail": "导师: 李四 (清华大学)"}, {"id": "collab_0_王五", "name": "王五", "type": "collaborator", "institution": "复旦大学", "detail": "合作者: 王五 | 机构: 复旦大学 | 合作论文: 8 篇 | 合作时段: 2015-2023"}, {"id": "collab_1_赵六", "name": "赵六", "type": "collaborator", "institution": "上海交通大学", "detail": "合作者: 赵六 | 机构: 上海交通大学 | 合作论文: 5 篇 | 合作时段: 2018-2022"}, {"id": "collab_2_孙七", "name": "孙七", "type": "collaborator", "institution": "北京大学", "detail": "合作者: 孙七 | 机构: 北京大学 | 合作论文: 12 篇 | 合作时段: 2010-2024"}, {"id": "edit_0_经济研究", "name": "经济研究", "type": "editorial", "institution": "", "detail": "期刊: 经济研究 | 职务: 编委 | 起始: 2018"}, {"id": "edit_1_管理世界", "name": "管理世界", "type": "editorial", "institution": "", "detail": "期刊: 管理世界 | 职务: 副主编 | 起始: 2020"}, {"id": "inst_0_中国社会科学院", "name": "中国社会科学院", "type": "institution", "institution": "", "detail": "机构: 中国社会科学院 | 关系: 兼职研究员"}, {"id": "inst_1_某咨询公司", "name": "某咨询公司", "type": "institution", "institution": "", "detail": "机构: 某咨询公司 | 关系: 顾问"}, {"id": "citer_王五", "name": "王五", "type": "citer", "institution": "", "detail": "高频引用者: 王五 | Author '王五' cited 8 times"}, {"id": "citer_赵六", "name": "赵六", "type": "citer", "institution": "", "detail": "高频引用者: 赵六 | Author '赵六' cited 4 times in 2022"}], "links": [{"source": "scholar", "target": "advisor_李四", "type": "advisor_of", "detail": "张三 的导师是 李四", "weight": 1, "is_anomaly": false}, {"source": "scholar", "target": "collab_0_王五", "type": "collaborates_with", "detail": "张三 与 王五 存在合作关系", "weight": 8, "is_anomaly": false}, {"source": "scholar", "target": "collab_1_赵六", "type": "collaborates_with", "detail": "张三 与 赵六 存在合作关系", "weight": 5, "is_anomaly": false}, {"source": "scholar", "target": "collab_2_孙七", "type": "collaborates_with", "detail": "张三 与 孙七 存在合作关系", "weight": 12, "is_anomaly": false}, {"source": "scholar", "target": "edit_0_经济研究", "type": "editorial_board", "detail": "张三 担任 经济研究 的 编委", "weight": 1, "is_anomaly": false}, {"source": "scholar", "target": "edit_1_管理世界", "type": "editorial_board", "detail": "张三 担任 管理世界 的 副主编", "weight": 1, "is_anomaly": false}, {"source": "scholar", "target": "inst_0_中国社会科学院", "type": "affiliated_with", "detail": "张三 与 中国社会科学院 存在 兼职研究员 关系", "weight": 1, "is_anomaly": false}, {"source": "scholar", "target": "inst_1_某咨询公司", "type": "affiliated_with", "detail": "张三 与 某咨询公司 存在 顾问 关系", "weight": 1, "is_anomaly": false}, {"source": "scholar", "target": "citer_王五", "type": "cites", "detail": "Author '王五' cited 8 times", "weight": 1, "is_anomaly": true}, {"source": "scholar", "target": "citer_赵六", "type": "cites", "detail": "Author '赵六' cited 4 times in 2022", "weight": 1, "is_anomaly": true}]};
 
 const width = document.getElementById('graph-container').clientWidth;

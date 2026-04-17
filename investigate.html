@@ -475,5 +475,21 @@
 
     window.initChat();
   </script>
+  <script>
+    (function() {
+      var btn = document.querySelector('.mobile-menu-btn');
+      var nav = document.querySelector('.nav-links');
+      if (btn && nav) {
+        btn.addEventListener('click', function() {
+          nav.classList.toggle('open');
+        });
+        nav.querySelectorAll('a').forEach(function(a) {
+          a.addEventListener('click', function() {
+            nav.classList.remove('open');
+          });
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

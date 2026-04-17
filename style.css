@@ -1611,7 +1611,28 @@ footer {
 
 @media (max-width: 640px) {
   .nav-links {
-    display: none;
+    position: fixed;
+    top: 48px; left: 0; right: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    padding: 16px 0;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    z-index: 999;
+  }
+  .nav-links.open {
+    transform: translateY(0);
+  }
+  .nav-links li {
+    padding: 12px 0;
+  }
+  .nav-links a {
+    font-size: 15px;
   }
 
   .mobile-menu-btn {
