@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title data-i18n="page_title">开始调查 | 学术背景调查服务</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .chat-page {
+      min-height: 100vh;
+      padding-top: 48px;
+      background: var(--space-black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .chat-container {
+      width: 100%;
+      max-width: 720px;
+      padding: 40px 24px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .chat-header {
+      text-align: center;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(-10px);
+      animation: fadeDown 0.6s ease forwards;
+    }
+
+    .chat-header h1 {
+      font-size: 28px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: -0.3px;
+      color: var(--spectral-white);
+    }
+
+    .chat-header p {
+      font-size: 15px;
+      color: rgba(240,240,250,0.5);
+      margin-top: 6px;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .message.show {
+      animation: msgPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .message.detective {
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .message.detective .avatar {
+      background: rgba(0,113,227,0.2);
+      color: var(--apple-blue);
+      border: 1px solid rgba(0,113,227,0.35);
+    }
+
+    .message.user .avatar {
+      background: rgba(240,240,250,0.1);
+      color: rgba(240,240,250,0.8);
+      border: 1px solid rgba(240,240,250,0.2);
+    }
+
+    .bubble {
+      max-width: 480px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--spectral-white);
+      word-break: break-word;
+    }
+
+    .message.detective .bubble {
+      background: rgba(0,113,227,0.14);
+      border: 1px solid rgba(0,113,227,0.28);
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.user .bubble {
+      background: rgba(240,240,250,0.08);
+      border: 1px solid rgba(240,240,250,0.15);
+      border-bottom-left-radius: 4px;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      height: 18px;
+    }
+
+    .typing-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(240,240,250,0.6);
+      animation: typingBounce 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+    .action-card {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 480px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .action-card.show {
+      animation: msgPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .action-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--spectral-white);
+    }
+
+    .action-card .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @keyframes fadeDown {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes msgPop {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .contact-section {
+      width: 100%;
+      padding: 120px 24px 160px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--space-black);
+    }
+
+    .contact-content {
+      max-width: 720px;
+      text-align: center;
+      color: var(--spectral-white);
+    }
+
+    .contact-content h2 {
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+    }
+
+    .contact-content p {
+      font-size: 17px;
+      line-height: 1.7;
+      color: rgba(240,240,250,0.75);
+      margin-bottom: 16px;
+    }
+
+    .contact-content .btn {
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .chat-container { padding: 28px 16px 100px; }
+      .bubble { font-size: 15px; padding: 12px 16px; }
+      .contact-content h2 { font-size: 32px; }
+      .contact-content p { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <div class="lang-switch" onclick="toggleLang()">
+        <span class="lang-zh active">中文</span>
+        <span>/</span>
+        <span class="lang-en">ENGLISH</span>
+      </div>
+      <div class="logo">Academic detective</div>
+      <ul class="nav-links">
+        <li><a href="index.html#home" data-i18n="nav_home">首页</a></li>
+        <li><a href="investigate.html" data-i18n="nav_investigate">开始调查</a></li>
+        <li><a href="deep-service.html" data-i18n="nav_deep_service">深度服务</a></li>
+        <li><a href="index.html#contact" data-i18n="nav_contact">联系我们</a></li>
+      </ul>
+      <button class="mobile-menu-btn">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Chat Page -->
+  <div class="chat-page">
+    <div class="chat-container">
+      <div class="chat-header">
+        <h1 data-i18n="page_title">开始调查</h1>
+        <p data-i18n="page_subtitle">Academic Detective 已接入调查系统</p>
+      </div>
+
+      <!-- Messages will be injected here -->
+      <div id="chat-messages"></div>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <section class="contact-section" id="contact">
+    <div class="contact-content">
+      <h2 data-i18n="privacy_title">隐私保障</h2>
+      <p data-i18n="privacy_p1">为保障您的隐私性，请您通过邮件与我们联系。</p>
+      <p data-i18n="privacy_p2">您只需发送调查对象姓名与职称，我们的研究员会在一天内回复您。回复内容包括免费的初步调查以及深度调查报价，在选择深度调查服务后，我们的调查团队会在72小时内向您的邮箱返回深度调查完整PDF以及可视化学术关系图谱。</p>
+      <div class="btn-group">
+        <a href="test_network_network.html" target="_blank" class="btn btn-ghost" data-i18n="btn_demo_graph">获取示例关系图</a>
+        <a id="email-link" href="mailto:3579104280@qq.com?subject=委托学术调查" class="btn btn-primary" data-i18n="btn_send_email">发送邮件</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; <span data-i18n="footer">2026 学术背景调查服务. YADNUS QINGSHAN.</span>
+  </footer>
+
+  <script src="lang.js?v=2"></script>
+  <script>
+    window.translations = {
+      nav_home: { zh: '首页', en: 'HOME' },
+      nav_investigate: { zh: '开始调查', en: 'INVESTIGATE' },
+      nav_deep_service: { zh: '深度服务', en: 'DEEP SERVICE' },
+      nav_contact: { zh: '联系我们', en: 'CONTACT' },
+      page_title: { zh: '开始调查', en: 'Start Investigation' },
+      page_subtitle: { zh: 'Academic Detective 已接入调查系统', en: 'Investigation system online — Academic Detective' },
+      chat_user_msg: { zh: '张XX XX大学XX教授/研究员', en: 'Prof. Zhang XX, XX University' },
+      chat_typing: { zh: '正在查询信息...', en: 'Running background checks...' },
+      chat_next_step: { zh: '下一步探查目标：论文署名一致性 / 项目经费流向 / 亲属学术关联', en: 'Next targets: authorship consistency / funding traceability / familial academic ties' },
+      action_title: { zh: '是否开始调查？', en: 'Start the investigation?' },
+      btn_start: { zh: '开始调查', en: 'Start' },
+      btn_not_now: { zh: '暂不调查', en: 'Not Now' },
+      btn_demo_graph: { zh: '获取示例关系图', en: 'View Demo Graph' },
+      privacy_title: { zh: '隐私保障', en: 'Privacy Protection' },
+      privacy_p1: { zh: '为保障您的隐私性，请您通过邮件与我们联系。', en: 'To protect your privacy, please reach out to us via email.' },
+      privacy_p2: { zh: '您只需发送调查对象姓名与职称，我们的研究员会在一天内回复您。回复内容包括免费的初步调查以及深度调查报价，在选择深度调查服务后，我们的调查团队会在72小时内向您的邮箱返回深度调查完整PDF以及可视化学术关系图谱。', en: 'Simply send the subject\'s name and academic title. Our investigator will reply within 24 hours with a free preliminary report and a quote for our deep-dive service. Once you select the deep service, our team will deliver the complete PDF report and an interactive academic relationship network graph to your inbox within 72 hours.' },
+      btn_send_email: { zh: '发送邮件', en: 'Send Email' },
+      email_subject: { zh: '委托学术调查', en: 'Academic Investigation Inquiry' },
+      footer: { zh: '2026 学术背景调查服务. YADNUS QINGSHAN.', en: '2026 Academic Investigation Service. YADNUS QINGSHAN.' }
+    };
+  </script>
+  <script>
+    window.initChat = function() {
+      var container = document.getElementById('chat-messages');
+      if (!container) return;
+      container.innerHTML = '';
+
+      var lang = localStorage.getItem('lang') || 'zh';
+      var t = window.translations || {};
+      function i18n(key) {
+        return (t[key] && t[key][lang]) ? t[key][lang] : (t[key] ? t[key].zh : key);
+      }
+
+      var emailLink = document.getElementById('email-link');
+      if (emailLink) {
+        var subject = encodeURIComponent(i18n('email_subject'));
+        emailLink.href = 'mailto:3579104280@qq.com?subject=' + subject;
+      }
+
+      var reportZh = '<strong>张XX初步调查报告</strong><br><br><strong>一、基本信息</strong><br>姓名：张xx<br>出生：19xx年x月（xx岁）<br>籍贯：xxxx<br>现任职务：xxxxxxxx<br>兼任：xxxxxxx<br><br><strong>二、教育背景与职业履历</strong><br>教育：<br>职业：<br><br><strong>三、学术成果概览</strong><br>论文（xx篇，主要在顶级期刊）：<br>《xx研究》4篇<br>《xxx动态》10篇<br>《xx经济》1篇<br>其他期刊8篇<br>专著与译著：';
+      var reportEn = '<strong>Preliminary Report: Zhang XX</strong><br><br><strong>I. Basic Information</strong><br>Name: Zhang xx<br>Birth: 19xx-x (xx years old)<br>Origin: xxxx<br>Current Position: xxxxxxxx<br>Concurrent Posts: xxxxxxx<br><br><strong>II. Education & Career</strong><br>Education:<br>Career:<br><br><strong>III. Academic Output Overview</strong><br>Papers (xx total, primarily in top-tier journals):<br>Journal of XX Research: 4<br>XX Dynamics: 10<br>XX Economy: 1<br>Other journals: 8<br>Monographs & Translations:';
+
+      var steps = [
+        {
+          type: 'user',
+          text: i18n('chat_user_msg')
+        },
+        {
+          type: 'typing',
+          duration: 1800
+        },
+        {
+          type: 'detective',
+          text: i18n('chat_typing')
+        },
+        {
+          type: 'detective',
+          text: lang === 'en' ? reportEn : reportZh
+        },
+        {
+          type: 'detective',
+          text: i18n('chat_next_step')
+        },
+        {
+          type: 'action',
+          title: i18n('action_title')
+        }
+      ];
+
+      var stepIndex = 0;
+
+      function createMessage(type) {
+        var wrapper = document.createElement('div');
+        wrapper.className = 'message ' + type;
+
+        var avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.textContent = type === 'user' ? 'U' : 'D';
+
+        var bubble = document.createElement('div');
+        bubble.className = 'bubble';
+
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(bubble);
+        return { wrapper: wrapper, bubble: bubble };
+      }
+
+      function typeHtml(bubble, html, speed, callback) {
+        var tokens = [];
+        var i = 0;
+        while (i < html.length) {
+          if (html.charAt(i) === '<') {
+            var end = html.indexOf('>', i);
+            if (end === -1) {
+              tokens.push(html.charAt(i));
+              i++;
+            } else {
+              tokens.push(html.slice(i, end + 1));
+              i = end + 1;
+            }
+          } else {
+            tokens.push(html.charAt(i));
+            i++;
+          }
+        }
+
+        var current = 0;
+        function next() {
+          if (current >= tokens.length) {
+            if (callback) callback();
+            return;
+          }
+          bubble.innerHTML = tokens.slice(0, current + 1).join('');
+          current++;
+          setTimeout(next, speed);
+        }
+        next();
+      }
+
+      function createTyping() {
+        var wrapper = document.createElement('div');
+        wrapper.className = 'message detective';
+        var avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.textContent = 'D';
+        var bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(bubble);
+        return wrapper;
+      }
+
+      function createAction(title) {
+        var card = document.createElement('div');
+        card.className = 'action-card';
+        card.innerHTML =
+          '<h3>' + title + '</h3>' +
+          '<div class="btn-group">' +
+            '<a href="#contact" class="btn btn-primary deliver-btn">' + i18n('btn_start') + '</a>' +
+            '<a href="index.html" class="btn btn-ghost">' + i18n('btn_not_now') + '</a>' +
+          '</div>';
+        var deliverBtn = card.querySelector('.deliver-btn');
+        deliverBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          var target = document.getElementById('contact');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+        return card;
+      }
+
+      function runStep() {
+        if (stepIndex >= steps.length) return;
+        var step = steps[stepIndex];
+
+        if (step.type === 'typing') {
+          var el = createTyping();
+          container.appendChild(el);
+          setTimeout(function() { el.classList.add('show'); }, 30);
+          setTimeout(function() {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(-8px)';
+            el.style.transition = 'all 0.3s ease';
+            setTimeout(function() {
+              if (el.parentNode) el.parentNode.removeChild(el);
+              stepIndex++;
+              runStep();
+            }, 320);
+          }, step.duration);
+          return;
+        }
+
+        if (step.type === 'user') {
+          var msg = createMessage('user');
+          msg.bubble.innerHTML = step.text;
+          container.appendChild(msg.wrapper);
+          setTimeout(function() { msg.wrapper.classList.add('show'); }, 30);
+          stepIndex++;
+          setTimeout(runStep, 900);
+          return;
+        }
+
+        if (step.type === 'detective') {
+          var msg = createMessage('detective');
+          container.appendChild(msg.wrapper);
+          setTimeout(function() { msg.wrapper.classList.add('show'); }, 30);
+          typeHtml(msg.bubble, step.text, 18, function() {
+            stepIndex++;
+            setTimeout(runStep, stepIndex === steps.length - 1 ? 600 : 1400);
+          });
+          return;
+        }
+
+        if (step.type === 'action') {
+          var el = createAction(step.title);
+          container.appendChild(el);
+          setTimeout(function() { el.classList.add('show'); }, 30);
+          stepIndex++;
+          return;
+        }
+      }
+
+      setTimeout(runStep, 400);
+    };
+
+    window.initChat();
+  </script>
+</body>
+</html>

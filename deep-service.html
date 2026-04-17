@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>深度服务 | 学术背景调查服务</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .deep-page {
+      min-height: 100vh;
+      background: var(--space-black);
+      padding-top: 48px;
+    }
+
+    .deep-hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .deep-hero h1 {
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: var(--spectral-white);
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .deep-hero p {
+      font-size: 18px;
+      color: rgba(240,240,250,0.6);
+      max-width: 560px;
+      margin-bottom: 36px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
+    }
+
+    .deep-hero .btn {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.24s forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tree-section {
+      padding: 80px 24px 120px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .tree-container {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .tree-trunk {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(0,113,227,0.6) 0%, rgba(0,113,227,0.15) 100%);
+      transform: translateX(-50%) scaleY(0);
+      transform-origin: top center;
+      transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .tree-trunk.grow {
+      transform: translateX(-50%) scaleY(1);
+    }
+
+    .tree-root {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 60px;
+    }
+
+    .root-node {
+      padding: 18px 28px;
+      background: rgba(0,113,227,0.12);
+      border: 1.5px solid rgba(0,113,227,0.4);
+      border-radius: 32px;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--spectral-white);
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .root-node.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .tree-branch {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 36px;
+      min-height: 120px;
+    }
+
+    .tree-branch.left {
+      flex-direction: row;
+    }
+
+    .tree-branch.right {
+      flex-direction: row-reverse;
+    }
+
+    .branch-line-wrap {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .branch-line {
+      height: 1.5px;
+      background: rgba(0,113,227,0.35);
+      width: 0;
+      transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .tree-branch.left .branch-line-wrap {
+      justify-content: flex-end;
+      padding-right: 20px;
+    }
+
+    .tree-branch.right .branch-line-wrap {
+      justify-content: flex-start;
+      padding-left: 20px;
+    }
+
+    .tree-branch.left .branch-line {
+      transform-origin: right center;
+    }
+
+    .tree-branch.right .branch-line {
+      transform-origin: left center;
+    }
+
+    .tree-branch.left .branch-card {
+      margin-right: auto;
+    }
+
+    .tree-branch.right .branch-card {
+      margin-left: auto;
+    }
+
+    .branch-card {
+      width: 100%;
+      max-width: 380px;
+      padding: 22px 24px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease;
+    }
+
+    .branch-card:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .branch-card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .branch-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--apple-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+    }
+
+    .branch-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--spectral-white);
+      margin-bottom: 10px;
+      letter-spacing: -0.2px;
+    }
+
+    .branch-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(240,240,250,0.75);
+    }
+
+    .tree-outputs {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .output-hub {
+      width: 100%;
+      max-width: 560px;
+      padding: 24px;
+      background: rgba(0,113,227,0.08);
+      border: 1px solid rgba(0,113,227,0.25);
+      border-radius: 18px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(16px) scale(0.98);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .output-hub.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .output-hub .branch-label {
+      margin-bottom: 10px;
+    }
+
+    .output-hub .branch-title {
+      margin-bottom: 14px;
+    }
+
+    .output-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .output-tag {
+      padding: 7px 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      font-size: 13px;
+      color: rgba(240,240,250,0.9);
+    }
+
+    .branch-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--apple-blue);
+      box-shadow: 0 0 10px rgba(0,113,227,0.5);
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .tree-branch.left .branch-dot {
+      right: -5px;
+    }
+
+    .tree-branch.right .branch-dot {
+      left: -5px;
+    }
+
+    .branch-line-wrap.grow .branch-line {
+      width: 100%;
+    }
+
+    .branch-line-wrap.grow .branch-dot {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @media (max-width: 720px) {
+      .tree-trunk { left: 18px; transform: translateX(0) scaleY(0); }
+      .tree-trunk.grow { transform: translateX(0) scaleY(1); }
+      .tree-branch.left, .tree-branch.right { flex-direction: row; padding-left: 18px; }
+      .tree-branch.left .branch-line-wrap, .tree-branch.right .branch-line-wrap { justify-content: flex-start; padding-left: 0; padding-right: 16px; }
+      .tree-branch.left .branch-line, .tree-branch.right .branch-line { transform-origin: left center; }
+      .branch-card { max-width: 100%; margin-left: 0 !important; margin-right: 0 !important; }
+      .tree-root { justify-content: flex-start; padding-left: 0; }
+      .root-node { font-size: 15px; padding: 14px 20px; }
+      .branch-dot { left: -5px !important; right: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <div class="lang-switch" onclick="toggleLang()">
+        <span class="lang-zh active">中文</span>
+        <span>/</span>
+        <span class="lang-en">ENGLISH</span>
+      </div>
+      <div class="logo">Academic detective</div>
+      <ul class="nav-links">
+        <li><a href="index.html#home" data-i18n="nav_home">首页</a></li>
+        <li><a href="investigate.html" data-i18n="nav_investigate">开始调查</a></li>
+        <li><a href="deep-service.html" data-i18n="nav_deep_service">深度服务</a></li>
+        <li><a href="index.html#contact" data-i18n="nav_contact">联系我们</a></li>
+      </ul>
+      <button class="mobile-menu-btn">&#9776;</button>
+    </div>
+  </nav>
+
+  <div class="deep-page">
+    <section class="deep-hero" id="hero">
+      <h1 data-i18n="hero_title">串联学术神经网络</h1>
+      <p data-i18n="hero_subtitle">并联多位导师的标准化调查系统，从数据到洞察，构建可对比的学术画像网络。</p>
+      <a href="#tree" class="btn btn-primary" data-i18n="hero_cta">了解</a>
+    </section>
+
+    <section class="tree-section" id="tree">
+      <div class="tree-container">
+        <div class="tree-trunk" id="tree-trunk"></div>
+
+        <div class="tree-root">
+          <div class="root-node" id="root-node" data-i18n="tree1_root">并联多位导师的标准化调查系统</div>
+        </div>
+
+        <div class="tree-branch left">
+          <div class="branch-line-wrap" id="line-1">
+            <div class="branch-line"></div>
+            <div class="branch-dot"></div>
+          </div>
+          <div class="branch-card" id="card-1">
+            <div class="branch-label" data-i18n="t1_b1_label">批量数据采集</div>
+            <div class="branch-title" data-i18n="t1_b1_title">统一数据入口</div>
+            <div class="branch-desc" data-i18n="t1_b1_desc">统一处理多位导师的 CNKI / Wanfang 导出数据，标准化论文清单、毕业学生时间线、基金项目记录。</div>
+          </div>
+        </div>
+
+        <div class="tree-branch right">
+          <div class="branch-line-wrap" id="line-2">
+            <div class="branch-line"></div>
+            <div class="branch-dot"></div>
+          </div>
+          <div class="branch-card" id="card-2">
+            <div class="branch-label" data-i18n="t1_b2_label">六维质量速评</div>
+            <div class="branch-title" data-i18n="t1_b2_title">批量质量评级</div>
+            <div class="branch-desc" data-i18n="t1_b2_desc">运用审查系统对核心论文进行批量质量评级（A / B+ / B / C / D），建立同机构对比基准线。</div>
+          </div>
+        </div>
+
+        <div class="tree-branch left">
+          <div class="branch-line-wrap" id="line-3">
+            <div class="branch-line"></div>
+            <div class="branch-dot"></div>
+          </div>
+          <div class="branch-card" id="card-3">
+            <div class="branch-label" data-i18n="t1_b3_label">学生培养审计</div>
+            <div class="branch-title" data-i18n="t1_b3_title">并行分析导师组</div>
+            <div class="branch-desc" data-i18n="t1_b3_desc">并行分析导师组的学生毕业年限、首篇论文发表时间、延期毕业率，标记超出正常分布的异常值。</div>
+          </div>
+        </div>
+
+        <div class="tree-branch right">
+          <div class="branch-line-wrap" id="line-4">
+            <div class="branch-line"></div>
+            <div class="branch-dot"></div>
+          </div>
+          <div class="branch-card" id="card-4">
+            <div class="branch-label" data-i18n="t1_b4_label">结构化评价匹配</div>
+            <div class="branch-title" data-i18n="t1_b4_title">匿名评价量化</div>
+            <div class="branch-desc" data-i18n="t1_b4_desc">批量检索匿名评价数据库，将 14 维度评价指标转化为可对比的量化信号。</div>
+          </div>
+        </div>
+
+        <div class="tree-outputs">
+          <div class="output-hub" id="output-hub">
+            <div class="branch-label" data-i18n="output_label">输出成果</div>
+            <div class="branch-title" data-i18n="t1_output_title">可落地的决策依据</div>
+            <div class="output-tags">
+              <span class="output-tag" data-i18n="t1_tag1">导师风险雷达图</span>
+              <span class="output-tag" data-i18n="t1_tag2">同机构横向对比报告</span>
+              <span class="output-tag" data-i18n="t1_tag3">异常模式标记清单</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:center;margin-top:48px;opacity:0;transform:translateY(12px);transition:opacity 0.6s ease, transform 0.6s ease;" id="next-step-wrap">
+          <a href="#tree2" class="btn btn-primary" id="next-step-btn" data-i18n="btn_next_step">更进一步</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tree-section" id="tree2">
+      <div class="tree-container">
+        <div class="tree-trunk" id="tree-trunk-2"></div>
+
+        <div class="tree-root">
+          <div class="root-node" id="root-node-2" data-i18n="tree2_root">学院内学术生态网络图谱构建</div>
+        </div>
+
+        <div class="tree-branch left">
+          <div class="branch-line-wrap" id="line-5">
+            <div class="branch-line"></div>
+            <div class="branch-dot"></div>
+          </div>
+          <div class="branch-card" id="card-5">
+            <div class="branch-label" data-i18n="t2_b1_label">核心思路</div>
+            <div class="branch-title" data-i18n="t2_b1_title">社会网络分析 + 文献计量学</div>
+            <div class="branch-desc" data-i18n="t2_b1_desc">运用社会网络分析与文献计量学方法，绘制学校内部完整的学术关系拓扑图，识别行政权力-学术产出耦合、互引卡特尔、主场优势垄断等系统性结构特征。</div>
+          </div>
+        </div>
+
+        <div class="tree-branch right">
+          <div class="branch-line-wrap" id="line-6">
+            <div class="branch-line"></div>
+            <div class="branch-dot"></div>
+          </div>
+          <div class="branch-card" id="card-6">
+            <div class="branch-label" data-i18n="t2_b2_label">节点映射</div>
+            <div class="branch-title" data-i18n="t2_b2_title">三类节点库构建</div>
+            <div class="branch-desc" data-i18n="t2_b2_desc">建立教师节点（含行政职务时间戳）、学生节点、期刊/会议节点三类节点库，形成完整的学术生态对象体系。</div>
+          </div>
+        </div>
+
+        <div class="tree-branch left">
+          <div class="branch-line-wrap" id="line-7">
+            <div class="branch-line"></div>
+            <div class="branch-dot"></div>
+          </div>
+          <div class="branch-card" id="card-7">
+            <div class="branch-label" data-i18n="t2_b3_label">关系边构建</div>
+            <div class="branch-title" data-i18n="t2_b3_title">四类关系边网络</div>
+            <div class="branch-desc" data-i18n-html="t2_b3_desc_html">
+              <div style="margin-bottom:6px;">• <strong>合著边</strong>：区分导师-学生、同僚、跨机构关系</div>
+              <div style="margin-bottom:6px;">• <strong>引用边</strong>：识别高权重互惠引用对子</div>
+              <div style="margin-bottom:6px;">• <strong>毕业答辩边</strong>：学生-答辩委员关联，用于后续合作审计</div>
+              <div>• <strong>主场期刊边</strong>：机构主办期刊-编委-发文者三角关系</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tree-branch right">
+          <div class="branch-line-wrap" id="line-8">
+            <div class="branch-line"></div>
+            <div class="branch-dot"></div>
+          </div>
+          <div class="branch-card" id="card-8">
+            <div class="branch-label" data-i18n="t2_b4_label">网络指标计算</div>
+            <div class="branch-title" data-i18n="t2_b4_title">量化结构特征</div>
+            <div class="branch-desc" data-i18n="t2_b4_desc">节点中心性（识别资源垄断者）、聚类系数（发现封闭小圈子）、行政职务-产出时间耦合度。</div>
+          </div>
+        </div>
+
+        <div class="tree-branch left">
+          <div class="branch-line-wrap" id="line-9">
+            <div class="branch-line"></div>
+            <div class="branch-dot"></div>
+          </div>
+          <div class="branch-card" id="card-9">
+            <div class="branch-label" data-i18n="t2_b5_label">风险子图识别</div>
+            <div class="branch-title" data-i18n="t2_b5_title">工具标记异常簇</div>
+            <div class="branch-desc" data-i18n="t2_b5_desc">运用工具标记疑似互引卡特尔、审稿互惠网络、权力窗口期产出激增簇。</div>
+          </div>
+        </div>
+
+        <div class="tree-outputs">
+          <div class="output-hub" id="output-hub-2">
+            <div class="branch-label" data-i18n="output_label">输出成果</div>
+            <div class="branch-title" data-i18n="t2_output_title">学院内学术生态全景图</div>
+            <div class="output-tags">
+              <span class="output-tag" data-i18n="t2_tag1">学术网络可视化图谱</span>
+              <span class="output-tag" data-i18n="t2_tag2">风险子图清单</span>
+              <span class="output-tag" data-i18n="t2_tag3">行政职务-产出耦合热力图</span>
+              <span class="output-tag" data-i18n="t2_tag4">机构主场优势占比统计</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:center;margin-top:48px;">
+          <a href="mailto:3579104280@qq.com?subject=深度服务咨询" class="btn btn-primary" data-i18n="btn_contact">与我们建联</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      &copy; <span data-i18n="footer">2026 学术背景调查服务. YADNUS QINGSHAN.</span>
+    </footer>
+  </div>
+
+  <script src="lang.js?v=2"></script>
+  <script>
+    window.translations = {
+      nav_home: { zh: '首页', en: 'HOME' },
+      nav_investigate: { zh: '开始调查', en: 'INVESTIGATE' },
+      nav_deep_service: { zh: '深度服务', en: 'DEEP SERVICE' },
+      nav_contact: { zh: '联系我们', en: 'CONTACT' },
+      hero_title: { zh: '串联学术神经网络', en: 'Connecting Academic Neural Networks' },
+      hero_subtitle: { zh: '并联多位导师的标准化调查系统，从数据到洞察，构建可对比的学术画像网络。', en: 'A standardized multi-advisor investigation system. From data to insight, building comparable academic profiles.' },
+      hero_cta: { zh: '了解', en: 'Learn More' },
+      tree1_root: { zh: '并联多位导师的标准化调查系统', en: 'Standardized Multi-Advisor Investigation System' },
+      t1_b1_label: { zh: '批量数据采集', en: 'Batch Data Collection' },
+      t1_b1_title: { zh: '统一数据入口', en: 'Unified Data Portal' },
+      t1_b1_desc: { zh: '统一处理多位导师的 CNKI / Wanfang 导出数据，标准化论文清单、毕业学生时间线、基金项目记录。', en: 'Process CNKI / Wanfang exports from multiple advisors, standardizing paper lists, graduation timelines, and funding records.' },
+      t1_b2_label: { zh: '六维质量速评', en: 'Six-Dimension Quality Scoring' },
+      t1_b2_title: { zh: '批量质量评级', en: 'Batch Quality Rating' },
+      t1_b2_desc: { zh: '运用审查系统对核心论文进行批量质量评级（A / B+ / B / C / D），建立同机构对比基准线。', en: 'Apply the review system to batch-rate core papers (A / B+ / B / C / D), establishing an institutional baseline.' },
+      t1_b3_label: { zh: '学生培养审计', en: 'Student Training Audit' },
+      t1_b3_title: { zh: '并行分析导师组', en: 'Parallel Advisor Group Analysis' },
+      t1_b3_desc: { zh: '并行分析导师组的学生毕业年限、首篇论文发表时间、延期毕业率，标记超出正常分布的异常值。', en: 'Analyze graduation duration, first-paper timing, and delay rates in parallel, flagging outliers beyond normal distributions.' },
+      t1_b4_label: { zh: '结构化评价匹配', en: 'Structured Evaluation Matching' },
+      t1_b4_title: { zh: '匿名评价量化', en: 'Anonymous Review Quantification' },
+      t1_b4_desc: { zh: '批量检索匿名评价数据库，将 14 维度评价指标转化为可对比的量化信号。', en: 'Batch-query anonymous review databases, converting 14-dimensional metrics into comparable quantitative signals.' },
+      output_label: { zh: '输出成果', en: 'Deliverables' },
+      t1_output_title: { zh: '可落地的决策依据', en: 'Actionable Decision Intelligence' },
+      t1_tag1: { zh: '导师风险雷达图', en: 'Advisor Risk Radar' },
+      t1_tag2: { zh: '同机构横向对比报告', en: 'Institutional Benchmark Report' },
+      t1_tag3: { zh: '异常模式标记清单', en: 'Anomaly Flag List' },
+      btn_next_step: { zh: '更进一步', en: 'Go Deeper' },
+      tree2_root: { zh: '学院内学术生态网络图谱构建', en: 'Intra-School Academic Ecosystem Mapping' },
+      t2_b1_label: { zh: '核心思路', en: 'Core Concept' },
+      t2_b1_title: { zh: '社会网络分析 + 文献计量学', en: 'SNA + Bibliometrics' },
+      t2_b1_desc: { zh: '运用社会网络分析与文献计量学方法，绘制学校内部完整的学术关系拓扑图，识别行政权力-学术产出耦合、互引卡特尔、主场优势垄断等系统性结构特征。', en: 'Using SNA and bibliometrics to map the complete intra-school academic topology, identifying power-output coupling, citation cartels, and home-field monopolies.' },
+      t2_b2_label: { zh: '节点映射', en: 'Node Mapping' },
+      t2_b2_title: { zh: '三类节点库构建', en: 'Three-Type Node Library' },
+      t2_b2_desc: { zh: '建立教师节点（含行政职务时间戳）、学生节点、期刊/会议节点三类节点库，形成完整的学术生态对象体系。', en: 'Build faculty nodes (with administrative timestamps), student nodes, and journal/conference nodes to form a complete academic ecosystem.' },
+      t2_b3_label: { zh: '关系边构建', en: 'Edge Construction' },
+      t2_b3_title: { zh: '四类关系边网络', en: 'Four-Type Edge Network' },
+      t2_b3_desc_html: {
+        zh: '<div style="margin-bottom:6px;">• <strong>合著边</strong>：区分导师-学生、同僚、跨机构关系</div><div style="margin-bottom:6px;">• <strong>引用边</strong>：识别高权重互惠引用对子</div><div style="margin-bottom:6px;">• <strong>毕业答辩边</strong>：学生-答辩委员关联，用于后续合作审计</div><div>• <strong>主场期刊边</strong>：机构主办期刊-编委-发文者三角关系</div>',
+        en: '<div style="margin-bottom:6px;">• <strong>Co-authorship</strong>: advisor-student, peer, cross-institution</div><div style="margin-bottom:6px;">• <strong>Citation</strong>: identify high-weight reciprocal citations</div><div style="margin-bottom:6px;">• <strong>Defense committee</strong>: student-examiner links for audit</div><div>• <strong>Home journal</strong>: sponsor-editor-author triangles</div>'
+      },
+      t2_b4_label: { zh: '网络指标计算', en: 'Network Metrics' },
+      t2_b4_title: { zh: '量化结构特征', en: 'Quantified Structure' },
+      t2_b4_desc: { zh: '节点中心性（识别资源垄断者）、聚类系数（发现封闭小圈子）、行政职务-产出时间耦合度。', en: 'Node centrality (resource monopolists), clustering coefficient (closed cliques), and administrative rank-output coupling.' },
+      t2_b5_label: { zh: '风险子图识别', en: 'Risk Subgraph Detection' },
+      t2_b5_title: { zh: '工具标记异常簇', en: 'Tool-Flagged Anomalies' },
+      t2_b5_desc: { zh: '运用工具标记疑似互引卡特尔、审稿互惠网络、权力窗口期产出激增簇。', en: 'Use automated tools to flag suspected citation cartels, reciprocal review networks, and power-window output surges.' },
+      t2_output_title: { zh: '学院内学术生态全景图', en: 'Intra-School Academic Ecosystem' },
+      t2_tag1: { zh: '学术网络可视化图谱', en: 'Academic Network Visualization' },
+      t2_tag2: { zh: '风险子图清单', en: 'Risk Subgraph List' },
+      t2_tag3: { zh: '行政职务-产出耦合热力图', en: 'Rank-Output Coupling Heatmap' },
+      t2_tag4: { zh: '机构主场优势占比统计', en: 'Home-Field Advantage Stats' },
+      btn_contact: { zh: '与我们建联', en: 'Contact Us' },
+      footer: { zh: '2026 学术背景调查服务. YADNUS QINGSHAN.', en: '2026 Academic Investigation Service. YADNUS QINGSHAN.' }
+    };
+  </script>
+  <script>
+    (function() {
+      var trunk = document.getElementById('tree-trunk');
+      var root = document.getElementById('root-node');
+      var items = [
+        { line: 'line-1', card: 'card-1' },
+        { line: 'line-2', card: 'card-2' },
+        { line: 'line-3', card: 'card-3' },
+        { line: 'line-4', card: 'card-4' }
+      ];
+      var output = document.getElementById('output-hub');
+      var triggered = false;
+
+      function revealTree() {
+        if (triggered) return;
+        var rect = trunk.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.75) {
+          triggered = true;
+          trunk.classList.add('grow');
+          setTimeout(function() { root.classList.add('show'); }, 200);
+          items.forEach(function(item, i) {
+            setTimeout(function() {
+              var lineWrap = document.getElementById(item.line);
+              var card = document.getElementById(item.card);
+              if (lineWrap) lineWrap.classList.add('grow');
+              setTimeout(function() {
+                if (card) card.classList.add('show');
+              }, 350);
+            }, 500 + i * 320);
+          });
+          setTimeout(function() {
+            if (output) output.classList.add('show');
+            var nextWrap = document.getElementById('next-step-wrap');
+            if (nextWrap) {
+              nextWrap.style.opacity = '1';
+              nextWrap.style.transform = 'translateY(0)';
+            }
+          }, 500 + items.length * 320 + 400);
+        }
+      }
+
+      window.addEventListener('scroll', revealTree);
+      window.addEventListener('load', revealTree);
+
+      document.querySelector('a[href="#tree"]').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('tree').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      document.getElementById('next-step-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('tree2').scrollIntoView({ behavior: 'smooth' });
+      });
+    })();
+
+    (function() {
+      var trunk = document.getElementById('tree-trunk-2');
+      var root = document.getElementById('root-node-2');
+      var items = [
+        { line: 'line-5', card: 'card-5' },
+        { line: 'line-6', card: 'card-6' },
+        { line: 'line-7', card: 'card-7' },
+        { line: 'line-8', card: 'card-8' },
+        { line: 'line-9', card: 'card-9' }
+      ];
+      var output = document.getElementById('output-hub-2');
+      var triggered = false;
+
+      function revealTree() {
+        if (triggered) return;
+        var rect = trunk.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.75) {
+          triggered = true;
+          trunk.classList.add('grow');
+          setTimeout(function() { root.classList.add('show'); }, 200);
+          items.forEach(function(item, i) {
+            setTimeout(function() {
+              var lineWrap = document.getElementById(item.line);
+              var card = document.getElementById(item.card);
+              if (lineWrap) lineWrap.classList.add('grow');
+              setTimeout(function() {
+                if (card) card.classList.add('show');
+              }, 350);
+            }, 500 + i * 320);
+          });
+          setTimeout(function() {
+            if (output) output.classList.add('show');
+          }, 500 + items.length * 320 + 400);
+        }
+      }
+
+      window.addEventListener('scroll', revealTree);
+      window.addEventListener('load', revealTree);
+    })();
+  </script>
+</body>
+</html>

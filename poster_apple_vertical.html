@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学术背景调查服务 · 竖版海报</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --apple-black: #000000;
+    --apple-light-gray: #f5f5f7;
+    --apple-near-black: #1d1d1f;
+    --apple-blue: #0071e3;
+    --apple-white: #ffffff;
+    --apple-text-secondary: rgba(0, 0, 0, 0.72);
+    --apple-text-tertiary: rgba(0, 0, 0, 0.48);
+  }
+
+  body {
+    font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: var(--apple-near-black);
+    background: var(--apple-light-gray);
+  }
+
+  /* A3 Portrait: 297mm x 420mm */
+  .poster {
+    width: 297mm;
+    height: 420mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .watermark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.15;
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22300%22%20height%3D%22160%22%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22Noto%20Sans%20SC%2C%20sans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22500%22%20fill%3D%22%23808080%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%20transform%3D%22rotate%28-30%2C%20150%2C%2080%29%22%3EMODI%E9%9D%92%E5%B1%B1%3C/text%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  /* Header */
+  .header {
+    grid-column: 1 / -1;
+    background: var(--apple-black);
+    color: var(--apple-white);
+    padding: 14mm 12mm 10mm 12mm;
+    text-align: center;
+  }
+
+  .header-tag {
+    font-size: 8pt;
+    font-weight: 500;
+    letter-spacing: 0.6px;
+    color: var(--apple-blue);
+    margin-bottom: 2mm;
+  }
+
+  .header-title {
+    font-size: 26pt;
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.2px;
+    margin-bottom: 2mm;
+  }
+
+  .header-sub {
+    font-size: 10pt;
+    font-weight: 400;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 240mm;
+    margin: 0 auto;
+  }
+
+  /* Left column — Core Values */
+  .col-left {
+    padding: 12mm 8mm 12mm 12mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6mm;
+    border-right: 0.5pt solid rgba(0, 0, 0, 0.08);
+    background: var(--apple-light-gray);
+  }
+
+  .left-title {
+    font-size: 17pt;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+    margin-bottom: 2mm;
+  }
+
+  .value-block {
+    background: var(--apple-white);
+    border-radius: 4mm;
+    padding: 8mm 7mm;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 12px 0px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .value-block h3 {
+    font-size: 15pt;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 2.5mm;
+    color: var(--apple-near-black);
+  }
+
+  .value-block p {
+    font-size: 11pt;
+    line-height: 1.55;
+    color: var(--apple-text-secondary);
+  }
+
+  /* Right column — 7-step process */
+  .col-right {
+    padding: 12mm 12mm 12mm 8mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4mm;
+    background: var(--apple-white);
+  }
+
+  .right-title {
+    font-size: 17pt;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+    margin-bottom: 2mm;
+  }
+
+  .step-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 3mm;
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .step-card {
+    display: flex;
+    align-items: center;
+    gap: 5mm;
+    background: var(--apple-light-gray);
+    border-radius: 4mm;
+    padding: 6mm 5mm;
+  }
+
+  .step-number {
+    width: 11mm;
+    height: 11mm;
+    min-width: 11mm;
+    border-radius: 50%;
+    background: var(--apple-black);
+    color: var(--apple-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15pt;
+    font-weight: 600;
+  }
+
+  .step-content h4 {
+    font-size: 14pt;
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 1.5mm;
+    letter-spacing: -0.2px;
+  }
+
+  .step-content p {
+    font-size: 11pt;
+    line-height: 1.5;
+    color: var(--apple-text-secondary);
+  }
+
+  .step-arrow {
+    text-align: center;
+    color: var(--apple-text-tertiary);
+    font-size: 13pt;
+    font-weight: 500;
+    line-height: 1;
+    padding: 0.5mm 0;
+  }
+
+  /* Footer */
+  .footer {
+    grid-column: 1 / -1;
+    background: var(--apple-near-black);
+    color: var(--apple-white);
+    padding: 9mm 12mm;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-scenes {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5mm;
+  }
+
+  .scene-item {
+    font-size: 10pt;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .scene-item strong {
+    color: var(--apple-white);
+    font-weight: 600;
+    font-size: 11pt;
+  }
+
+  .footer-cta {
+    text-align: right;
+  }
+
+  .cta-text {
+    font-size: 9pt;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1.5mm;
+  }
+
+  .cta-pill {
+    display: inline-block;
+    background: var(--apple-blue);
+    color: var(--apple-white);
+    font-size: 12pt;
+    font-weight: 500;
+    padding: 3mm 6mm;
+    border-radius: 980px;
+    text-decoration: none;
+  }
+
+  .rubric-block {
+    padding: 6mm 6mm;
+    justify-content: flex-start;
+  }
+  .rubric-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5mm 3mm;
+    margin-bottom: 3mm;
+  }
+  .rubric-item {
+    background: rgba(0,0,0,0.03);
+    border-radius: 2mm;
+    padding: 2.5mm 3mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10.5pt;
+  }
+  .rubric-item strong {
+    font-weight: 600;
+    color: var(--apple-near-black);
+  }
+  .rubric-item span {
+    font-size: 9pt;
+    color: var(--apple-text-tertiary);
+    font-weight: 500;
+  }
+  .rating-bar {
+    display: flex;
+    gap: 2mm;
+    flex-wrap: wrap;
+  }
+  .rating-badge {
+    background: var(--apple-light-gray);
+    color: var(--apple-near-black);
+    font-size: 9pt;
+    font-weight: 600;
+    padding: 1.5mm 3mm;
+    border-radius: 980px;
+  }
+
+  @media print {
+    .poster {
+      width: 297mm;
+      height: 420mm;
+      page-break-after: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="poster">
+    <div class="watermark"></div>
+
+    <header class="header">
+      <div class="header-tag">Third-Party Academic Due Diligence</div>
+      <h1 class="header-title">学术背景调查服务</h1>
+      <p class="header-sub">
+        系统化学者学术履历核查与学术诚信审查 · 基于典型案例方法论 · 生成带完整证据链的第三方背调报告
+      </p>
+    </header>
+
+    <!-- Left: Core Values -->
+    <section class="col-left">
+      <h2 class="left-title">四大核心价值</h2>
+      <div class="value-block">
+        <h3>有出处</h3>
+        <p>每条判断追溯到具体数据库、官方记录或原文比对</p>
+      </div>
+      <div class="value-block">
+        <h3>有平衡</h3>
+        <p>既记录成就，也记录问题，避免单向叙事</p>
+      </div>
+      <div class="value-block">
+        <h3>有痕迹</h3>
+        <p>从数据采集到最终结论，全程留痕，可质证</p>
+      </div>
+      <div class="value-block">
+        <h3>看当下</h3>
+        <p>近三年论文、经费、学生去向，比头衔更能说明问题</p>
+      </div>
+
+      <h2 class="left-title" style="margin-top: 5mm; font-size: 15pt;">六维论文质量评估</h2>
+      <div class="value-block rubric-block">
+        <p style="font-size: 9pt; color: var(--apple-text-tertiary); margin-bottom: 2mm;">基于 Nature / Springer / ACM 同行评审标准</p>
+        <div class="rubric-grid">
+          <div class="rubric-item"><strong>原创性</strong><span>25%</span></div>
+          <div class="rubric-item"><strong>严谨性</strong><span>20%</span></div>
+          <div class="rubric-item"><strong>数据质量</strong><span>20%</span></div>
+          <div class="rubric-item"><strong>结构逻辑</strong><span>15%</span></div>
+          <div class="rubric-item"><strong>文献规范</strong><span>10%</span></div>
+          <div class="rubric-item"><strong>清晰度</strong><span>10%</span></div>
+        </div>
+        <div class="rating-bar">
+          <div class="rating-badge">A ≥85</div>
+          <div class="rating-badge">B+ ≥75</div>
+          <div class="rating-badge">B ≥65</div>
+          <div class="rating-badge">C ≥55</div>
+          <div class="rating-badge" style="background:#ff3b30;color:#fff;">D &lt;55</div>
+        </div>
+        <p style="font-size: 9pt; color: var(--apple-text-secondary); margin-top: 2.5mm;">机器初评 + 专家复核，每篇论文输出带维度的结构化评分</p>
+      </div>
+    </section>
+
+    <!-- Right: 7-step process -->
+    <section class="col-right">
+      <h2 class="right-title">七步标准化流程</h2>
+      <div class="step-flow">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>基础画像</h4>
+            <p>核实姓名、机构、职称、教育背景</p>
+          </div>
+        </div>
+        <div class="step-arrow">↓</div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>产出数量</h4>
+            <p>统计近三年论文数、期刊档次、署名位置</p>
+          </div>
+        </div>
+        <div class="step-arrow">↓</div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>质量评估</h4>
+            <p>专著/论文文本细读，按 Nature/Springer/ACM 六维标准评分</p>
+          </div>
+        </div>
+        <div class="step-arrow">↓</div>
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>关系网络</h4>
+            <p>导师谱系、合作模式、资源依赖图谱</p>
+          </div>
+        </div>
+        <div class="step-arrow">↓</div>
+        <div class="step-card">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h4>异常检测</h4>
+            <p>晋升时间线、发表聚类、扩展红旗信号</p>
+          </div>
+        </div>
+        <div class="step-arrow">↓</div>
+        <div class="step-card">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            <h4>口碑采集</h4>
+            <p>学生评价数据库匹配（14 维度 + 可信度评分）</p>
+          </div>
+        </div>
+        <div class="step-arrow">↓</div>
+        <div class="step-card">
+          <div class="step-number">7</div>
+          <div class="step-content">
+            <h4>交叉验证与报告</h4>
+            <p>每项重大发现 ≥2 个独立来源，生成结构化报告</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-scenes">
+        <div class="scene-item"><strong>适用场景</strong> 学生选导师 · 高校人才引进 · 职称晋升背调</div>
+        <div class="scene-item"><strong>服务边界</strong> 公开数据库核实、PDF 文本分析、关系网络构建、报告生成</div>
+        <div class="scene-item"><strong>我们不做</strong> 非法爬取付费数据库、自动登录凭证系统、出具法律意见</div>
+      </div>
+      <div class="footer-cta">
+        <div class="cta-text">提供学者姓名与机构即可启动</div>
+        <div class="cta-pill">开始合作</div>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
