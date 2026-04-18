@@ -69,6 +69,11 @@
     color: var(--spectral-white);
   }
   .node-detail.empty { color: rgba(240,240,250,0.4); font-style: italic; }
+  .node-detail.active {
+    background: rgba(0, 113, 227, 0.08);
+    border-color: rgba(0, 113, 227, 0.3);
+    border-left: 3px solid var(--apple-blue);
+  }
   #graph-container {
     position: fixed; top: 48px; left: 280px; right: 0; bottom: 0;
     background: var(--space-black);
@@ -151,6 +156,9 @@
 <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
 <div class="sidebar">
+  <h2>选中节点详情</h2>
+  <div class="node-detail empty" id="node-detail">点击节点查看详细信息</div>
+
   <h2>网络统计</h2>
   <div class="stat-grid">
     <div class="stat-card">
@@ -200,9 +208,6 @@
 <label><input type="checkbox" value="citer" checked> 引用者</label>
 
   </div>
-
-  <h2>选中节点详情</h2>
-  <div class="node-detail empty" id="node-detail">点击节点查看详细信息</div>
 
   <div class="warning-banner">⚠️ 检测到 2 条引用异常信号，包括高频互引或集中引用。建议结合 citation_profiler.py 输出进行交叉验证。</div>
 </div>
@@ -335,12 +340,14 @@ nodeElements
   .on('mouseout', () => tooltip.style('opacity', 0))
   .on('click', (e, d) => {
     detailBox.classList.remove('empty');
+    detailBox.classList.add('active');
     detailBox.innerHTML = `<strong style="font-size:15px;color:${nodeTypes[d.type]?.color || '#f0f0fa'}">${d.name}</strong><br/><span style="color:rgba(240,240,250,0.5);font-size:12px">${nodeTypes[d.type]?.label || d.type}</span><br/><br/>${d.detail || '暂无详细信息'}`;
     e.stopPropagation();
   });
 
 svg.on('click', () => {
   detailBox.classList.add('empty');
+  detailBox.classList.remove('active');
   detailBox.textContent = '点击节点查看详细信息';
 });
 
