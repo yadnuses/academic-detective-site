@@ -27,6 +27,14 @@
     for (var b = 0; b < enSpans.length; b++) {
       enSpans[b].classList.toggle('active', lang === 'en');
     }
+    var pdfTemplate = document.getElementById('pdf-template-download');
+    if (pdfTemplate) {
+      pdfTemplate.href = lang === 'en' ? 'Scholar_A_Report_Anonymous.pdf' : '学术档案调查报告示例.pdf';
+    }
+    var pdfCase = document.getElementById('pdf-case-download');
+    if (pdfCase) {
+      pdfCase.href = lang === 'en' ? 'Scholar_A_Report_Anonymous.pdf' : '学术档案调查报告示例.pdf';
+    }
   }
 
   window.toggleLang = function() {
