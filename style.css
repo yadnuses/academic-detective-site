@@ -250,15 +250,13 @@ section {
   position: relative;
   width: 100%;
   max-width: 900px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   align-self: stretch;
 }
 
 .slider-viewport {
   width: 100%;
-  min-width: 0;
+  min-width: 100%;
   height: 620px;
   overflow: hidden;
   border-radius: 16px;
@@ -270,11 +268,13 @@ section {
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-width: 100%;
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .slide {
   width: 100%;
+  min-width: 100%;
   min-height: 620px;
   padding: 40px 44px;
   background: rgba(255, 255, 255, 0.03);
@@ -1461,9 +1461,10 @@ section {
 }
 
 @media (max-width: 640px) {
-  .slider-viewport { width: 100%; min-width: 0; height: auto; }
+  .slider-viewport { width: 100%; min-width: 100%; height: auto; }
   .slide {
     width: 100%;
+    min-width: 100%;
     min-height: auto;
     height: auto;
     max-height: none;
