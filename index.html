@@ -584,8 +584,15 @@
       }
 
       function update() {
-        var slideHeight = getSlideHeight();
-        track.style.transform = 'translateY(-' + (current * slideHeight) + 'px)';
+        var offset = 0;
+        for (var i = 0; i < current; i++) {
+          offset += slides[i] ? slides[i].offsetHeight : 0;
+        }
+        track.style.transform = 'translateY(-' + offset + 'px)';
+        var viewport = document.querySelector('.slider-viewport');
+        if (viewport && slides[current] && !window.matchMedia('(max-width: 640px)').matches) {
+          viewport.style.height = slides[current].offsetHeight + 'px';
+        }
         for (var i = 0; i < total; i++) {
           slides[i].classList.toggle('active', i === current);
           slides[i].classList.remove('animating');
