@@ -1461,7 +1461,20 @@ section {
 }
 
 @media (max-width: 640px) {
-  .slider-viewport { width: 100%; min-width: 100%; height: auto; }
+  /* Static stacking mode: all slides visible, no slider */
+  .slider-viewport {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    overflow: visible;
+    border-radius: 0;
+    background: transparent;
+  }
+  .slider-track {
+    transform: none !important;
+    transition: none;
+    gap: 16px;
+  }
   .slide {
     width: 100%;
     min-width: 100%;
@@ -1469,39 +1482,82 @@ section {
     height: auto;
     max-height: none;
     padding: 24px 20px;
+    opacity: 1;
+    transform: none;
+    margin-bottom: 0;
+    border-radius: 12px;
   }
+  .slide.active {
+    opacity: 1;
+    transform: none;
+  }
+  .slide-fx { display: none; }
   .slide h3 {
     font-size: 17px;
     word-wrap: break-word;
     line-height: 1.35;
   }
   .slide-header { gap: 10px; }
-  .slide-body { font-size: 14px; }
+  .slide-body { font-size: 14px; overflow: visible; }
+  /* Mobile nav: sticky bottom-right arrows + centered dots */
   .slider-controls {
-    position: absolute;
+    display: flex;
+    position: fixed;
     right: 12px;
-    bottom: 12px;
+    bottom: 72px;
     top: auto;
     transform: none;
-    flex-direction: row;
-    gap: 8px;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
     margin-top: 0;
-    z-index: 20;
   }
   .slider-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 15px;
-    background: rgba(0, 0, 0, 0.65);
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    background: rgba(0, 0, 0, 0.7);
     border-color: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   .slider-dots {
-    position: absolute;
-    bottom: 18px;
+    display: flex;
+    position: fixed;
     left: 50%;
+    bottom: 24px;
     transform: translateX(-50%);
     margin-top: 0;
-    z-index: 20;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  /* Force all animated elements visible */
+  .thinking-step,
+  .dimension-tags,
+  .dimension-tag,
+  .quality-item,
+  .network-glass-card,
+  .network-focus-bar,
+  .anomaly-item,
+  .anomaly-alert,
+  .validation-card,
+  .validation-rule,
+  .fx-check,
+  .fx-paper,
+  .report-stage,
+  .review-checks,
+  .review-pill,
+  .pdf-cta,
+  .net-node,
+  .net-line {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
   }
   .word-cloud {
     position: relative;
