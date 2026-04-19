@@ -599,37 +599,6 @@ section {
 .slide[data-anim="scan"].animating .word-cloud-item.w27 { opacity: 1; transform: scale(1) translateY(0); transition-delay: 1.84s; }
 
 @media (max-width: 640px) {
-  .slider-viewport { height: 680px; }
-  .slide { min-height: 680px; }
-  .word-cloud { height: 480px; }
-  .word-cloud-item.w1 { left: -2%; top: -4%; font-size: 52px; }
-  .word-cloud-item.w2 { left: 42%; top: -2%; font-size: 44px; }
-  .word-cloud-item.w3 { left: 0%; top: 24%; font-size: 22px; }
-  .word-cloud-item.w4 { left: 50%; top: 20%; font-size: 18px; }
-  .word-cloud-item.w5 { left: 30%; top: 16%; font-size: 12px; }
-  .word-cloud-item.w6 { left: 82%; top: 28%; font-size: 11px; }
-  .word-cloud-item.w7 { left: 74%; top: 12%; font-size: 15px; }
-  .word-cloud-item.w8 { left: 38%; top: 68%; font-size: 20px; }
-  .word-cloud-item.w9 { left: 4%; top: 42%; font-size: 24px; }
-  .word-cloud-item.w10 { left: 2%; top: 64%; font-size: 18px; }
-  .word-cloud-item.w11 { left: 40%; top: 38%; font-size: 20px; }
-  .word-cloud-item.w12 { left: 68%; top: 36%; font-size: 17px; }
-  .word-cloud-item.w13 { left: 0%; top: 54%; font-size: 11px; }
-  .word-cloud-item.w14 { left: 52%; top: 12%; font-size: 11px; }
-  .word-cloud-item.w15 { left: 84%; top: 48%; font-size: 12px; }
-  .word-cloud-item.w16 { left: 70%; top: 70%; font-size: 26px; }
-  .word-cloud-item.w17 { left: 14%; top: 78%; font-size: 13px; }
-  .word-cloud-item.w18 { left: 54%; top: 80%; font-size: 14px; }
-  .word-cloud-item.w19 { left: 80%; top: 64%; font-size: 11px; }
-  .word-cloud-item.w20 { left: 20%; top: 50%; font-size: 24px; }
-  .word-cloud-item.w21 { left: 0%; top: 76%; font-size: 12px; }
-  .word-cloud-item.w22 { left: 58%; top: 52%; font-size: 22px; }
-  .word-cloud-item.w23 { left: 26%; top: 32%; font-size: 10px; }
-  .word-cloud-item.w24 { left: 76%; top: 82%; font-size: 11px; }
-  .word-cloud-item.w25 { left: 6%; top: 34%; font-size: 11px; }
-  .word-cloud-item.w26 { left: 60%; top: 24%; font-size: 10px; }
-  .word-cloud-item.w27 { left: 18%; top: 2%; font-size: 38px; }
-
   .node-center { width: 36px; height: 36px; margin-top: -18px; margin-left: -18px; }
   .node-center .node-label { font-size: 11px; margin-top: 6px; }
   .node-mentor   { width: 22px; height: 22px; margin-top: -11px; margin-left: -11px; top: 16%; }
@@ -1492,10 +1461,15 @@ section {
   .slide {
     min-height: auto;
     height: auto;
-    max-height: 70vh;
+    max-height: none;
     padding: 24px 20px;
   }
-  .slide h3 { font-size: 18px; }
+  .slide h3 {
+    font-size: 17px;
+    word-wrap: break-word;
+    line-height: 1.35;
+  }
+  .slide-header { gap: 10px; }
   .slide-body { font-size: 14px; }
   .slider-controls {
     position: relative;
@@ -1517,8 +1491,48 @@ section {
     bottom: auto;
     margin-top: 12px;
   }
-  .word-cloud { height: auto; max-height: 200px; }
-  .word-cloud-item { font-size: 12px !important; }
+  .word-cloud {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    gap: 8px 12px;
+    height: auto;
+    max-height: none;
+    margin-top: 8px;
+    padding: 8px 0;
+  }
+  .word-cloud-item {
+    position: static;
+    font-size: 13px !important;
+    opacity: 1;
+    transform: none;
+    padding: 5px 10px;
+    background: rgba(0,113,227,0.08);
+    border: 1px solid rgba(0,113,227,0.2);
+    border-radius: 16px;
+    white-space: nowrap;
+    color: rgba(240,240,250,0.85) !important;
+  }
+  .word-cloud-item.w1,
+  .word-cloud-item.w2,
+  .word-cloud-item.w27 {
+    font-size: 15px !important;
+    font-weight: 700;
+    color: rgba(0,113,227,0.5) !important;
+    background: rgba(0,113,227,0.1);
+  }
+  .pdf-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .pdf-cta .btn {
+    margin-left: 0 !important;
+    width: 100%;
+    max-width: none;
+  }
 }
 
 /* CTA Section */
