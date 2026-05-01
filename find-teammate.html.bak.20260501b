@@ -318,57 +318,57 @@
 
     <!-- Details Section -->
     <section class="details-section" id="details">
-      <h2 class="section-title" id="details-title" data-i18n="team_details_title">诚邀志同道合的伙伴</h2>
-      <p class="details-intro" data-i18n="team_details_intro">Academic Detective 是一个专注于学术背景调查与科研人才评估的独立项目。我们正在寻找有热情的伙伴一起把它做大。无论你擅长技术、数据、市场还是内容，只要你对学术诚信和科研生态有想法，欢迎加入。</p>
+      <h2 class="section-title" id="details-title" data-i18n="team_details_title">我们帮你找到对的人</h2>
+      <p class="details-intro" data-i18n="team_details_intro">基于学术背景调查的核心能力，我们为科研工作者提供可信的协作伙伴匹配服务。从学术履历核实到合作契合度评估，每一步都以数据为根基。</p>
 
       <div class="details-grid">
         <div class="detail-card">
           <div class="detail-icon">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
           </div>
-          <h3 data-i18n="team_card1_title">关于这个项目</h3>
-          <p data-i18n="team_card1_desc">Academic Detective 致力于用数据和方法论还原学者的真实科研履历。从论文核查到关系网络分析，我们构建了一套系统化的学术背景调查流程。</p>
+          <h3 data-i18n="team_card1_title">学术履历核实</h3>
+          <p data-i18n="team_card1_desc">对潜在合作者的教育背景、论文产出、项目经历进行交叉验证，确保信息真实可信。</p>
         </div>
         <div class="detail-card">
           <div class="detail-icon">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6 L12 12 L16 14"/></svg>
           </div>
-          <h3 data-i18n="team_card2_title">核心能力</h3>
-          <p data-i18n="team_card2_desc">我们在学术数据库检索、多源交叉验证、合著网络可视化、异常检测等领域积累了扎实的方法论。每一份报告都建立在可回溯的证据链之上。</p>
+          <h3 data-i18n="team_card2_title">研究方向匹配</h3>
+          <p data-i18n="team_card2_desc">通过论文关键词、基金项目、学术谱系分析，精准识别研究兴趣高度契合的候选人。</p>
         </div>
         <div class="detail-card">
           <div class="detail-icon">
             <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
-          <h3 data-i18n="team_card3_title">发展阶段</h3>
-          <p data-i18n="team_card3_desc">项目已完成核心调查体系和演示站点搭建。下一阶段目标是自动化数据采集、扩大样本覆盖、以及探索商业化路径。这是一个从零到一的关键节点。</p>
+          <h3 data-i18n="team_card3_title">合作网络分析</h3>
+          <p data-i18n="team_card3_desc">绘制目标学者的合著网络与机构关联图谱，识别其团队协作模式与独立研究能力。</p>
         </div>
         <div class="detail-card">
           <div class="detail-icon">
             <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
           </div>
-          <h3 data-i18n="team_card4_title">合作方向</h3>
-          <p data-i18n="team_card4_desc">技术架构、数据工程、前端交互、学术内容运营、市场推广、商业模式探索。我们不设边界，只看你的热情和能带来的价值。</p>
+          <h3 data-i18n="team_card4_title">学术声誉评估</h3>
+          <p data-i18n="team_card4_desc">综合引用影响力、同行评价、学术诚信记录，形成多维度的合作风险评估报告。</p>
         </div>
         <div class="detail-card">
           <div class="detail-icon">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
           </div>
-          <h3 data-i18n="team_card5_title">我们需要谁</h3>
-          <p data-i18n="team_card5_desc">对学术诚信、科研生态或数据调查有真实兴趣的人。可以是程序员、研究者、产品经理、市场人，甚至只是一个有想法的学生。态度比履历更重要。</p>
+          <h3 data-i18n="team_card5_title">项目适配度评分</h3>
+          <p data-i18n="team_card5_desc">根据你的课题需求与团队缺口，量化候选人的技能互补性与时间投入可行性。</p>
         </div>
         <div class="detail-card">
           <div class="detail-icon">
             <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
-          <h3 data-i18n="team_card6_title">立即加入</h3>
-          <p data-i18n="team_card6_desc">扫码添加微信，或者通过页面底部联系方式找到我们。告诉我们你是谁、擅长什么、为什么对这个项目感兴趣。每一个真诚的沟通都会被认真对待。</p>
+          <h3 data-i18n="team_card6_title">可信推荐闭环</h3>
+          <p data-i18n="team_card6_desc">每一份推荐报告均附带原始数据来源与验证路径，让合作决策建立在透明信息之上。</p>
         </div>
       </div>
 
       <div class="details-cta">
-        <a href="investigate.html" class="btn btn-ghost" data-i18n="team_btn_back">了解调查服务</a>
-        <a href="index.html#contact" class="btn btn-primary" data-i18n="team_btn_contact">联系我们</a>
+        <a href="investigate.html" class="btn btn-ghost" data-i18n="team_btn_back">返回调查服务</a>
+        <a href="index.html#contact" class="btn btn-primary" data-i18n="team_btn_contact">预约咨询</a>
       </div>
     </section>
   </div>
@@ -390,8 +390,8 @@
       team_hero_subtitle: { zh: '精准匹配学术伙伴，构建高信任科研协作网络', en: 'Precisely match academic partners. Build a high-trust research collaboration network.' },
       team_btn_learn: { zh: '了解更多', en: 'Learn More' },
       team_scroll_hint: { zh: '向下滚动', en: 'Scroll Down' },
-      team_details_title: { zh: '诚邀志同道合的伙伴', en: 'We Help You Find the Right People' },
-      team_details_intro: { zh: 'Academic Detective 是一个专注于学术背景调查与科研人才评估的独立项目。我们正在寻找有热情的伙伴一起把它做大。无论你擅长技术、数据、市场还是内容，只要你对学术诚信和科研生态有想法，欢迎加入。', en: 'Leveraging our core academic background investigation capabilities, we provide researchers with trusted collaborator matching services. From credential verification to compatibility assessment, every step is data-driven.' },
+      team_details_title: { zh: '我们帮你找到对的人', en: 'We Help You Find the Right People' },
+      team_details_intro: { zh: '基于学术背景调查的核心能力，我们为科研工作者提供可信的协作伙伴匹配服务。从学术履历核实到合作契合度评估，每一步都以数据为根基。', en: 'Leveraging our core academic background investigation capabilities, we provide researchers with trusted collaborator matching services. From credential verification to compatibility assessment, every step is data-driven.' },
       team_card1_title: { zh: '学术履历核实', en: 'Credential Verification' },
       team_card1_desc: { zh: '对潜在合作者的教育背景、论文产出、项目经历进行交叉验证，确保信息真实可信。', en: 'Cross-verify potential collaborators education, publications, and project history to ensure credibility.' },
       team_card2_title: { zh: '研究方向匹配', en: 'Research Alignment' },
