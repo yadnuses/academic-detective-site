@@ -22,6 +22,57 @@
       padding: 40px 24px;
     }
 
+    .team-hero-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 64px;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    .team-hero-qr {
+      flex-shrink: 0;
+    }
+
+    .team-hero-qr img {
+      width: 220px;
+      height: 220px;
+      border-radius: 16px;
+      background: #ffffff;
+      padding: 12px;
+      box-shadow: 0 0 40px rgba(0, 113, 227, 0.15);
+    }
+
+    .team-hero-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .team-hero-text .btn {
+      align-self: flex-start;
+    }
+
+    @media (max-width: 768px) {
+      .team-hero-inner {
+        flex-direction: column;
+        gap: 40px;
+      }
+      .team-hero-text {
+        align-items: center;
+        text-align: center;
+      }
+      .team-hero-text .btn {
+        align-self: center;
+      }
+      .team-hero-qr img {
+        width: 160px;
+        height: 160px;
+      }
+    }
+
     .team-hero h1 {
       font-size: clamp(56px, 14vw, 140px);
       font-weight: 800;
@@ -249,9 +300,16 @@
   <div class="team-page">
     <!-- Hero Section -->
     <section class="team-hero" id="home">
-      <h1><span class="title-text" data-i18n="team_hero_title">找队友</span><span class="emoji">🥹</span></h1>
-      <p data-i18n="team_hero_subtitle">精准匹配学术伙伴，构建高信任科研协作网络</p>
-      <a href="#details" class="btn btn-primary" data-i18n="team_btn_learn">了解更多</a>
+      <div class="team-hero-inner">
+        <div class="team-hero-qr">
+          <img src="qr-code.png" alt="扫码访问">
+        </div>
+        <div class="team-hero-text">
+          <h1><span class="title-text" data-i18n="team_hero_title">找队友</span><span class="emoji">🥹</span></h1>
+          <p data-i18n="team_hero_subtitle">精准匹配学术伙伴，构建高信任科研协作网络</p>
+          <a href="#details" class="btn btn-primary" data-i18n="team_btn_learn">了解更多</a>
+        </div>
+      </div>
       <div class="scroll-hint">
         <span data-i18n="team_scroll_hint">向下滚动</span>
         <svg viewBox="0 0 24 24"><path d="M12 5 L12 19 M5 12 L12 19 L19 12"/></svg>
