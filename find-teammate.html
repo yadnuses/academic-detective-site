@@ -31,11 +31,20 @@
       opacity: 0;
       transform: translateY(20px);
       animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .team-hero h1 .title-text {
       background: linear-gradient(180deg, #ffffff 0%, #a0a0b0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       text-shadow: 0 0 60px rgba(0, 113, 227, 0.15);
+    }
+
+    .team-hero h1 .emoji {
+      -webkit-text-fill-color: initial;
+      color: inherit;
+      font-weight: 400;
     }
 
     .team-hero p {
@@ -240,7 +249,7 @@
   <div class="team-page">
     <!-- Hero Section -->
     <section class="team-hero" id="home">
-      <h1><span data-i18n="team_hero_title">找队友</span>🥹</h1>
+      <h1><span class="title-text" data-i18n="team_hero_title">找队友</span><span class="emoji">🥹</span></h1>
       <p data-i18n="team_hero_subtitle">精准匹配学术伙伴，构建高信任科研协作网络</p>
       <a href="#details" class="btn btn-primary" data-i18n="team_btn_learn">了解更多</a>
       <div class="scroll-hint">
