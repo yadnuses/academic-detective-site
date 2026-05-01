@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>找队友 | 学术背景调查服务</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .team-page {
+      min-height: 100vh;
+      background: var(--space-black);
+      padding-top: 48px;
+    }
+
+    .team-hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .team-hero h1 {
+      font-size: clamp(56px, 14vw, 140px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -3px;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      background: linear-gradient(180deg, #ffffff 0%, #a0a0b0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 60px rgba(0, 113, 227, 0.15);
+    }
+
+    .team-hero p {
+      font-size: 18px;
+      color: rgba(240,240,250,0.6);
+      max-width: 560px;
+      margin-bottom: 36px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
+    }
+
+    .team-hero .btn {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.24s forwards;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(240,240,250,0.35);
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+    }
+
+    .scroll-hint svg {
+      width: 20px;
+      height: 20px;
+      stroke: rgba(240,240,250,0.35);
+      stroke-width: 2;
+      fill: none;
+      animation: bounceDown 1.5s ease-in-out infinite;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounceDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    .team-hero {
+      position: relative;
+    }
+
+    /* Details Section */
+    .details-section {
+      padding: 100px 24px 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: linear-gradient(180deg, var(--space-black) 0%, #0a0a0c 100%);
+    }
+
+    .details-section .section-title {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .details-section .section-title.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .detail-card {
+      padding: 32px 28px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      text-align: left;
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .detail-card.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .detail-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .detail-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(0,113,227,0.12);
+      border: 1.5px solid rgba(0,113,227,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .detail-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--apple-blue);
+      stroke-width: 1.8;
+      fill: none;
+    }
+
+    .detail-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--spectral-white);
+      margin-bottom: 10px;
+      letter-spacing: -0.2px;
+    }
+
+    .detail-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(240,240,250,0.65);
+    }
+
+    .details-intro {
+      max-width: 640px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(240,240,250,0.7);
+      margin-bottom: 56px;
+    }
+
+    .details-cta {
+      margin-top: 64px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+      .scroll-hint {
+        display: none;
+      }
+    }
+
+    /* Stagger delays for cards */
+    .detail-card:nth-child(1).revealed { transition-delay: 0.1s; }
+    .detail-card:nth-child(2).revealed { transition-delay: 0.22s; }
+    .detail-card:nth-child(3).revealed { transition-delay: 0.34s; }
+    .detail-card:nth-child(4).revealed { transition-delay: 0.46s; }
+    .detail-card:nth-child(5).revealed { transition-delay: 0.58s; }
+    .detail-card:nth-child(6).revealed { transition-delay: 0.70s; }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <div class="lang-switch" onclick="toggleLang()">
+        <span class="lang-zh active">中文</span>
+        <span>/</span>
+        <span class="lang-en">ENGLISH</span>
+      </div>
+      <div class="logo">Academic detective</div>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav_home">首页</a></li>
+        <li><a href="investigate.html" data-i18n="nav_investigate">开始调查</a></li>
+        <li><a href="deep-service.html" data-i18n="nav_deep_service">深度服务</a></li>
+        <li><a href="find-teammate.html" data-i18n="nav_find_teammate">找队友</a></li>
+        <li><a href="index.html#contact" data-i18n="nav_contact">联系我们</a></li>
+      </ul>
+      <button class="mobile-menu-btn">&#9776;</button>
+    </div>
+  </nav>
+
+  <div class="team-page">
+    <!-- Hero Section -->
+    <section class="team-hero" id="home">
+      <h1 data-i18n="team_hero_title">找队友</h1>
+      <p data-i18n="team_hero_subtitle">精准匹配学术伙伴，构建高信任科研协作网络</p>
+      <a href="#details" class="btn btn-primary" data-i18n="team_btn_learn">了解更多</a>
+      <div class="scroll-hint">
+        <span data-i18n="team_scroll_hint">向下滚动</span>
+        <svg viewBox="0 0 24 24"><path d="M12 5 L12 19 M5 12 L12 19 L19 12"/></svg>
+      </div>
+    </section>
+
+    <!-- Details Section -->
+    <section class="details-section" id="details">
+      <h2 class="section-title" id="details-title" data-i18n="team_details_title">我们帮你找到对的人</h2>
+      <p class="details-intro" data-i18n="team_details_intro">基于学术背景调查的核心能力，我们为科研工作者提供可信的协作伙伴匹配服务。从学术履历核实到合作契合度评估，每一步都以数据为根基。</p>
+
+      <div class="details-grid">
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+          </div>
+          <h3 data-i18n="team_card1_title">学术履历核实</h3>
+          <p data-i18n="team_card1_desc">对潜在合作者的教育背景、论文产出、项目经历进行交叉验证，确保信息真实可信。</p>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6 L12 12 L16 14"/></svg>
+          </div>
+          <h3 data-i18n="team_card2_title">研究方向匹配</h3>
+          <p data-i18n="team_card2_desc">通过论文关键词、基金项目、学术谱系分析，精准识别研究兴趣高度契合的候选人。</p>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 data-i18n="team_card3_title">合作网络分析</h3>
+          <p data-i18n="team_card3_desc">绘制目标学者的合著网络与机构关联图谱，识别其团队协作模式与独立研究能力。</p>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3 data-i18n="team_card4_title">学术声誉评估</h3>
+          <p data-i18n="team_card4_desc">综合引用影响力、同行评价、学术诚信记录，形成多维度的合作风险评估报告。</p>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          </div>
+          <h3 data-i18n="team_card5_title">项目适配度评分</h3>
+          <p data-i18n="team_card5_desc">根据你的课题需求与团队缺口，量化候选人的技能互补性与时间投入可行性。</p>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3 data-i18n="team_card6_title">可信推荐闭环</h3>
+          <p data-i18n="team_card6_desc">每一份推荐报告均附带原始数据来源与验证路径，让合作决策建立在透明信息之上。</p>
+        </div>
+      </div>
+
+      <div class="details-cta">
+        <a href="investigate.html" class="btn btn-ghost" data-i18n="team_btn_back">返回调查服务</a>
+        <a href="index.html#contact" class="btn btn-primary" data-i18n="team_btn_contact">预约咨询</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <span data-i18n="footer">&copy; 2026 学术背景调查服务. YADNUS QINGSHAN.</span>
+  </footer>
+
+  <script src="lang.js?v=2"></script>
+  <script>
+    window.translations = {
+      nav_home: { zh: '首页', en: 'HOME' },
+      nav_investigate: { zh: '开始调查', en: 'INVESTIGATE' },
+      nav_deep_service: { zh: '深度服务', en: 'DEEP SERVICE' },
+      nav_find_teammate: { zh: '找队友', en: 'FIND TEAMMATES' },
+      nav_contact: { zh: '联系我们', en: 'CONTACT' },
+      team_hero_title: { zh: '找队友', en: 'Find Teammates' },
+      team_hero_subtitle: { zh: '精准匹配学术伙伴，构建高信任科研协作网络', en: 'Precisely match academic partners. Build a high-trust research collaboration network.' },
+      team_btn_learn: { zh: '了解更多', en: 'Learn More' },
+      team_scroll_hint: { zh: '向下滚动', en: 'Scroll Down' },
+      team_details_title: { zh: '我们帮你找到对的人', en: 'We Help You Find the Right People' },
+      team_details_intro: { zh: '基于学术背景调查的核心能力，我们为科研工作者提供可信的协作伙伴匹配服务。从学术履历核实到合作契合度评估，每一步都以数据为根基。', en: 'Leveraging our core academic background investigation capabilities, we provide researchers with trusted collaborator matching services. From credential verification to compatibility assessment, every step is data-driven.' },
+      team_card1_title: { zh: '学术履历核实', en: 'Credential Verification' },
+      team_card1_desc: { zh: '对潜在合作者的教育背景、论文产出、项目经历进行交叉验证，确保信息真实可信。', en: 'Cross-verify potential collaborators education, publications, and project history to ensure credibility.' },
+      team_card2_title: { zh: '研究方向匹配', en: 'Research Alignment' },
+      team_card2_desc: { zh: '通过论文关键词、基金项目、学术谱系分析，精准识别研究兴趣高度契合的候选人。', en: 'Identify highly aligned candidates through keyword analysis, grant records, and academic pedigree mapping.' },
+      team_card3_title: { zh: '合作网络分析', en: 'Collaboration Network Analysis' },
+      team_card3_desc: { zh: '绘制目标学者的合著网络与机构关联图谱，识别其团队协作模式与独立研究能力。', en: 'Map co-authorship networks and institutional ties to understand team dynamics and independent capacity.' },
+      team_card4_title: { zh: '学术声誉评估', en: 'Reputation Assessment' },
+      team_card4_desc: { zh: '综合引用影响力、同行评价、学术诚信记录，形成多维度的合作风险评估报告。', en: 'Synthesize citation impact, peer reviews, and integrity records into a multi-dimensional risk assessment.' },
+      team_card5_title: { zh: '项目适配度评分', en: 'Project Fit Scoring' },
+      team_card5_desc: { zh: '根据你的课题需求与团队缺口，量化候选人的技能互补性与时间投入可行性。', en: 'Quantify skill complementarity and time commitment feasibility based on your project needs and team gaps.' },
+      team_card6_title: { zh: '可信推荐闭环', en: 'Trusted Recommendation Loop' },
+      team_card6_desc: { zh: '每一份推荐报告均附带原始数据来源与验证路径，让合作决策建立在透明信息之上。', en: 'Every recommendation includes source data and verification trails, so collaboration decisions rest on transparent information.' },
+      team_btn_back: { zh: '返回调查服务', en: 'Back to Investigation' },
+      team_btn_contact: { zh: '预约咨询', en: 'Book a Consultation' },
+      footer: { zh: '&copy; 2026 学术背景调查服务. YADNUS QINGSHAN.', en: '&copy; 2026 Academic Investigation Service. YADNUS QINGSHAN.' }
+    };
+
+    var lang = localStorage.getItem('lang') || 'zh';
+    var t = window.translations || {};
+    function i18n(key) {
+      return (t[key] && t[key][lang]) ? t[key][lang] : (t[key] ? t[key].zh : key);
+    }
+    window.i18n = i18n;
+  </script>
+  <script>
+    // Scroll reveal for details section
+    (function() {
+      var title = document.getElementById('details-title');
+      var cards = document.querySelectorAll('.detail-card');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      if (title) observer.observe(title);
+      cards.forEach(function(card) {
+        observer.observe(card);
+      });
+    })();
+
+    // Mobile menu toggle
+    (function() {
+      var btn = document.querySelector('.mobile-menu-btn');
+      var nav = document.querySelector('.nav-links');
+      if (btn && nav) {
+        btn.addEventListener('click', function() {
+          nav.classList.toggle('open');
+        });
+        nav.querySelectorAll('a').forEach(function(a) {
+          a.addEventListener('click', function() {
+            nav.classList.remove('open');
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "date": "2026-04-19",
+  "window": "7d",
+  "metrics": {
+    "commits": 15,
+    "contributors": 1,
+    "prs_merged": 0,
+    "insertions": 5169,
+    "deletions": 114,
+    "net_loc": 5055,
+    "test_loc": 0,
+    "test_ratio": 0.0,
+    "active_days": 3,
+    "sessions": 4,
+    "deep_sessions": 1,
+    "avg_session_minutes": 34,
+    "loc_per_session_hour": 2250,
+    "feat_pct": 0.67,
+    "fix_pct": 0.13,
+    "peak_hour": 6,
+    "ai_assisted_commits": 0
+  },
+  "authors": {
+    "yadnuses": {
+      "commits": 15,
+      "insertions": 5169,
+      "deletions": 114,
+      "test_ratio": 0.0,
+      "top_area": "root"
+    }
+  },
+  "version_range": null,
+  "streak_days": 3,
+  "tweetable": "Week of Apr 13: 15 commits (solo), 5.1k LOC, 0% tests, 0 PRs, peak: 6am | Streak: 3d"
+}
