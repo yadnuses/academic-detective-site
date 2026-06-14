@@ -1,0 +1,1191 @@
+/* ============================================
+   论坛汇报 - 算法化信息聚合器
+   学术极简风演示样式
+   ============================================ */
+
+/* ---- CSS 变量 ---- */
+:root {
+  --primary: rgb(30, 50, 100);
+  --primary-dark: rgb(30, 30, 30);
+  --accent-red: rgb(160, 60, 60);
+  --accent-gold: rgb(180, 140, 80);
+  --accent-warn: rgb(140, 40, 40);
+  --bg: #ffffff;
+  --bg-card: rgb(245, 245, 245);
+  --bg-quote: rgb(250, 250, 250);
+  --text: rgb(30, 30, 30);
+  --text-secondary: rgb(80, 80, 80);
+  --text-muted: rgb(128, 128, 128);
+  --border: rgb(220, 220, 220);
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --radius: 6px;
+}
+
+/* ---- 基础重置 ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ---- 字体工具类 ---- */
+.font-hei {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+.font-song {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+}
+
+.font-kai {
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+}
+
+.font-mono {
+  font-family: 'Courier New', 'Menlo', 'Monaco', monospace;
+}
+
+/* ---- Slide 容器 ---- */
+.slide-container {
+  scroll-snap-type: y proximity;
+  overflow-y: auto;
+  height: 100vh;
+  width: 100%;
+}
+
+.slide {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px 80px;
+  position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.slide-content {
+  width: 100%;
+  max-width: 960px;
+  position: relative;
+}
+
+/* ---- 页脚页码 ---- */
+.slide-footer {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  font-size: 10pt;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+/* ---- 右侧圆点导航 ---- */
+.dot-nav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+.dot-nav-item {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  border: none;
+  padding: 0;
+  appearance: none;
+}
+
+.dot-nav-item:hover,
+.dot-nav-item.active {
+  background: var(--primary);
+  transform: scale(1.3);
+}
+
+.dot-nav-item .tooltip {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--primary-dark);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.dot-nav-item:hover .tooltip {
+  opacity: 1;
+}
+
+/* ---- 翻页按钮 ---- */
+.page-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 80px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 200;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+  box-shadow: var(--shadow);
+}
+
+.page-btn:hover {
+  opacity: 1;
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.page-btn.prev { left: 20px; }
+.page-btn.next { right: 20px; }
+
+.page-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- 全屏按钮 ---- */
+.fullscreen-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  z-index: 300;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+}
+
+.fullscreen-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.fullscreen-btn:active {
+  transform: scale(0.95);
+}
+
+/* ---- 粒子卡片（P5专用） ---- */
+.particle-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.particle-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.particle-card-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.particle-card-tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 12px;
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+.particle-card-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-node {
+  width: 100px;
+  height: 36px;
+  border: 1.5px solid var(--primary);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text);
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  background: var(--bg);
+}
+
+.preview-line {
+  width: 2px;
+  height: 16px;
+  background: var(--primary);
+  border-radius: 1px;
+}
+
+/* ---- 粒子画布（P5内嵌） ---- */
+.particle-canvas-wrapper {
+  transition: height 0.5s ease;
+  overflow: hidden;
+}
+
+#p5ParticleCanvas {
+  width: 100%;
+  height: 240px;
+  display: block;
+  border-radius: var(--radius);
+  background: #fafafa;
+  border: 1px solid var(--border);
+}
+
+/* ---- 动画系统 ---- */
+.animate-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.slide.active .animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 阶梯延迟 */
+.slide.active .animate-in:nth-child(1) { transition-delay: 0.0s; }
+.slide.active .animate-in:nth-child(2) { transition-delay: 0.1s; }
+.slide.active .animate-in:nth-child(3) { transition-delay: 0.2s; }
+.slide.active .animate-in:nth-child(4) { transition-delay: 0.3s; }
+.slide.active .animate-in:nth-child(5) { transition-delay: 0.4s; }
+.slide.active .animate-in:nth-child(6) { transition-delay: 0.5s; }
+.slide.active .animate-in:nth-child(7) { transition-delay: 0.6s; }
+.slide.active .animate-in:nth-child(8) { transition-delay: 0.7s; }
+.slide.active .animate-in:nth-child(9) { transition-delay: 0.8s; }
+.slide.active .animate-in:nth-child(10) { transition-delay: 0.9s; }
+
+/* 取消动画的类 */
+.no-animate {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* ---- 页面标题 ---- */
+.slide-title {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 24pt;
+  font-weight: bold;
+  color: var(--primary);
+  margin-bottom: 32px;
+  line-height: 1.3;
+}
+
+.slide-title.light {
+  font-size: 18pt;
+  color: var(--text-secondary);
+}
+
+/* ---- 学术三线表 ---- */
+.academic-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 20px 0;
+}
+
+.academic-table thead {
+  border-top: 1.5pt solid var(--text);
+  border-bottom: 1pt solid var(--text);
+}
+
+.academic-table thead th {
+  background: var(--bg-card);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: bold;
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+.academic-table tbody tr {
+  border-bottom: 0.5pt solid var(--border);
+}
+
+.academic-table tbody tr:last-child {
+  border-bottom: 1.5pt solid var(--text);
+}
+
+.academic-table tbody td {
+  padding: 12px 16px;
+  vertical-align: top;
+}
+
+/* ---- 大字号引语 ---- */
+.quote-hero {
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+  font-size: 28px;
+  font-style: italic;
+  color: var(--accent-red);
+  text-align: center;
+  line-height: 1.6;
+  margin: 24px 0;
+}
+
+.quote-source {
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* ---- 流程图节点 ---- */
+.flow-box {
+  background: var(--bg-card);
+  border: 1pt solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  text-align: center;
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  min-width: 100px;
+}
+
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 20px;
+  padding: 4px 0;
+}
+
+.flow-arrow.horizontal {
+  padding: 0 8px;
+}
+
+/* ---- 对比框 ---- */
+.compare-box {
+  border-radius: var(--radius);
+  padding: 20px;
+  background: var(--bg);
+}
+
+.compare-box.loose {
+  border: 1.5px dashed var(--border);
+}
+
+.compare-box.strict {
+  border: 1.5px solid var(--text);
+  box-shadow: var(--shadow-md);
+}
+
+.compare-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 12px;
+  text-align: center;
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+}
+
+/* 系统框模拟 */
+.system-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.system-tag {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+.system-tag.danger {
+  background: var(--accent-warn);
+  color: #fff;
+}
+
+.system-tag.info {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* ---- 理论卡片 ---- */
+.theory-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  border-left: 3px solid var(--accent-gold);
+}
+
+.theory-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.theory-card .card-label {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 14px;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.theory-card .card-summary {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.theory-card .card-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 12px;
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+}
+
+/* 理论面板 */
+.theory-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  width: 90%;
+  max-width: 720px;
+  max-height: 80vh;
+  background: var(--bg);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s ease;
+  overflow-y: auto;
+  padding: 40px 44px;
+  border: 1px solid var(--border);
+}
+
+.theory-panel.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.theory-panel .panel-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--text-secondary);
+  transition: all 0.3s;
+}
+
+.theory-panel .panel-close:hover {
+  background: var(--accent-red);
+  color: #fff;
+  border-color: var(--accent-red);
+}
+
+.theory-panel .panel-title {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 20px;
+  color: var(--primary);
+  margin-bottom: 8px;
+  padding-right: 40px;
+}
+
+.theory-panel .panel-source {
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.theory-panel .panel-body {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--text);
+}
+
+.theory-panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+  z-index: 199;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.theory-panel-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---- 信息源对比网格 ---- */
+.info-source-grid {
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin: 32px 0;
+}
+
+.info-source-item {
+  flex: 1;
+  text-align: center;
+  padding: 24px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.info-source-item .icon-box {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border: 1.5px solid var(--primary);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 20px;
+}
+
+.info-source-item .source-name {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 16px;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.info-source-item .source-desc {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ---- 原则卡片 ---- */
+.principle-card {
+  display: flex;
+  gap: 0;
+  margin-bottom: 12px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.principle-card .principle-num {
+  width: 44px;
+  min-height: 68px;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.principle-card .principle-body {
+  padding: 12px 16px;
+  flex: 1;
+}
+
+.principle-card .principle-title {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 15px;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.principle-card .principle-desc {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.principle-card .principle-response {
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+  font-size: 12px;
+  color: var(--accent-red);
+  margin-top: 4px;
+}
+
+/* ---- 常用内联样式类 ---- */
+.section-heading {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 18px;
+  color: var(--primary);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary);
+  display: inline-block;
+}
+
+.card-title {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 15px;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+/* ---- 辅助布局 ---- */
+.flex-row {
+  display: flex;
+  gap: 32px;
+  align-items: stretch;
+}
+
+.flex-row > * {
+  flex: 1;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mt-4 { margin-top: 32px; }
+
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+.mb-4 { margin-bottom: 32px; }
+
+/* ---- 特殊组件 ---- */
+.big-arrow {
+  font-size: 32px;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.big-arrow.red {
+  color: var(--accent-red);
+}
+
+.dark-box {
+  background: var(--primary-dark);
+  color: #fff;
+  padding: 24px;
+  border-radius: var(--radius);
+}
+
+.dark-box .box-title {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.dark-box .box-sub {
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.highlight-box {
+  background: var(--bg-quote);
+  border-left: 3px solid var(--accent-warn);
+  padding: 16px 20px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.bordered-box {
+  border: 2px solid var(--primary);
+  padding: 20px;
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.gold-bordered-box {
+  border: 2px solid var(--accent-gold);
+  padding: 20px;
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+.tag.primary { background: var(--primary); color: #fff; }
+.tag.gold { background: var(--accent-gold); color: #fff; }
+.tag.gray { background: var(--text-muted); color: #fff; }
+
+/* 封面特殊样式 */
+.slide-cover {
+  text-align: center;
+}
+
+.slide-cover .cover-title {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 32pt;
+  font-weight: bold;
+  color: var(--primary);
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+.slide-cover .cover-subtitle {
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+  font-size: 18pt;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+}
+
+.slide-cover .cover-info {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  font-size: 16pt;
+  color: var(--text-muted);
+}
+
+/* 引用条 */
+.cite-bar {
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* 收束句 */
+.closing-line {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 24px;
+  line-height: 1.6;
+}
+
+.closing-line.big {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--accent-warn);
+}
+
+/* 齿轮节点 */
+.gear-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  text-align: center;
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 14px;
+  position: relative;
+}
+
+.gear-node::after {
+  content: "↓";
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.gear-node:last-child::after {
+  display: none;
+}
+
+/* 分布图文字模拟 */
+.bar-chart-text {
+  font-family: 'Courier New', 'Menlo', 'Monaco', monospace;
+  font-size: 14px;
+  line-height: 2;
+  color: var(--text);
+}
+
+.bar-chart-text .bar-label {
+  display: inline-block;
+  width: 100px;
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+}
+
+.bar-chart-text .bar-fill {
+  color: var(--primary);
+  letter-spacing: 2px;
+}
+
+/* 信息碎片 */
+.info-fragment {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  font-size: 14px;
+}
+
+.info-fragment .fragment-source {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 13px;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.info-fragment .fragment-content {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  color: var(--text-secondary);
+}
+
+/* 验证维度 */
+.verify-dim {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.verify-dim:last-child {
+  border-bottom: none;
+}
+
+.verify-dim .dim-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.verify-dim .dim-text {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* 漏斗图形 */
+.funnel-shape {
+  width: 120px;
+  height: 160px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.funnel-shape .funnel-top {
+  width: 100%;
+  height: 40px;
+  border: 2px solid var(--primary);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+}
+
+.funnel-shape .funnel-mid {
+  width: 70%;
+  height: 60px;
+  margin: 0 auto;
+  border-left: 2px solid var(--primary);
+  border-right: 2px solid var(--primary);
+}
+
+.funnel-shape .funnel-bot {
+  width: 40%;
+  height: 40px;
+  margin: 0 auto;
+  border: 2px solid var(--primary);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+
+/* 再语境化信息块 */
+.context-block {
+  text-align: center;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+
+.context-block .ctx-name {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 14px;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.context-block .ctx-source {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* 对话气泡 */
+.chat-bubble {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 16px 20px;
+  position: relative;
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.chat-bubble::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid var(--bg-card);
+}
+
+/* 递进收束 */
+.progression-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.progression-item:last-child {
+  border-bottom: none;
+}
+
+.progression-item .prog-arrow {
+  color: var(--accent-gold);
+  font-size: 20px;
+}
+
+.progression-item .prog-text {
+  font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 16px;
+  color: var(--text);
+}
+
+/* 底部呼应句 */
+.echo-line {
+  font-family: 'SimSun', 'Songti SC', 'STSong', 'FangSong', serif;
+  font-size: 11pt;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* 核心发现 */
+.core-finding {
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+  font-size: 15px;
+  color: var(--accent-red);
+  text-align: center;
+  margin-top: 24px;
+  line-height: 1.7;
+}
+
+.core-finding.left {
+  text-align: left;
+}
+
+/* 小字注释 */
+.small-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;
+}
+
+/* 论文列表模拟 */
+.paper-list-mock {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 2;
+}
+
+.paper-list-mock .paper-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.paper-list-mock .paper-item.dim {
+  color: var(--border);
+}
+
+/* 打印与 PDF 导出 */
+@media print {
+  .dot-nav,
+  .page-btn,
+  .fullscreen-btn,
+  .theory-panel-overlay,
+  .theory-panel,
+  .card-hint {
+    display: none !important;
+  }
+
+  .slide-container {
+    scroll-snap-type: none;
+    overflow: visible;
+    height: auto;
+  }
+
+  .slide {
+    min-height: 100vh;
+    page-break-after: always;
+    page-break-inside: avoid;
+    display: flex;
+    opacity: 1 !important;
+  }
+
+  .slide:last-child {
+    page-break-after: auto;
+  }
+
+  .slide-content {
+    max-width: 100%;
+  }
+
+  .animate-in {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .particle-canvas-wrapper {
+    height: 0 !important;
+  }
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .dot-nav,
+  .page-btn {
+    display: none !important;
+  }
+
+  .flex-row {
+    flex-direction: column;
+  }
+
+  .slide {
+    padding: 40px 20px 60px;
+  }
+
+  .slide-title {
+    font-size: 20pt;
+  }
+
+  .slide-cover .cover-title {
+    font-size: 24pt;
+  }
+
+  .info-source-grid {
+    flex-direction: column;
+  }
+
+  .theory-panel {
+    width: 92%;
+    padding: 32px 24px;
+  }
+
+  .quote-hero {
+    font-size: 22px;
+  }
+}

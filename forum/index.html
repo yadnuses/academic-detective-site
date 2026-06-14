@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>算法化信息聚合器的权威风险与规制边界</title>
+  <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+
+<div class="slide-container">
+
+  <!-- ====== 第1页：封面 ====== -->
+  <section class="slide slide-cover" id="slide-1">
+    <div class="slide-content">
+      <div class="animate-in">
+        <h1 class="cover-title">算法化信息聚合器的权威风险与规制边界</h1>
+      </div>
+      <div class="animate-in">
+        <p class="cover-subtitle">——基于开源学术情报工具的探索性案例研究</p>
+      </div>
+      <div class="animate-in">
+        <p class="cover-info">周墨 ｜ 南京师范大学文学院</p>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">1 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第2页：困境引入 ====== -->
+  <section class="slide" id="slide-2">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">从"选导师靠玄学"说起</h2>
+      
+      <div class="flex-row" style="gap: 40px; align-items: flex-start;">
+        <!-- 板块一：选导师的困境 -->
+        <div class="animate-in" style="flex: 1.2;">
+          <h3 class="section-heading">一、选导师的困境</h3>
+          
+          <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+            升学择校时，如何选择导师是一个现实问题：导师会不会卡毕业？进组压力大不大？但当我们真正去了解时，能够获取到的信息却非常碎片化。
+          </p>
+
+          <div class="info-source-grid" style="margin: 20px 0;">
+            <div class="info-source-item">
+              <div class="icon-box">🏛</div>
+              <div class="source-name">学院官网</div>
+              <div class="source-desc">经组织筛选的<br>前台形象</div>
+            </div>
+            <div class="info-source-item">
+              <div class="icon-box">📄</div>
+              <div class="source-name">论文库</div>
+              <div class="source-desc">知网、谷歌学术<br>难以转化为质量判断</div>
+            </div>
+            <div class="info-source-item">
+              <div class="icon-box">💬</div>
+              <div class="source-name">社交媒体</div>
+              <div class="source-desc">知乎、小红书<br>匿名、碎片化、情绪化</div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-quote); border-left: 3px solid var(--accent-red); padding: 16px 20px; border-radius: 0 var(--radius) var(--radius) 0; margin-top: 16px;">
+            <p style="font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif; font-size: 16px; color: var(--text); line-height: 1.7; margin-bottom: 8px;">"选导师基本靠玄学。"</p>
+            <p style="font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif; font-size: 16px; color: var(--text); line-height: 1.7; margin-bottom: 8px;">"主要还是问学长学姐，但说实话学长学姐说的也不一定准。"</p>
+            <p style="font-size: 13px; color: var(--text-muted); font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;">—— 应届学生访谈</p>
+          </div>
+        </div>
+
+        <!-- 板块二：聚合工具的介入 -->
+        <div class="animate-in" style="flex: 1;">
+          <h3 class="section-heading">二、聚合工具的介入</h3>
+          
+          <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;">
+            近年来，一批基于开源情报方法的学术背景调查工具开始介入这一场景，聚合多源公开数据进行声誉画像。
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="background: var(--bg-card); border-radius: var(--radius); padding: 16px 20px; border: 1px solid var(--border); border-left: 3px solid var(--primary);">
+              <div class="card-title">导师评价网</div>
+              <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">国内匿名评价平台，积累大量学生经验反馈</div>
+            </div>
+            <div style="background: var(--bg-card); border-radius: var(--radius); padding: 16px 20px; border: 1px solid var(--border); border-left: 3px solid var(--accent-gold);">
+              <div class="card-title">PubPeer</div>
+              <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">国际平台，提供已发表论文的公开质疑与讨论空间</div>
+            </div>
+            <div style="background: var(--bg-card); border-radius: var(--radius); padding: 16px 20px; border: 1px solid var(--border); border-left: 3px solid var(--accent-red);">
+              <div class="card-title">开源学术情报工具</div>
+              <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">身份画像 · 产出统计 · 异常模式识别 · 报告生成</div>
+            </div>
+            <div style="background: var(--bg-card); border-radius: var(--radius); padding: 16px 20px; border: 1px solid var(--border); border-left: 3px solid var(--text-muted);">
+              <div class="card-title">OSINT 背调系统</div>
+              <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">企业尽调、人员背景调查与声誉管理</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">2 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第3页：经典理论的解释缝隙 ====== -->
+  <section class="slide" id="slide-3">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">经典理论为何解释不了算法聚合？</h2>
+      
+      <div class="flex-row">
+        <div class="flex-col" style="flex: 1.5;">
+          <div class="theory-card animate-in" data-theory="akerlof">
+            <div class="card-label">Akerlof · 柠檬市场（1970）</div>
+            <div class="card-summary">信息劣势方无法分辨质量时，市场会失灵。学生选导师正是典型的信息不对称场景。</div>
+            <div class="card-why" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 13px; color: var(--accent-red); font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif; line-height: 1.6;">→ 被引原因：建立问题起点——学生作为信息劣势方，只能基于粗糙信号作出高风险决策。</div>
+            <div class="card-hint">点击展开详情</div>
+          </div>
+          <div class="theory-card animate-in" data-theory="spence">
+            <div class="card-label">Spence · 信号传递（1973）</div>
+            <div class="card-summary">信息优势方通过职称、论文等信号帮助劣势方识别质量。但传统信号由导师主动释放。</div>
+            <div class="card-why" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 13px; color: var(--accent-red); font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif; line-height: 1.6;">→ 被引原因：揭示解释缝隙——当信号由第三方系统通过公开数据聚合逆向建构时，经典理论失效。</div>
+            <div class="card-hint">点击展开详情</div>
+          </div>
+        </div>
+        <div class="flex-col" style="flex: 1; justify-content: center; align-items: center;">
+          <div class="animate-in big-arrow">→</div>
+          <div class="animate-in bordered-box text-center" style="margin-top: 16px;">
+            <p style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 15px; color: var(--primary);">新结构：信号不由导师主动释放，而由算法被动聚合</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cite-bar animate-in">Artiles & Matusovich (2022); 张爱秀 (2006)</div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">3 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第4页：算法中介与伦理资源 ====== -->
+  <section class="slide" id="slide-4">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">算法中介与聚合伦理</h2>
+      
+      <div class="flex-row">
+        <div class="theory-card animate-in" data-theory="gillespie">
+          <div class="card-label">Gillespie · 信息中介（2014）</div>
+          <div class="card-summary">算法通过排序、筛选和呈现重塑信息的可见性与社会意义，而不只是传递信息。</div>
+          <div class="card-why" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 13px; color: var(--accent-red); font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif; line-height: 1.6;">→ 被引原因：界定研究对象本质——算法化信息聚合器不是搜索引擎，而是重塑信息关系的中介。</div>
+          <div class="card-hint">点击展开详情</div>
+        </div>
+        <div class="theory-card animate-in" data-theory="solove">
+          <div class="card-label">Solove · 聚合侵害（2006）</div>
+          <div class="card-summary">单一数据虽公开，系统性聚合后会产生超出原始披露预期的全新信息。</div>
+          <div class="card-why" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 13px; color: var(--accent-red); font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif; line-height: 1.6;">→ 被引原因：论证"马赛克效应"——分散的论文、评价、网络被聚合后，形成原始发布者未预期的声誉画像。</div>
+          <div class="card-hint">点击展开详情</div>
+        </div>
+        <div class="theory-card animate-in" data-theory="nissenbaum">
+          <div class="card-label">Nissenbaum · 语境完整性（2010）</div>
+          <div class="card-summary">信息流通有语境边界，偏离原始采集时的语境、角色与规则即构成侵犯。</div>
+          <div class="card-why" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 13px; color: var(--accent-red); font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif; line-height: 1.6;">→ 被引原因：提供判断标准——学者的论文、职称、评价原本分布在不同语境中，聚合为风险画像即"再语境化"。</div>
+          <div class="card-hint">点击展开详情</div>
+        </div>
+      </div>
+
+      <div class="closing-line animate-in" style="margin-top: 40px;">
+        三个理论共同构成伦理分析框架：Gillespie 界定对象，Solove 揭示聚合风险，Nissenbaum 划定语境边界。
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">4 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第5页：算法化信息聚合器 ====== -->
+  <section class="slide" id="slide-5">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">算法化信息聚合器</h2>
+      
+      <div class="flex-row" style="align-items: stretch; gap: 24px;">
+        <!-- 左侧卡片：点击触发信息层面动画 -->
+        <div class="animate-in" style="flex: 1;">
+          <div class="particle-card" data-flow="info" style="cursor: pointer;">
+            <div class="particle-card-header">
+              <span class="particle-card-tag" style="background: var(--primary);">信息层面</span>
+              <h3 style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 18px; color: var(--primary); margin: 12px 0 8px;">结构化重构</h3>
+            </div>
+            <div class="particle-card-preview">
+              <div class="preview-node">抓取</div>
+              <div class="preview-line"></div>
+              <div class="preview-node">清洗</div>
+              <div class="preview-line"></div>
+              <div class="preview-node">归类</div>
+              <div class="preview-line"></div>
+              <div class="preview-node">连接</div>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-top: 16px; text-align: center;">核心问题："还有什么信息不可见？"</p>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px; text-align: center;">理论：Gillespie (2014); Beer (2016)</p>
+            <div class="card-hint" style="margin-top: 12px; text-align: center;">点击观看粒子聚合过程</div>
+          </div>
+        </div>
+
+        <!-- 中间：转化箭头 -->
+        <div class="animate-in" style="flex: 0.5; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+          <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 8px;">公开数据碎片</div>
+          <div style="font-size: 28px; color: var(--primary);">↓</div>
+          <div style="font-size: 14px; color: var(--text-muted); margin-top: 8px;">结构化声誉画像</div>
+        </div>
+
+        <!-- 右侧卡片：点击触发认知层面动画 -->
+        <div class="animate-in" style="flex: 1;">
+          <div class="particle-card" data-flow="cognitive" style="cursor: pointer;">
+            <div class="particle-card-header">
+              <span class="particle-card-tag" style="background: var(--accent-gold);">认知层面</span>
+              <h3 style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 18px; color: var(--accent-gold); margin: 12px 0 8px;">算法化转译</h3>
+            </div>
+            <div class="particle-card-preview">
+              <div class="preview-node" style="border-color: var(--accent-gold);">评分规则</div>
+              <div class="preview-line" style="background: var(--accent-gold);"></div>
+              <div class="preview-node" style="border-color: var(--accent-gold);">比较基准</div>
+              <div class="preview-line" style="background: var(--accent-gold);"></div>
+              <div class="preview-node" style="border-color: var(--accent-gold);">模式识别</div>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-top: 16px; text-align: center;">核心问题："这些信息意味着什么？"</p>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px; text-align: center;">理论：Solove (2006); Nissenbaum (2010)</p>
+            <div class="card-hint" style="margin-top: 12px; text-align: center;">点击观看粒子聚合过程</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 粒子动画画布（点击卡片后激活） -->
+      <div class="particle-canvas-wrapper animate-in" style="margin-top: 24px; height: 0; overflow: hidden; transition: height 0.5s ease;" id="particleCanvasWrapper">
+        <canvas id="p5ParticleCanvas" style="width: 100%; height: 240px; display: block; border-radius: var(--radius); background: #fafafa;"></canvas>
+        <div style="text-align: center; margin-top: 8px; font-size: 12px; color: var(--text-muted); font-family: 'KaiTi', 'STKaiti', 'BiauKai', serif;">
+          <span id="canvasHint">点击粒子可改变其形态</span>
+          <button id="stopParticleBtn" style="margin-left: 16px; font-size: 12px; padding: 2px 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); cursor: pointer; color: var(--text-secondary); font-family: 'SimSun', 'Songti SC', serif;">停止动画</button>
+        </div>
+      </div>
+
+      <div class="animate-in dark-box" style="margin-top: 24px;">
+        <p style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 15px; text-align: center;">算法化信息聚合器 — 通过公开数据聚合与算法量化，将分散的声誉信息重组为可比较、可判断、可行动的结构化画像的技术中介。</p>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">5 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第6页：类型辨析与算法权威 ====== -->
+  <section class="slide" id="slide-6">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">类型辨析与算法权威</h2>
+      
+      <table class="academic-table no-animate">
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th>搜索引擎</th>
+            <th>平台推荐系统</th>
+            <th>算法化信息聚合器</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>核心能力</strong></td>
+            <td>索引已有信息</td>
+            <td>预测用户偏好</td>
+            <td>重组公开信息的可见性</td>
+          </tr>
+          <tr>
+            <td><strong>数据基础</strong></td>
+            <td>全网文本</td>
+            <td>用户行为数据</td>
+            <td>对象公开记录</td>
+          </tr>
+          <tr>
+            <td><strong>权力来源</strong></td>
+            <td>检索效率</td>
+            <td>数据垄断</td>
+            <td>公开信息的重新配置</td>
+          </tr>
+          <tr>
+            <td><strong>伦理风险</strong></td>
+            <td>信息过载</td>
+            <td>信息茧房</td>
+            <td>再语境化 / 马赛克效应</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="theory-card animate-in mt-3" data-theory="lustig">
+        <div class="card-label">Lustig & Nardi · 算法权威的生成条件（2015）</div>
+        <div class="card-summary">算法权威不是无条件信任，而是当复杂判断被转译为技术输出（分数、标签）时，这些输出更容易被感知为客观、中立、可信赖的结构性条件。</div>
+        <div class="card-hint">点击展开详情</div>
+      </div>
+
+      <div class="closing-line animate-in">算法权威未必已经形成，但其生成条件已经具备。这正是前置治理的正当性所在。</div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">6 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第7页：技术谱系与典型案例 ====== -->
+  <section class="slide" id="slide-7">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">公开数据聚合的声誉调查谱系</h2>
+      
+      <div class="flex-row animate-in">
+        <div class="info-source-item" style="border: none; background: var(--bg-card);">
+          <div class="source-name">国内</div>
+          <div class="source-desc" style="font-size: 14px; color: var(--text);"><strong>导师评价网</strong><br>匿名评价聚合</div>
+        </div>
+        <div class="info-source-item" style="border: none; background: var(--bg-card);">
+          <div class="source-name">国际</div>
+          <div class="source-desc" style="font-size: 14px; color: var(--text);"><strong>PubPeer / RateMyProfessors</strong><br>论文公开质疑 / 教授评分数据库</div>
+        </div>
+        <div class="info-source-item" style="border: none; background: var(--bg-card);">
+          <div class="source-name">商业</div>
+          <div class="source-desc" style="font-size: 14px; color: var(--text);"><strong>OSINT 背调系统</strong><br>企业尽调、人员背景调查</div>
+        </div>
+      </div>
+
+      <div class="flex-row animate-in" style="margin-top: 32px;">
+        <div class="dark-box" style="flex: 1;">
+          <div class="box-title">耿同学</div>
+          <div class="box-sub">人工开源情报典型案例</div>
+        </div>
+        <div style="flex: 2; padding-left: 24px;">
+          <p style="font-size: 14px; line-height: 2; color: var(--text);">
+            <strong>时间：</strong>2026年连续举报多位985院长/杰青<br>
+            <strong>工具：</strong>公开可下载的论文原始数据<br>
+            <strong>方法：</strong>末位数字分布、等差数列等异常识别<br>
+            <strong>结果：</strong>多所高校免职、解聘、启动调查
+          </p>
+        </div>
+      </div>
+
+      <div class="core-finding animate-in">核心洞察：公开数据聚合的声誉调查能力，已从算法系统扩散到个体行动者。</div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">7 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第8页：研究定位 ====== -->
+  <section class="slide" id="slide-8">
+    <div class="slide-content" style="max-width: 1200px; width: 100%;">
+      <div class="animate-in" style="width: 100%;">
+        <img src="assets/slide8_research_focus.png" alt="研究定位：以单系统为窗口，观察一类机制" style="width: 100%; height: auto; display: block; border-radius: var(--radius);">
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">8 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第9页：三种机制与双层操作的对应 ====== -->
+  <section class="slide" id="slide-9">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">核心发现：三种机制与双层操作</h2>
+      
+      <table class="academic-table no-animate">
+        <thead>
+          <tr>
+            <th>双层操作</th>
+            <th style="text-align: center;">→</th>
+            <th>案例机制</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>信息层面：结构化重构</td>
+            <td style="text-align: center; color: var(--primary); font-size: 18px;">→</td>
+            <td>① 碎片聚合（风险型案例）</td>
+          </tr>
+          <tr>
+            <td>认知层面：算法化转译</td>
+            <td style="text-align: center; color: var(--primary); font-size: 18px;">→</td>
+            <td>② 基准线校准（量化型案例）</td>
+          </tr>
+          <tr>
+            <td>两层协同</td>
+            <td style="text-align: center; color: var(--primary); font-size: 18px;">→</td>
+            <td>③ 交叉验证（结构型案例）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="small-note animate-in" style="margin-top: 24px;">案例选择标准：完整七步流程、信息维度差异显著、公开数据来源可追溯</p>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">9 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第10页：机制一——碎片聚合 ====== -->
+  <section class="slide" id="slide-10">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">机制一：碎片聚合（信息层面的结构化重构）</h2>
+      
+      <div class="flex-row" style="align-items: center;">
+        <div class="animate-in" style="flex: 1;">
+          <div class="flex-col">
+            <div class="info-fragment">
+              <div class="fragment-source">官网</div>
+              <div class="fragment-content">职称、研究方向</div>
+            </div>
+            <div class="info-fragment">
+              <div class="fragment-source">论文库</div>
+              <div class="fragment-content">署名列表</div>
+            </div>
+            <div class="info-fragment">
+              <div class="fragment-source">社交媒体</div>
+              <div class="fragment-content">零散评价</div>
+            </div>
+            <div class="info-fragment">
+              <div class="fragment-source">时间线</div>
+              <div class="fragment-content">职业轨迹</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="animate-in" style="flex: 0.5; text-align: center;">
+          <div class="big-arrow">→</div>
+          <p style="font-size: 13px; color: var(--primary); font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; margin-top: 8px;">结构化重构</p>
+        </div>
+
+        <div class="animate-in" style="flex: 1;">
+          <div class="bordered-box">
+            <p style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 15px; color: var(--primary); margin-bottom: 12px;">风险模式浮现</p>
+            <ul style="font-size: 14px; color: var(--text-secondary); line-height: 2; padding-left: 20px;">
+              <li>署名频次异常</li>
+              <li>合作者关系固定</li>
+              <li>评价线索汇聚</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="core-finding animate-in">弱信号在聚合后形成互相印证的关系，原本不可见的模式浮现。</div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">10 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第11页：机制二——基准线校准 ====== -->
+  <section class="slide" id="slide-11">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">机制二：基准线校准（认知层面的算法化转译）</h2>
+      
+      <div class="flex-row" style="align-items: center;">
+        <div class="animate-in" style="flex: 1;">
+          <div class="paper-list-mock">
+            <div class="paper-item">[1] 论文标题示例一……</div>
+            <div class="paper-item">[2] 论文标题示例二……</div>
+            <div class="paper-item">[3] 论文标题示例三……</div>
+            <div class="paper-item dim">……</div>
+            <div class="paper-item">[18] 论文标题示例十八……</div>
+            <div class="paper-item">[19] 论文标题示例十九……</div>
+          </div>
+        </div>
+
+        <div class="animate-in" style="flex: 0.6; text-align: center;">
+          <div class="flex-col" style="gap: 8px;">
+            <div class="gear-node">多维评分</div>
+            <div class="gear-node">学科基准线</div>
+            <div class="gear-node">期刊层级区分</div>
+          </div>
+          <p style="font-size: 13px; color: var(--primary); font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; margin-top: 12px;">算法化转译</p>
+        </div>
+
+        <div class="animate-in" style="flex: 1;">
+          <div class="gold-bordered-box">
+            <p style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 15px; color: var(--accent-gold); margin-bottom: 12px;">质量画像</p>
+            <div class="bar-chart-text">
+              <div><span class="bar-label">CSSCI论文</span> <span class="bar-fill">████████</span> 70%</div>
+              <div><span class="bar-label">普通期刊</span> <span class="bar-fill">██</span> 30%</div>
+              <div><span class="bar-label">独立一作</span> <span class="bar-fill">████</span> 35%</div>
+              <div><span class="bar-label">合作论文</span> <span class="bar-fill">██████</span> 65%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="core-finding animate-in left">可比较性带来决策便利，也带来风险：评分易被误读为"客观事实"，且内嵌学科偏见。</div>
+      <p class="small-note animate-in" style="text-align: right; margin-top: 8px;">算法偏差示例：格式解析异常、概念整合型创新被低估</p>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">11 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第12页：机制三——交叉验证 ====== -->
+  <section class="slide" id="slide-12">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">机制三：交叉验证（两层协同）</h2>
+      
+      <div class="animate-in" style="background: var(--bg-card); padding: 20px; border-radius: var(--radius); margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="color: #2d8a4e; font-size: 24px;">✓</span>
+          <span style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 16px; color: var(--text);">单一维度 — "顶级期刊论文较多" — 传统渠道的单维度判断</span>
+        </div>
+      </div>
+
+      <div class="animate-in bordered-box">
+        <div class="verify-dim">
+          <div class="dim-icon">1</div>
+          <div class="dim-text"><strong>合著网络：</strong>顶刊依赖少数中心节点？</div>
+        </div>
+        <div class="verify-dim">
+          <div class="dim-icon">2</div>
+          <div class="dim-text"><strong>职业时间线：</strong>独立发表能力与晋升轨迹匹配？</div>
+        </div>
+        <div class="verify-dim">
+          <div class="dim-icon">3</div>
+          <div class="dim-text"><strong>置信度标注：</strong>来源多元且一致→置信度高；来源矛盾→置信度低</div>
+        </div>
+      </div>
+
+      <div class="core-finding animate-in">交叉验证补上关系维度和时间维度，揭示声誉如何在具体社会关系中被生产。</div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">12 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第13页：从效率到权利 ====== -->
+  <section class="slide" id="slide-13">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">从信息效率到权利重构</h2>
+      
+      <div class="animate-in highlight-box">
+        <p style="font-size: 15px; line-height: 1.8;">2026年，博主"耿同学"通过公开论文数据，连续举报多位985高校院长及杰青学者，引发多所高校免职与调查。</p>
+      </div>
+
+      <div class="animate-in" style="margin-top: 40px; text-align: center;">
+        <p style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 18px; color: var(--text-secondary);">公开数据聚合的声誉调查能力已从算法系统扩散到个体行动者</p>
+        <div class="big-arrow red" style="margin: 20px 0;">↓</div>
+        <p style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 20px; font-weight: bold; color: var(--accent-warn);">引发的不仅是技术效率问题，更是伦理与权利问题</p>
+      </div>
+
+      <div class="closing-line animate-in" style="margin-top: 32px;">两类核心风险 →</div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">13 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第14页：马赛克效应 ====== -->
+  <section class="slide" id="slide-14">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">风险一：公开数据聚合的"马赛克效应"</h2>
+      
+      <div class="flex-row">
+        <div class="theory-card animate-in" data-theory="solove">
+          <div class="card-label">Solove · 聚合侵害（2006）</div>
+          <div class="card-summary">即使单一数据公开，系统性聚合后也会产生超出原始披露预期的全新信息。</div>
+          <div class="card-hint">点击展开详情</div>
+        </div>
+        <div class="theory-card animate-in" data-theory="nissenbaum">
+          <div class="card-label">Nissenbaum · 语境完整性（2010）</div>
+          <div class="card-summary">信息的流通具有语境完整性，信息使用是否正当取决于是否偏离原始采集时的语境、角色与规则。</div>
+          <div class="card-hint">点击展开详情</div>
+        </div>
+      </div>
+
+      <div class="animate-in" style="margin-top: 32px;">
+        <div class="flex-row" style="margin-bottom: 16px;">
+          <div class="context-block">
+            <div class="ctx-name">论文署名</div>
+            <div class="ctx-source">论文库语境</div>
+          </div>
+          <div class="context-block">
+            <div class="ctx-name">学生评价</div>
+            <div class="ctx-source">社交媒体语境</div>
+          </div>
+          <div class="context-block">
+            <div class="ctx-name">职称信息</div>
+            <div class="ctx-source">官网语境</div>
+          </div>
+          <div class="context-block">
+            <div class="ctx-name">合作网络</div>
+            <div class="ctx-source">学术网络语境</div>
+          </div>
+        </div>
+        <div class="text-center" style="margin: 12px 0;">
+          <span style="font-size: 24px; color: var(--primary);">↓</span>
+          <span style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 14px; color: var(--primary); margin-left: 8px;">再语境化</span>
+        </div>
+        <div class="bordered-box text-center">
+          <p style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 15px; color: var(--primary);">风险画像：署名异常 + 评价汇聚 + 网络依赖</p>
+        </div>
+      </div>
+
+      <div class="core-finding animate-in">信息没有消失，也没有被伪造，却在新的算法框架中获得了更强的判断力和传播力。</div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">14 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第15页：风险标签的符号权力 ====== -->
+  <section class="slide" id="slide-15">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">风险二：风险标签的"符号权力"</h2>
+      
+      <div class="theory-card animate-in" data-theory="beer">
+        <div class="card-label">Beer · 算法的社会权力（2016）</div>
+        <div class="card-summary">算法通过技术化的表达形式——分数、图谱、标签——提高了特定信息的可见性和可信度。</div>
+        <div class="card-hint">点击展开详情</div>
+      </div>
+
+      <div class="flex-row" style="margin-top: 32px;">
+        <div class="animate-in">
+          <div class="compare-box loose">
+            <div class="chat-bubble">这个导师好像有点问题……</div>
+          </div>
+          <div class="compare-label">主观、情绪化、可质疑</div>
+        </div>
+        <div class="animate-in">
+          <div class="compare-box strict">
+            <div class="system-header">
+              <span class="system-tag danger">高风险</span>
+              <span class="system-tag info">署名异常</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary);">置信度：中 ｜ 来源：多源聚合</p>
+          </div>
+          <div class="compare-label">客观化、系统化、难以反驳</div>
+        </div>
+      </div>
+
+      <div class="core-finding animate-in">标签通过算法形式被赋予"系统结论"的外观，提高了其被接受为客观判断的概率。</div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">15 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第16页：权利结构转向 ====== -->
+  <section class="slide" id="slide-16">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">权利结构的转向：从"信息不足"到"语境失控"</h2>
+      
+      <div class="flex-row" style="align-items: center;">
+        <div class="animate-in" style="flex: 1;">
+          <div style="background: var(--bg-card); padding: 24px; border-radius: var(--radius);">
+            <p style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 16px; color: var(--primary); margin-bottom: 12px;">传统困境</p>
+            <p style="font-size: 14px; line-height: 2; color: var(--text-secondary);">
+              <strong>学生：</strong>信息不足<br>
+              <strong>解决：</strong>熟人网络、道听途说<br>
+              <strong>权利焦点：</strong>知情权
+            </p>
+          </div>
+        </div>
+
+        <div class="animate-in" style="flex: 0.4; text-align: center;">
+          <div class="big-arrow">→</div>
+          <p style="font-size: 13px; color: var(--primary); font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif;">转向</p>
+        </div>
+
+        <div class="animate-in" style="flex: 1;">
+          <div class="bordered-box">
+            <p style="font-family: 'SimHei', 'Heiti SC', 'STHeiti', 'Microsoft YaHei', 'PingFang SC', sans-serif; font-size: 16px; color: var(--primary); margin-bottom: 12px;">算法化聚合后</p>
+            <p style="font-size: 14px; line-height: 2; color: var(--text-secondary);">
+              <strong>学生获得：</strong>更强的信息获取能力<br>
+              <strong>被评价者面临：</strong>可见性压力、<span style="color: var(--accent-warn);">语境失控</span><br>
+              <strong>权利焦点：</strong>名誉权、解释权、纠错权
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="closing-line big animate-in" style="margin-top: 40px;">
+        智能传播时代的权利保护，不能只问"是否收集了个人信息"，而应问"信息被聚合后产生了何种新意义"。
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">16 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第17页：五项前置治理原则 ====== -->
+  <section class="slide" id="slide-17">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">前置治理的五项原则</h2>
+      
+      <div class="no-animate">
+        <div class="principle-card">
+          <div class="principle-num">1</div>
+          <div class="principle-body">
+            <div class="principle-title">透明披露</div>
+            <div class="principle-desc">系统需说明数据来源、评分维度、权重逻辑与比较基准。</div>
+            <div class="principle-response">回应：算法黑箱</div>
+          </div>
+        </div>
+        <div class="principle-card">
+          <div class="principle-num">2</div>
+          <div class="principle-body">
+            <div class="principle-title">最小必要</div>
+            <div class="principle-desc">与决策无关或证据薄弱的信息不应纳入画像。</div>
+            <div class="principle-response">回应：马赛克效应</div>
+          </div>
+        </div>
+        <div class="principle-card">
+          <div class="principle-num">3</div>
+          <div class="principle-body">
+            <div class="principle-title">风险分级</div>
+            <div class="principle-desc">事实、推断与评价应当分开呈现，弱信号不能直接写成强标签。</div>
+            <div class="principle-response">回应：符号权力</div>
+          </div>
+        </div>
+        <div class="principle-card">
+          <div class="principle-num">4</div>
+          <div class="principle-body">
+            <div class="principle-title">申辩纠错</div>
+            <div class="principle-desc">被评价者应能提交事实更正与解释材料。</div>
+            <div class="principle-response">回应：语境失控</div>
+          </div>
+        </div>
+        <div class="principle-card">
+          <div class="principle-num">5</div>
+          <div class="principle-body">
+            <div class="principle-title">辅助决策</div>
+            <div class="principle-desc">报告只能作为信息补充，不能替代直接沟通。</div>
+            <div class="principle-response">回应：替代判断</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="echo-line animate-in">治理目标：不是否定公开数据聚合的价值，而是防止有限证据被包装为过度确定的声誉判断。</p>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">17 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第18页：分层治理 ====== -->
+  <section class="slide" id="slide-18">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in">分层治理：不是"一禁了之"，而是"分层设界"</h2>
+      
+      <table class="academic-table no-animate">
+        <thead>
+          <tr>
+            <th>层级</th>
+            <th>应用场景</th>
+            <th>规制强度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>个人参考型</td>
+            <td>学生择导时的信息补充</td>
+            <td>提示义务 + 人工复核</td>
+          </tr>
+          <tr>
+            <td>公开传播型</td>
+            <td>可检索、可复制的评价系统</td>
+            <td>算法备案 + 申诉机制 + 定期风险评估</td>
+          </tr>
+          <tr>
+            <td>正式决策型</td>
+            <td>招生、聘任、奖惩流程</td>
+            <td>程序正义 + 第三方审计 + 决策留痕</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="closing-line big animate-in" style="margin-top: 40px;">
+        在技术尚未规模化之前讨论规制边界，是最有效的治理时机。
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">18 / 19</span>
+    </div>
+  </section>
+
+  <!-- ====== 第19页：结语 ====== -->
+  <section class="slide slide-cover" id="slide-19">
+    <div class="slide-content">
+      <h2 class="slide-title animate-in" style="margin-bottom: 0; font-size: 32pt;">在"意义之网"中重建比例性边界</h2>
+    </div>
+    <div class="slide-footer">
+      <span class="page-num font-mono">19 / 19</span>
+    </div>
+  </section>
+
+</div>
+
+<script src="js/main.js?v=2"></script>
+</body>
+</html>
