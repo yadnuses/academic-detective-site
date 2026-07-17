@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>物件里的家族 | Fan Family</title>
+  <style>
+    :root {
+      --bg: #f7f3ec;
+      --bg-dark: #e8e0d4;
+      --ink: #2c241b;
+      --ink-light: #5a5045;
+      --paper: #fffef8;
+      --paper-trans: rgba(255, 254, 248, 0.92);
+      --accent: #8b4513;
+      --accent-light: #a65d2e;
+      --muted: #8a7f70;
+      --shadow: rgba(44, 36, 27, 0.15);
+      --shadow-deep: rgba(44, 36, 27, 0.22);
+      --1s: 1s;
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      :root { --1s: 0.001s; }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Noto Serif SC", "Songti SC", "PingFang SC", "Microsoft YaHei", Georgia, serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* 纸张纹理 */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(139, 69, 19, 0.015) 3px, rgba(139, 69, 19, 0.015) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(139, 69, 19, 0.012) 3px, rgba(139, 69, 19, 0.012) 4px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* 顶部导航与进度 */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: linear-gradient(to bottom, var(--bg) 70%, transparent);
+      padding: 1.2rem 2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .top-bar .brand {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      white-space: nowrap;
+      font-family: "Noto Serif SC", serif;
+    }
+
+    .timeline-progress {
+      flex: 1;
+      max-width: 500px;
+      position: relative;
+      height: 3px;
+      background: rgba(139, 69, 19, 0.12);
+      border-radius: 2px;
+    }
+
+    .timeline-progress .fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.15s linear;
+    }
+
+    .top-bar .nav-links {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.78rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .top-bar .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .top-bar .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    @media (max-width: 768px) {
+      .top-bar { padding: 1rem; }
+      .top-bar .brand { font-size: 0.85rem; }
+      .top-bar .nav-links { display: none; }
+    }
+
+    /* 章节侧边导航 */
+    .side-nav {
+      position: fixed;
+      right: 26px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .side-nav a {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      transition: color 0.3s;
+    }
+
+    .side-nav a .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #c9c0b0;
+      transition: all 0.3s var(--ease-out);
+      flex-shrink: 0;
+    }
+
+    .side-nav a .label {
+      opacity: 0;
+      transform: translateX(8px);
+      transition: all 0.3s var(--ease-out);
+    }
+
+    .side-nav a:hover .label,
+    .side-nav a.active .label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .side-nav a:hover .dot,
+    .side-nav a.active .dot {
+      background: var(--accent);
+      transform: scale(1.4);
+    }
+
+    @media (max-width: 900px) {
+      .side-nav { right: 14px; gap: 12px; }
+      .side-nav a .label { display: none; }
+    }
+
+    /* 通用 section */
+    .section {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7rem 2rem 6rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* 开场 */
+    .hero {
+      background:
+        radial-gradient(ellipse at center, rgba(255,254,248,0.92) 0%, rgba(247,243,236,0.85) 70%),
+        url("./assets/photos/其他/IMG_0218.jpg") center/cover no-repeat;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      border: 1px solid rgba(139, 69, 19, 0.3);
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.9s var(--ease-out);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.9s var(--ease-out) 0.1s;
+    }
+
+    .hero .subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--ink-light);
+      max-width: 560px;
+      margin: 0 auto 3rem;
+      line-height: 1.9;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.9s var(--ease-out) 0.2s;
+    }
+
+    .scroll-cue {
+      opacity: 0;
+      transition: opacity 0.9s var(--ease-out) 0.4s;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .scroll-cue .line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      margin: 1rem auto 0;
+      animation: lineGrow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes lineGrow {
+      0%, 100% { transform: scaleY(0.3); opacity: 0.4; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+
+    .hero.loaded .hero-badge,
+    .hero.loaded h1,
+    .hero.loaded .subtitle,
+    .hero.loaded .scroll-cue {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 物件章节 */
+    .object-section {
+      position: relative;
+    }
+
+    .object-section:nth-child(even) {
+      background: rgba(255, 254, 248, 0.5);
+    }
+
+    .object-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 5rem;
+      align-items: center;
+      min-height: 70vh;
+    }
+
+    .object-section:nth-child(even) .object-layout {
+      direction: rtl;
+    }
+
+    .object-section:nth-child(even) .object-visual,
+    .object-section:nth-child(even) .object-text {
+      direction: ltr;
+    }
+
+    /* 视觉区 */
+    .object-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .polaroid {
+      background: var(--paper);
+      padding: 14px 14px 50px 14px;
+      border-radius: 3px;
+      box-shadow:
+        0 12px 40px var(--shadow),
+        0 2px 8px rgba(0,0,0,0.06);
+      transform: rotate(-1.5deg) translateY(40px);
+      opacity: 0;
+      transition: all 1s var(--ease-out);
+      cursor: pointer;
+      max-width: 420px;
+      position: relative;
+    }
+
+    .polaroid::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(139, 69, 19, 0.08);
+      pointer-events: none;
+      border-radius: 2px;
+    }
+
+    .polaroid.visible {
+      opacity: 1;
+      transform: rotate(-1.5deg) translateY(0);
+    }
+
+    .polaroid:hover {
+      transform: rotate(0deg) scale(1.02) translateY(-6px);
+      box-shadow: 0 20px 50px var(--shadow-deep);
+    }
+
+    .polaroid img {
+      width: 100%;
+      max-height: 52vh;
+      object-fit: contain;
+      display: block;
+      background: #f0ebe0;
+      border-radius: 2px;
+    }
+
+    .polaroid .caption {
+      position: absolute;
+      bottom: 16px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-style: italic;
+      padding: 0 1rem;
+    }
+
+    .year-stamp {
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      background: var(--accent);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 4px;
+      box-shadow: 0 4px 14px rgba(139, 69, 19, 0.3);
+      transform: scale(0.8) rotate(8deg);
+      opacity: 0;
+      transition: all 0.6s var(--ease-out) 0.3s;
+      z-index: 5;
+    }
+
+    .polaroid.visible + .year-stamp,
+    .year-stamp.visible {
+      opacity: 1;
+      transform: scale(1) rotate(8deg);
+    }
+
+    /* 文字区 */
+    .object-text {
+      max-width: 480px;
+      padding: 2rem 0;
+    }
+
+    .object-text > * {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s var(--ease-out);
+    }
+
+    .object-text.visible > *:nth-child(1) { transition-delay: 0.1s; }
+    .object-text.visible > *:nth-child(2) { transition-delay: 0.2s; }
+    .object-text.visible > *:nth-child(3) { transition-delay: 0.3s; }
+    .object-text.visible > *:nth-child(4) { transition-delay: 0.4s; }
+    .object-text.visible > *:nth-child(5) { transition-delay: 0.5s; }
+    .object-text.visible > *:nth-child(6) { transition-delay: 0.6s; }
+
+    .object-text.visible > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .chapter-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      text-transform: uppercase;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .object-era {
+      display: inline-block;
+      font-size: 0.78rem;
+      color: #fff;
+      background: var(--accent);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 1.4rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 600;
+    }
+
+    .object-text h2 {
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      line-height: 1.2;
+    }
+
+    .object-text .lead {
+      font-size: 1.08rem;
+      line-height: 1.95;
+      color: var(--ink-light);
+      margin-bottom: 1.4rem;
+    }
+
+    .object-text .context {
+      font-size: 0.97rem;
+      line-height: 1.85;
+      color: var(--muted);
+      margin-bottom: 1.4rem;
+    }
+
+    .object-text .quote {
+      background: rgba(248, 246, 240, 0.8);
+      border-left: 3px solid var(--accent-light);
+      padding: 1rem 1.2rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+      color: var(--ink-light);
+      border-radius: 0 8px 8px 0;
+      font-size: 1.02rem;
+      line-height: 1.75;
+      backdrop-filter: blur(4px);
+    }
+
+    .object-text .quote .source {
+      display: block;
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-style: normal;
+    }
+
+    .explore-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1.2rem;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      margin-top: 0.5rem;
+    }
+
+    .explore-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* 相关照片散落 */
+    .related-scattered {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .mini-polaroid {
+      background: var(--paper);
+      padding: 8px 8px 32px 8px;
+      border-radius: 3px;
+      box-shadow: 0 4px 14px var(--shadow);
+      cursor: pointer;
+      transition: transform 0.3s var(--ease-out);
+      width: 130px;
+      flex-shrink: 0;
+      transform: rotate(var(--rot, -2deg));
+    }
+
+    .mini-polaroid:nth-child(2) { --rot: 1.5deg; }
+    .mini-polaroid:nth-child(3) { --rot: -1deg; }
+
+    .mini-polaroid:hover {
+      transform: rotate(0deg) translateY(-6px) scale(1.05);
+      z-index: 10;
+    }
+
+    .mini-polaroid img {
+      width: 100%;
+      height: 90px;
+      object-fit: cover;
+      display: block;
+      background: #f0ebe0;
+      border-radius: 2px;
+    }
+
+    .mini-polaroid .caption {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* 结尾 */
+    .outro {
+      text-align: center;
+      background: radial-gradient(ellipse at center, #fffef8 0%, var(--bg) 65%);
+      min-height: 80vh;
+    }
+
+    .outro h2 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.9s var(--ease-out);
+    }
+
+    .outro p {
+      color: var(--ink-light);
+      font-size: 1.1rem;
+      line-height: 1.9;
+      max-width: 580px;
+      margin: 0 auto 2.5rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.9s var(--ease-out) 0.15s;
+    }
+
+    .outro .actions {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.9s var(--ease-out) 0.3s;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .outro.visible h2,
+    .outro.visible p,
+    .outro.visible .actions {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.95rem 1.8rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: all 0.25s;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(139, 69, 19, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 26px rgba(139, 69, 19, 0.32);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid #c9c0b0;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(139, 69, 19, 0.06);
+    }
+
+    .btn span {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-top: 0.15rem;
+    }
+
+    /* 深潜面板 */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 36, 27, 0.35);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease-out);
+      backdrop-filter: blur(2px);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 460px;
+      max-width: 90vw;
+      height: 100%;
+      background: var(--paper);
+      box-shadow: -8px 0 40px rgba(0,0,0,0.2);
+      z-index: 210;
+      transform: translateX(100%);
+      transition: transform 0.5s var(--ease-out);
+      overflow-y: auto;
+      padding: 2.5rem;
+    }
+
+    .drawer.active {
+      transform: translateX(0);
+    }
+
+    .drawer-close {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.5rem;
+      font-size: 1.8rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .drawer-close:hover {
+      color: var(--ink);
+    }
+
+    .drawer h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.6rem;
+      padding-right: 2rem;
+    }
+
+    .drawer .era {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .drawer img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+
+    .drawer p {
+      line-height: 1.85;
+      margin-bottom: 1rem;
+      color: var(--ink-light);
+      font-size: 0.97rem;
+    }
+
+    .drawer .related-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .drawer .related-grid img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 0.4rem;
+    }
+
+    .drawer .related-grid .caption {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 300;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      color: #fff;
+      font-size: 2.2rem;
+      cursor: pointer;
+      opacity: 0.85;
+    }
+
+    .lightbox-close:hover { opacity: 1; }
+
+    /* 响应式 */
+    @media (max-width: 900px) {
+      .object-layout {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        min-height: auto;
+      }
+
+      .object-section:nth-child(even) .object-layout {
+        direction: ltr;
+      }
+
+      .polaroid {
+        max-width: 320px;
+        transform: rotate(-1deg) translateY(40px);
+      }
+
+      .polaroid.visible {
+        transform: rotate(-1deg) translateY(0);
+      }
+
+      .object-text {
+        max-width: 100%;
+        text-align: center;
+        padding: 0;
+      }
+
+      .related-scattered {
+        justify-content: center;
+      }
+
+      .year-stamp {
+        top: -14px;
+        right: -14px;
+        font-size: 0.75rem;
+        padding: 7px 12px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .section { padding: 6rem 1.2rem 4rem; }
+      .drawer { padding: 1.8rem; }
+      .drawer .related-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="./assets/css/global.css">
+</head>
+<body>
+  <!-- 顶部进度 -->
+  <div class="top-bar">
+    <a class="brand" href="./index.html" data-i18n="brand.title">物件里的家族</a>
+    <div class="timeline-progress">
+      <div class="fill" id="progressFill"></div>
+    </div>
+    <div class="nav-links">
+      <a href="./index.html">相册封面</a>
+      <a href="./migration_timeline.html">迁移地图</a>
+    </div>
+  </div>
+
+  <!-- 侧边导航 -->
+  <nav class="side-nav" id="sideNav">
+    <a href="#hero" class="active" data-index="-1"><span class="label">开场</span><span class="dot"></span></a>
+    <!-- 物件链接由 JS 生成 -->
+    <a href="#outro" data-index="99"><span class="label">结尾</span><span class="dot"></span></a>
+  </nav>
+
+  <!-- 开场 -->
+  <section class="section hero" id="hero">
+    <div class="section-inner">
+      <div class="hero-badge" data-i18n="hero.badge">Fan Family · 1948—2000</div>
+      <h1 data-i18n="hero.title">物件里的家族</h1>
+      <p class="subtitle" data-i18n="hero.sub">从一本相册、一件衣服、一个玩具、一张饭桌，读出一个家庭如何在时代中迁徙、分离与重逢。</p>
+      <div class="scroll-cue">
+        向下滚动
+        <div class="line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 物件章节 -->
+  <div id="objectSections"></div>
+
+  <!-- 结尾 -->
+  <section class="section outro" id="outro">
+    <div class="section-inner">
+      <h2>物件只是容器</h2>
+      <p>真正动人的，是里面的人一直在努力相聚。从 1953 年的锦缎相册，到 2000 年的团圆饭桌，这个家庭的记忆穿越了政治运动、地理距离与时代变迁。</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="./migration_timeline.html">
+          继续：家族迁移时间轴
+          <span>在地图上看三代人如何跨越中国与世界</span>
+        </a>
+        <a class="btn btn-secondary" href="./index.html">返回相册封面</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 深潜面板 -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <span class="drawer-close" onclick="closeDrawer()">&times;</span>
+    <div id="drawerContent"></div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="放大查看">
+  </div>
+
+  <script>
+    const objects = [
+      {
+        id: 's-album',
+        title: '锦缎相册封面',
+        era: '1953—1979 · 爱情与迁徙',
+        shortEra: '1953—1979',
+        image: './assets/photos/其他/IMG_0218.jpg',
+        caption: 'S 相册封面：紫红色缎面牡丹花纹',
+        lead: '紫红色缎面牡丹花纹，是 1950 年代婚礼相册的典型样式。这本 S 相册的扉页有范瑶珠好友赵思聪于 1954 年写下的结婚赠言。',
+        context: '相册封面是家庭的"皮肤"：它用最传统的牡丹纹样，包裹着一个最激进的时代选择——到祖国最需要的地方去。1951 年范瑶珠从上海伯特利高级护理助产学校毕业，1953 年瞒着家人报名去新疆。孙钢在上海江湾区法院工作，得知后放弃晋升机会，甚至搭上一支秦腔剧团的卡车追随而去。',
+        quote: null,
+        related: [
+          { src: './assets/photos/单张照片/RL-01-01.jpg', caption: '1951 年，范瑶珠护士求学肖像。' },
+          { src: './assets/photos/单张照片/RL-22-01.jpg', caption: '1954 年，范瑶珠与孙钢结婚照。' },
+          { src: './assets/photos/其他/IMG_0219.jpg', caption: 'S 相册扉页：1954 年赵思聪赠言。' }
+        ]
+      },
+      {
+        id: 'b-album',
+        title: '《白毛女》相册封面',
+        era: '1964—1973 · 政治与童年',
+        shortEra: '1964—1973',
+        image: './assets/photos/其他/IMG_0460.jpg',
+        caption: 'B 相册封面：《白毛女》剧照',
+        lead: '革命样板戏《白毛女》的剧照，被做成红色塑料线圈相册的封面。里面装着的却是文革年代一个家庭的私人记忆。',
+        context: '外壳是革命的，内容是生活的。一个中国家庭最常见的记忆容器，就这样同时承载了两个时代。1967 年乌鲁木齐发生严重武斗，范瑶珠安排 12 岁的女儿孙葛带着 5 个月大的弟弟孙晓舞逃往上海。',
+        quote: { text: '带着我弟弟。他们老欺负他。', source: '孙葛，《家族老照片梳理完成》' },
+        related: [
+          { src: './assets/photos/其他/IMG_0461.jpg', caption: 'B 相册扉页：毛主席语录。' },
+          { src: './assets/photos/单张照片/B-01-01.jpg', caption: '1968 年，孙晓舞一岁生日照。' },
+          { src: './assets/photos/单张照片/B-23-01.jpg', caption: '1970 年，孙葛初中班级合影。' }
+        ]
+      },
+      {
+        id: 'nurse-uniform',
+        title: '白色护士服',
+        era: '1951 · 职业与选择',
+        shortEra: '1951',
+        image: './assets/photos/单张照片/RL-01-01.jpg',
+        caption: '1951 年，范瑶珠护士求学肖像',
+        lead: '范瑶珠手持鲜花、身穿白色护士服的毕业肖像。这件护士服不仅象征新中国职业女性的独立身份，也成为她后来选择支边、孙钢追随她进疆的起点。',
+        context: '1948 年，不满 17 岁的范瑶珠从福建建瓯独自到上海求学。1951 年 7 月 20 日，她参加上海市私立护士学校联合毕业典礼。照片中的白色护士服、护士帽、手持鲜花的姿态，都带有强烈的仪式感和庆祝意味。',
+        quote: null,
+        related: [
+          { src: './assets/photos/单张照片/RL-22-01.jpg', caption: '1954 年结婚照：从上海到边疆。' },
+          { src: './assets/photos/其他/IMG_0218.jpg', caption: 'S 相册封面：人生节点被郑重收藏。' }
+        ]
+      },
+      {
+        id: 'toy',
+        title: '黄色毛绒玩具',
+        era: '1985 · 日常与富足',
+        shortEra: '1985',
+        image: './assets/photos/单张照片/L-002-01.jpg',
+        caption: '1985 年暑假，第三代李宜斐抱着黄色毛绒玩具',
+        lead: '1985 年家庭合影中，第三代李宜斐抱着一只黄色毛绒玩具。冰箱、卡通 T 恤、毛绒玩具同时出现在画面里，标志着改革开放后城市家庭生活水平的提高。',
+        context: '与 1950 年代的庄重合影相比，这张照片姿态自然放松，不再需要照相馆和正式布景。照相的功能开始转变：从"记录人生大事"到"留住日常团聚"。',
+        quote: null,
+        related: [
+          { src: './assets/photos/单张照片/L-002-01.jpg', caption: '1985 年暑假，三代同堂。' },
+          { src: './assets/photos/单张照片/L-003-01.jpg', caption: '1985 年，孙葛与李俊在乌鲁木齐。' },
+          { src: './assets/photos/单张照片/D-001-01.jpg', caption: '1990 年，上海亲戚家中探亲。' }
+        ]
+      },
+      {
+        id: 'dining-table',
+        title: '团圆饭桌',
+        era: '2000 · 跨国家庭团聚',
+        shortEra: '2000',
+        image: './assets/photos/单张照片/C-001-01.jpg',
+        caption: '2000 年，孙晓舞从美国回乌鲁木齐探亲',
+        lead: '2000 年，孙晓舞从美国回乌鲁木齐探亲，全家围坐在餐桌旁举杯。全球化时代的跨国家庭团聚，不再需要照相馆和庄重姿态，普通一餐就是最重要的家庭影像。',
+        context: '从 1953 年因国家建设而分离，到 2000 年因个人发展而跨国，团聚一直是这个家庭影像的核心主题。照相已完全日常化：生活中普通一餐、一次举杯，即是最重要的家庭影像。',
+        quote: null,
+        related: [
+          { src: './assets/photos/单张照片/C-001-01.jpg', caption: '2000 年，全家举杯。' },
+          { src: './assets/photos/单张照片/C-001-02.jpg', caption: '同一次聚餐的另一角度。' },
+          { src: './assets/photos/单张照片/D-005-01.jpg', caption: '1991 年，孙钢三兄弟杭州重逢。' }
+        ]
+      }
+    ];
+
+    function renderObjects() {
+      const container = document.getElementById('objectSections');
+      container.innerHTML = objects.map((obj, idx) => `
+        <section class="section object-section" id="object-${idx}" data-index="${idx}">
+          <div class="section-inner">
+            <div class="object-layout">
+              <div class="object-visual">
+                <div class="polaroid" onclick="openDrawer(${idx})">
+                  <img src="${obj.image}" alt="${obj.title}">
+                  <div class="caption">${obj.caption}</div>
+                </div>
+                <div class="year-stamp">${obj.shortEra}</div>
+              </div>
+              <div class="object-text">
+                <div class="chapter-label">物件 0${idx + 1}</div>
+                <div class="object-era">${obj.era}</div>
+                <h2>${obj.title}</h2>
+                <p class="lead">${obj.lead}</p>
+                <p class="context">${obj.context}</p>
+                ${obj.quote ? `<div class="quote">"${obj.quote.text}"<span class="source">—— ${obj.quote.source}</span></div>` : ''}
+                <button class="explore-btn" onclick="openDrawer(${idx})">
+                  展开这件物件的故事与照片
+                </button>
+                <div class="related-scattered">
+                  ${obj.related.map(photo => `
+                    <div class="mini-polaroid" onclick="openLightbox('${photo.src}')">
+                      <img src="${photo.src}" alt="${photo.caption}">
+                      <div class="caption">${photo.caption}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `).join('');
+    }
+
+    function renderSideNav() {
+      const nav = document.getElementById('sideNav');
+      nav.innerHTML = `
+        <a href="#hero" class="active" data-index="-1"><span class="label">开场</span><span class="dot"></span></a>
+        ${objects.map((obj, idx) => `
+          <a href="#object-${idx}" data-index="${idx}"><span class="label">${obj.shortEra}</span><span class="dot"></span></a>
+        `).join('')}
+        <a href="#outro" data-index="99"><span class="label">结尾</span><span class="dot"></span></a>
+      `;
+    }
+
+    function openDrawer(index) {
+      const obj = objects[index];
+      const content = document.getElementById('drawerContent');
+      content.innerHTML = `
+        <h3>${obj.title}</h3>
+        <div class="era">${obj.era}</div>
+        <img src="${obj.image}" alt="${obj.title}" onclick="openLightbox('${obj.image}')">
+        <p class="lead" style="font-size:1.05rem; color: var(--ink-light); line-height:1.9; margin-bottom:1.2rem;">${obj.lead}</p>
+        <p>${obj.context}</p>
+        ${obj.quote ? `<div class="quote" style="margin: 1.2rem 0;">"${obj.quote.text}"<span class="source">—— ${obj.quote.source}</span></div>` : ''}
+        <h4 style="margin: 1.5rem 0 1rem; font-size: 1rem; color: var(--accent);">相关照片</h4>
+        <div class="related-grid">
+          ${obj.related.map(photo => `
+            <div onclick="openLightbox('${photo.src}')">
+              <img src="${photo.src}" alt="${photo.caption}">
+              <div class="caption">${photo.caption}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      document.getElementById('drawerOverlay').classList.add('active');
+      document.getElementById('drawer').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      document.getElementById('drawerOverlay').classList.remove('active');
+      document.getElementById('drawer').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+
+    // 动画与进度
+    function initAnimations() {
+      // 开场动画
+      setTimeout(() => {
+        document.getElementById('hero').classList.add('loaded');
+      }, 200);
+
+      // 物件章节动画
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.querySelector('.polaroid')?.classList.add('visible');
+            entry.target.querySelector('.year-stamp')?.classList.add('visible');
+            entry.target.querySelector('.object-text')?.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.3, rootMargin: '0px 0px -15% 0px' });
+
+      document.querySelectorAll('.object-section').forEach(section => observer.observe(section));
+
+      // 结尾动画
+      const outroObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.4 });
+
+      outroObserver.observe(document.getElementById('outro'));
+    }
+
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = Math.min(100, Math.max(0, (scrollTop / docHeight) * 100));
+      document.getElementById('progressFill').style.width = progress + '%';
+
+      // 更新 side nav
+      const sections = ['hero', ...objects.map((_, i) => `object-${i}`), 'outro'];
+      let current = 0;
+      sections.forEach((id, idx) => {
+        const el = document.getElementById(id);
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.5) {
+          current = idx;
+        }
+      });
+
+      document.querySelectorAll('.side-nav a').forEach((link, idx) => {
+        link.classList.toggle('active', idx === current);
+      });
+    }
+
+    // 键盘导航
+    function handleKey(e) {
+      if (document.getElementById('drawer').classList.contains('active')) {
+        if (e.key === 'Escape') closeDrawer();
+        return;
+      }
+      if (document.getElementById('lightbox').classList.contains('active')) {
+        if (e.key === 'Escape') closeLightbox();
+        return;
+      }
+
+      const sections = ['hero', ...objects.map((_, i) => `object-${i}`), 'outro'];
+      const current = sections.findIndex(id => {
+        const rect = document.getElementById(id).getBoundingClientRect();
+        return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5;
+      });
+
+      if (e.key === 'ArrowDown' && current < sections.length - 1) {
+        e.preventDefault();
+        document.getElementById(sections[current + 1]).scrollIntoView({ behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp' && current > 0) {
+        e.preventDefault();
+        document.getElementById(sections[current - 1]).scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    document.addEventListener('keydown', handleKey);
+
+    renderObjects();
+    renderSideNav();
+    initAnimations();
+    updateProgress();
+  </script>
+  <script src="./assets/js/pjax.js"></script>
+  <script src="./assets/js/audio-controller.js"></script>
+  <script>
+    window.fanI18nDict = {
+      'brand.title': { zh: '物件里的家族', en: 'Family in Objects' },
+      'nav.albums': { zh: '相册封面', en: 'Album Covers' },
+      'nav.map': { zh: '迁移', en: 'Migration' },
+      'hero.badge': { zh: 'Fan Family · 1948—2000', en: 'Fan Family · 1948—2000' },
+      'hero.title': { zh: '物件里的家族', en: 'Family in Objects' },
+      'hero.sub': { zh: '从一本相册、一件衣服、一个玩具、一张饭桌，读出一个家庭如何在时代中迁徙、分离与重逢。', en: 'From a photo album, a piece of clothing, a toy, and a dining table, read how a family migrated, separated, and reunited through the times.' },
+      'hero.scroll': { zh: '向下滚动', en: 'Scroll Down' }
+    };
+  </script>
+  <script src="./assets/js/i18n.js"></script>
+</body>
+</html>

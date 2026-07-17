@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>范氏家族三代人迁移时间轴</title>
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --ink: #2c241b;
+      --paper: #fffef8;
+      --accent: #8b4513;
+      --accent-light: #d4774a;
+      --muted: #7a6f5b;
+      --shadow: rgba(44, 36, 27, 0.18);
+      --gen1: #c45c2f;
+      --gen2: #3a6ea5;
+      --gen3: #5b8c5a;
+      --active: #8c4a9e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: "Noto Serif SC", "Songti SC", "PingFang SC", "Microsoft YaHei", serif; background: var(--bg); color: var(--ink); }
+    #map { width: 100%; height: 100%; }
+    .l7-marker-container { pointer-events: none; }
+
+    /* 顶部导航 */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(247, 243, 236, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+      pointer-events: none;
+    }
+    .top-bar > * { pointer-events: auto; }
+    .brand {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .journey-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.72rem;
+    }
+    .journey-progress .step {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .journey-progress .step::after {
+      content: "→";
+      opacity: 0.22;
+      margin-left: 0.1rem;
+      font-size: 0.65rem;
+    }
+    .journey-progress .step:last-child::after { display: none; }
+    .journey-progress .step:hover { color: var(--accent); }
+    .journey-progress .step.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .journey-progress .step.active .dot {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .journey-progress .step.completed {
+      color: var(--accent-light);
+    }
+    .journey-progress .step.completed .dot {
+      background: var(--accent-light);
+      border-color: var(--accent-light);
+    }
+    .journey-progress .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+    }
+
+    .one-more-btn {
+      position: fixed;
+      bottom: 190px;
+      right: 20px;
+      z-index: 1001;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(44, 36, 27, 0.18);
+    }
+    .one-more-btn:hover { transform: scale(1.05); background: var(--accent); box-shadow: 0 6px 22px rgba(44, 36, 27, 0.25); }
+
+    @media (max-width: 768px) {
+      .one-more-btn { bottom: 70px; right: 12px; font-size: 0.65rem; padding: 0.45rem 0.8rem; }
+    }
+
+    /* 故事结束幕 */
+    .journey-ending {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(247, 243, 236, 0.96);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s, visibility 0.6s;
+      padding: 2rem;
+    }
+    .journey-ending.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .journey-ending .ending-content {
+      max-width: 560px;
+      text-align: center;
+    }
+    .journey-ending h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+    .journey-ending h2 span { color: #a12d2d; }
+    .journey-ending p {
+      color: var(--ink-light);
+      margin-bottom: 1.2rem;
+      line-height: 1.8;
+    }
+    .journey-ending img {
+      max-width: 320px;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid rgba(139, 69, 19, 0.2);
+      box-shadow: 0 20px 60px rgba(44, 36, 27, 0.18);
+      margin-bottom: 1.5rem;
+    }
+    .journey-ending .actions a {
+      display: inline-block;
+      margin: 0 0.4rem;
+      padding: 0.6rem 1.4rem;
+      background: var(--accent);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.8rem;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .journey-ending .actions a:hover { background: var(--accent-light); }
+    .journey-ending .actions a.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .journey-ending .actions a.secondary:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .ending-hint {
+      position: fixed;
+      bottom: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1500;
+      background: var(--paper);
+      border: 1px solid rgba(139, 69, 19, 0.15);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.75rem;
+      color: var(--muted);
+      box-shadow: 0 4px 14px rgba(44,36,27,0.1);
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s, visibility 0.4s;
+    }
+    .ending-hint.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* 信息卡片 */
+    .info-card {
+      position: absolute;
+      top: 64px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+      background: rgba(255, 254, 248, 0.97);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 28px var(--shadow);
+      z-index: 10;
+      border: 1px solid #e5dfd2;
+      transition: width 0.3s var(--ease), padding 0.3s var(--ease), opacity 0.3s var(--ease);
+    }
+    .personal-card {
+      left: 20px;
+      width: 320px;
+    }
+    .history-card {
+      right: 20px;
+      width: 300px;
+    }
+    .info-card.collapsed {
+      width: auto;
+      padding: 8px 14px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .info-card.collapsed .card-body {
+      display: none;
+    }
+    .info-card.collapsed h2 {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .card-toggle {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .card-toggle:hover { background: var(--accent-light); }
+    .info-card .year {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .info-card h2 {
+      font-size: 19px;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .info-card .meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed #dcd5c5;
+    }
+    .info-card .section {
+      margin-bottom: 14px;
+    }
+    .info-card .section-title {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .info-card p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #3a3a3a;
+    }
+    .personal-card .section {
+      background: #fff;
+      border-radius: 8px;
+      padding: 14px;
+      border: 1px solid #ede8dc;
+    }
+    .history-card .section {
+      background: #f8f6f0;
+      border-radius: 8px;
+      padding: 14px;
+      border: 1px solid #e5dfd2;
+    }
+    .history-card .section-title {
+      color: var(--accent);
+    }
+    .info-card .hist-photo {
+      margin-top: 10px;
+    }
+    .info-card .hist-photo img {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid #dcd5c5;
+      display: block;
+    }
+    .info-card .hist-photo .caption {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+    .info-card .quote {
+      background: #f8f6f0;
+      border-left: 3px solid var(--accent-light);
+      padding: 10px 12px;
+      margin: 8px 0;
+      font-style: italic;
+      color: #3d3226;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .info-card .quote .source {
+      display: block;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--muted);
+      font-style: normal;
+    }
+    .info-card .photos {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .info-card .photos img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid #e5dfd2;
+    }
+    .info-card .photos img:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+    .info-card .album-tag {
+      display: inline-block;
+      background: #ede8dc;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-top: 6px;
+    }
+
+    /* 图例 */
+    .legend {
+      position: absolute;
+      bottom: 82px;
+      left: 20px;
+      width: 180px;
+      background: rgba(255, 254, 248, 0.96);
+      border-radius: 10px;
+      padding: 14px 16px;
+      box-shadow: 0 4px 20px var(--shadow);
+      z-index: 10;
+      font-size: 12px;
+      border: 1px solid #e5dfd2;
+    }
+    .legend h4 { font-size: 12px; color: var(--muted); margin-bottom: 10px; font-weight: 700; }
+    .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+    .legend-item:last-child { margin-bottom: 0; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .line-sample { width: 24px; height: 3px; border-radius: 2px; }
+    .line-sample.dashed {
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--active), var(--active) 4px, transparent 4px, transparent 8px);
+    }
+
+    /* 时间轴 */
+    .timeline-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 254, 248, 0.98);
+      border-top: 2px solid var(--ink);
+      padding: 12px 18px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-btn {
+      flex-shrink: 0;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .nav-btn:hover { background: var(--accent); }
+    .nav-btn:disabled { background: #c9c0b0; cursor: not-allowed; }
+    .play-btn {
+      background: var(--accent);
+    }
+    .timeline-track {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 8px;
+      position: relative;
+    }
+    .time-display {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .time-slider {
+      width: 100%;
+      height: 3px;
+      border-radius: 2px;
+      background: #dcd5c5;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+    }
+    .time-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px var(--shadow);
+      cursor: grab;
+    }
+    .time-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px var(--shadow);
+      cursor: grab;
+    }
+    .time-ticks {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      padding: 0 9px;
+      font-size: 10px;
+      color: var(--muted);
+      position: relative;
+      height: 14px;
+    }
+    .time-tick {
+      position: absolute;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+    .time-tick.labeled {
+      color: var(--muted);
+    }
+    .time-tick.unlabeled {
+      color: transparent;
+      pointer-events: auto;
+    }
+    .time-tick::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 5px;
+      background: var(--muted);
+    }
+    .time-tick.unlabeled::before {
+      height: 3px;
+      background: #b8b0a0;
+    }
+
+    /* 地点侧栏 */
+    .location-drawer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 420px;
+      max-width: 90vw;
+      height: 100%;
+      background: rgba(255, 254, 248, 0.98);
+      box-shadow: -6px 0 28px var(--shadow);
+      z-index: 30;
+      transform: translateX(100%);
+      transition: transform 0.35s ease;
+      padding: 24px;
+      overflow-y: auto;
+      border-left: 1px solid #e5dfd2;
+    }
+    .location-drawer.open { transform: translateX(0); }
+    .drawer-close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--muted);
+      line-height: 1;
+    }
+    .drawer-close:hover { color: var(--ink); }
+    .location-drawer h2 {
+      font-size: 22px;
+      margin-bottom: 4px;
+      padding-right: 30px;
+    }
+    .location-drawer .coord {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .location-drawer .event-item {
+      padding: 14px 0;
+      border-bottom: 1px dashed #dcd5c5;
+    }
+    .location-drawer .event-year {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+    .location-drawer .event-title {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    .location-drawer .event-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #3a3a3a;
+    }
+    .location-drawer .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .location-drawer .photos-grid img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid #e5dfd2;
+      transition: transform 0.2s;
+    }
+    .location-drawer .photos-grid img:hover { transform: translateY(-3px); }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+    .lightbox-close:hover { opacity: 1; }
+
+    /* 遮罩 */
+    .overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.2);
+      z-index: 25;
+    }
+    .overlay.active { display: block; }
+
+    /* 提示 */
+    .hint {
+      position: absolute;
+      bottom: 78px;
+      left: 20px;
+      background: rgba(255, 254, 248, 0.92);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: var(--muted);
+      z-index: 10;
+      border: 1px solid #e5dfd2;
+    }
+
+    .map-year-display {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(4rem, 12vw, 9rem);
+      font-weight: 900;
+      color: rgba(44, 36, 27, 0.08);
+      z-index: 5;
+      pointer-events: none;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: -0.05em;
+    }
+  </style>
+  <link rel="stylesheet" href="./assets/css/global.css">
+</head>
+<body>
+  <header class="top-bar">
+    <a href="index.html" class="brand" data-i18n="brand.title">Fan Family · 视觉档案</a>
+    <nav class="journey-progress">
+      <a href="story.html" class="step completed"><span class="dot"></span><label data-i18n="nav.story">故事线</label></a>
+      <a href="museum.html" class="step completed"><span class="dot"></span><label data-i18n="nav.museum">物件博物馆</label></a>
+      <a href="migration_timeline.html" class="step active"><span class="dot"></span><label data-i18n="nav.map">迁移地图</label></a>
+    </nav>
+  </header>
+  <a href="one_more.html" class="one-more-btn" data-i18n="btn.next">下一站：同学们 →</a>
+
+  <div class="ending-hint" id="endingHint" data-i18n="ending.hint">故事已到终点 · 点击查看收束</div>
+
+  <div class="journey-ending" id="journeyEnding">
+    <div class="ending-content">
+      <h2 data-i18n="ending.title">二人合葬于乌鲁木齐东山生态园公墓。<br>面朝<span>东方</span>——<br>他们<span>来时的方向</span>。</h2>
+      <p data-i18n="ending.years">她 1953 年来疆，在此 66 年。<br>他 1954 年来疆，在此 66 年。</p>
+      <img src="./assets/photos/单张照片/J-104-01.jpg" alt="2014 年钻石婚">
+      <div class="actions">
+        <a href="index.html" data-i18n="ending.back">回到封面</a>
+        <a href="story.html" class="secondary" data-i18n="ending.again">再看一次</a>
+        <a href="one_more.html" class="one-more-btn" style="position:static; margin-left:0" data-i18n="btn.next">下一站：同学们 →</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="map"></div>
+  <div class="map-year-display" id="mapYearDisplay">1931</div>
+
+  <!-- 家族个人事件卡片 -->
+  <div class="info-card personal-card collapsed" id="personalCard">
+    <div class="year" id="personalYear">1931</div>
+    <h2 id="personalTitle">范瑶珠出生于福建建瓯</h2>
+    <button class="card-toggle" onclick="toggleCard('personalCard')" data-i18n="card.expand">展开</button>
+    <div class="card-body">
+      <div class="meta" id="personalMeta">人物：范瑶珠 · 第一代</div>
+      <div class="section">
+        <div class="section-title" data-i18n="card.personal">家族个人事件</div>
+        <p id="personalDesc">范瑶珠 1931 年出生于福建建瓯，家族叙事的起点。</p>
+        <div id="personalQuoteSection" style="display:none; margin-top:10px">
+          <div class="quote" id="personalQuote"></div>
+        </div>
+        <div id="personalPhotoSection" style="display:none; margin-top:10px">
+          <div class="section-title" style="margin-bottom:6px" data-i18n="card.photos">相关照片</div>
+          <div class="photos" id="personalPhotos"></div>
+        </div>
+        <div id="personalAlbumSection" style="display:none; margin-top:10px">
+          <div class="section-title" style="margin-bottom:6px" data-i18n="card.album">关联相册</div>
+          <div class="album-tag" id="personalAlbum"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 时代背景卡片 -->
+  <div class="info-card history-card collapsed" id="historyCard">
+    <div class="year" id="historyYear">1931</div>
+    <h2 id="historyTitle" data-i18n="card.history">时代背景</h2>
+    <button class="card-toggle" onclick="toggleCard('historyCard')" data-i18n="card.expand">展开</button>
+    <div class="card-body">
+      <div class="section">
+        <p id="historyContext">民国时期的福建山区，家族记忆从这里开始。</p>
+        <div id="historyPhotoSection" style="display:none; margin-top:12px">
+          <div class="hist-photo" id="historyPhoto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h4 data-i18n="legend.title">图例</h4>
+    <div class="legend-item"><span class="dot" style="background:var(--gen1)"></span><span data-i18n="legend.gen1">第一代：范瑶珠、孙钢</span></div>
+    <div class="legend-item"><span class="dot" style="background:var(--gen2)"></span><span data-i18n="legend.gen2">第二代：孙葛、孙晓舞</span></div>
+    <div class="legend-item"><span class="dot" style="background:var(--gen3)"></span><span data-i18n="legend.gen3">第三代：李宜斐</span></div>
+    <div class="legend-item"><span class="dot" style="background:var(--active)"></span><span data-i18n="legend.active">当前步骤高亮</span></div>
+    <div class="legend-item"><span class="line-sample" style="background:var(--gen1);opacity:.35"></span><span data-i18n="legend.history">历史迁徙线</span></div>
+    <div class="legend-item"><span class="line-sample" style="background:var(--gen1);opacity:.95"></span><span data-i18n="legend.current">当前流动线</span></div>
+  </div>
+
+  <div class="hint" data-i18n="hint.text">提示：点击地图上的地点可查看该地点的所有事件与照片</div>
+
+  <div class="timeline-bar">
+    <button class="nav-btn" id="prevBtn" data-i18n="timeline.prev">‹ 事件</button>
+    <button class="nav-btn play-btn" id="playBtn" data-i18n="timeline.play">▶ 播放</button>
+    <div class="timeline-track">
+      <div class="time-display" id="timeDisplay">1931</div>
+      <input type="range" class="time-slider" id="timeSlider" min="1931" max="2000" step="0.01" value="1931">
+      <div class="time-ticks" id="timeTicks"></div>
+    </div>
+    <button class="nav-btn" id="nextBtn">事件 ›</button>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <div class="location-drawer" id="locationDrawer">
+    <span class="drawer-close" id="drawerClose">&times;</span>
+    <h2 id="drawerTitle">地点</h2>
+    <div class="coord" id="drawerCoord"></div>
+    <div id="drawerEvents"></div>
+    <div class="section" id="drawerPhotoSection" style="margin-top:18px">
+      <div class="section-title">相关照片</div>
+      <div class="photos-grid" id="drawerPhotos"></div>
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="放大查看">
+  </div>
+
+  <script>
+    window.forceWebGL = true;
+  </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "@antv/l7": "https://cdn.jsdelivr.net/npm/@antv/l7@2.20.5/+esm",
+      "@antv/l7-maps": "https://cdn.jsdelivr.net/npm/@antv/l7-maps@2.20.5/+esm"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import { Scene, PointLayer, LineLayer } from '@antv/l7';
+    import { MapLibre } from '@antv/l7-maps';
+
+    const colors = {
+      '第一代': '#c45c2f',
+      '第二代': '#3A6EA5',
+      '第三代': '#5B8C5A',
+      '旁系': '#8c6b4a',
+      '当前': '#8c4a9e'
+    };
+
+    const locations = {
+      '福建建瓯': [118.305, 27.045],
+      '上海': [121.4737, 31.2304],
+      '西安': [108.9398, 34.3416],
+      '乌鲁木齐': [87.6168, 43.8256],
+      '北京': [116.4074, 39.9042],
+      '杭州': [120.1551, 30.2741],
+      '绍兴': [120.5802, 30.0523],
+      '吐鲁番': [89.1897, 42.9513],
+      '和静': [86.397, 42.317],
+      '艾丁湖': [89.25, 42.65],
+      '克拉玛依': [84.8739, 45.5792],
+      '哈密': [93.515, 42.826],
+      '喀什': [75.9897, 39.4704],
+      '美国': [-100, 40]
+    };
+
+    const albumNames = {
+      s: 'S 相册 · 结婚纪念（1953—1979）',
+      b: 'B 相册 · 白毛女封面（1964—1973）',
+      h: 'H 相册 · 西湖三潭印月（1952—1980）',
+      l: 'L 相册 · 风景封面（1985）',
+      d: 'D 相册 · 狗狗相册（1990—1991）',
+      c: 'C 相册 · 跨地域团聚（2000）'
+    };
+
+    const photos = {
+      rl01: './assets/photos/单张照片/RL-01-01.jpg',
+      rl22: './assets/photos/单张照片/RL-22-01.jpg',
+      sCover: './assets/photos/其他/IMG_0218.jpg',
+      sPage: './assets/photos/其他/IMG_0219.jpg',
+      bCover: './assets/photos/其他/IMG_0460.jpg',
+      bPage: './assets/photos/其他/IMG_0461.jpg',
+      b01: './assets/photos/单张照片/B-01-01.jpg',
+      b23: './assets/photos/单张照片/B-23-01.jpg',
+      h10: './assets/photos/单张照片/H-10-01.jpg',
+      h14: './assets/photos/单张照片/H-14-01.jpg',
+      h15: './assets/photos/单张照片/H-15-01.jpg',
+      l002: './assets/photos/单张照片/L-002-01.jpg',
+      l003: './assets/photos/单张照片/L-003-01.jpg',
+      l005: './assets/photos/单张照片/L-005-01.jpg',
+      d001: './assets/photos/单张照片/D-001-01.jpg',
+      d003: './assets/photos/单张照片/D-003-01.jpg',
+      d004: './assets/photos/单张照片/D-004-01.jpg',
+      d005: './assets/photos/单张照片/D-005-01.jpg',
+      c001: './assets/photos/单张照片/C-001-01.jpg',
+      c002: './assets/photos/单张照片/C-001-02.jpg'
+    };
+
+    const historicalPhotos = {
+      h1931: './assets/historical-photos/1931_fujian_nanping.jpg',
+      h1948: './assets/historical-photos/1948_shanghai_nurse.jpg',
+      h1953: './assets/historical-photos/1953_xinjiang_locust.jpg',
+      h1953_09: './assets/historical-photos/1953_shanghai_xinjiang.jpg',
+      h1954_09: './assets/historical-photos/1954_urumqi_cadre.jpg',
+      h1958: './assets/historical-photos/1958_women_model.jpg',
+      h1966: './assets/historical-photos/1966_destroy_four_old_rename.jpg',
+      h1967: './assets/historical-photos/1967_beijing_red_guard.jpg',
+      h1968: './assets/historical-photos/1968_zhiqing_boat_arrival.jpg',
+      h1969: './assets/historical-photos/1969_civil_defense_digging.jpg',
+      h1971: './assets/historical-photos/1971_shanghai_street.jpg',
+      h1972: './assets/historical-photos/1972_sent_down_youth.jpg',
+      h1975: './assets/historical-photos/1975_barefoot_doctor.jpg',
+      h1976: './assets/historical-photos/1976_karamay_oilfield.jpg',
+      h1990: './assets/historical-photos/1990_taiwan_veteran_reunion.jpg',
+      h1999: './assets/historical-photos/1999_beijing_native_new_york.jpg',
+      h2000: './assets/historical-photos/2000_spring_festival_family.jpg'
+    };
+
+    const steps = [
+      {
+        year: '1931',
+        title: '范瑶珠出生于福建建瓯',
+        person: '范瑶珠',
+        gen: '第一代',
+        desc: '范瑶珠 1931 年出生于福建建瓯，家族叙事的起点。',
+        historicalContext: '民国时期的福建山区，家族记忆从这里开始。',
+        historicalPhoto: { src: historicalPhotos.h1931, caption: '民国时期福建南平的老照片，层叠的城门与山区街巷，映射出范瑶珠出生地建瓯一带的乡土风貌。' },
+        quote: null,
+        album: null,
+        relatedPhotos: [],
+        points: [['福建建瓯', '范瑶珠出生地']],
+        lines: []
+      },
+      {
+        year: '1948',
+        title: '范瑶珠赴上海求学',
+        person: '范瑶珠',
+        gen: '第一代',
+        desc: '不满 17 岁，她从建瓯独自到上海，进入伯特利高级护理助产学校。',
+        historicalContext: '建国初期教会医院/学校逐步转为公立，护理教育跨越“教会办学”到“国家办学”的过渡期。',
+        historicalPhoto: { src: historicalPhotos.h1948, caption: '1937 年上海震旦大学大礼堂改建成伤兵医院，用作同时代上海医护与护理教育场景的代表影像。' },
+        quote: null,
+        album: null,
+        relatedPhotos: [],
+        points: [['上海', '伯特利高级护理助产学校']],
+        lines: [['福建建瓯', '上海', '从建瓯赴上海求学']]
+      },
+      {
+        year: '1953.09',
+        title: '范瑶珠支边进疆',
+        person: '范瑶珠',
+        gen: '第一代',
+        desc: '响应国家号召，从上海经西安转敞篷卡车，历时近 40 天到达乌鲁木齐。',
+        historicalContext: '新中国“支援边疆、建设边疆”运动，上世纪五六十年代约 10 万上海支边青年赴新疆。',
+        historicalPhoto: { src: historicalPhotos.h1953_09, caption: '1964 年上海火车站，松江有志知识青年整装待发奔赴新疆建设兵团，代表上世纪五六十年代上海支边青年洪流。' },
+        quote: { text: '谁回来谁是逃兵，就是一定要坚持到底的。', source: '孙晓舞/孙葛，《外婆老照片与家族往事》' },
+        album: 's',
+        relatedPhotos: [photos.rl01],
+        points: [['西安', '进疆中转'], ['乌鲁木齐', '新疆起点']],
+        lines: [['上海', '西安', '乘火车到西安'], ['西安', '乌鲁木齐', '乘敞篷卡车进疆']]
+      },
+      {
+        year: '1953',
+        title: '哥哥范国桢随苏联专家来新疆灭蝗',
+        person: '范国桢',
+        gen: '旁系',
+        desc: '哥哥本在北京农业部工作，被派往新疆协同苏联专家灭蝗，后因组织需要留在新疆。',
+        historicalContext: '1953 年苏联灭蝗工作团在新疆帮助灭蝗，飞机灭蝗面积达 61.3 万多亩；边疆急需农业技术人才，组织调动具有高度强制性。',
+        historicalPhoto: { src: historicalPhotos.h1953, caption: '1954 年苏联治蝗团携带 17 架治蝗飞机抵达乌鲁木齐，协助新疆防治蝗灾，体现 1953 年前后中苏农业技术合作背景。' },
+        quote: null,
+        album: null,
+        relatedPhotos: [],
+        points: [['北京', '农业部工作地'], ['乌鲁木齐', '八一农学院任教'], ['哈密', '1963 年病逝于此']],
+        lines: [['北京', '乌鲁木齐', '来新疆灭蝗'], ['乌鲁木齐', '哈密', '调往哈密农业站']]
+      },
+      {
+        year: '1954.09',
+        title: '孙钢放弃上海晋升，追随范瑶珠进疆',
+        person: '孙钢',
+        gen: '第一代',
+        desc: '孙钢从上海江湾区法院出发，搭秦腔剧团卡车西进，11 月在乌鲁木齐举办婚礼。',
+        historicalContext: '1950 年代干部统包统配、户籍制度限制自由流动；夫妻两地分居需组织审批，“没有个人调动先例”。',
+        historicalPhoto: { src: historicalPhotos.h1954_09, caption: '1954 年新疆省第一届人民代表大会代表在乌鲁木齐合影，反映当时干部统一调配、组织调动高度制度化的时代特征。' },
+        quote: null,
+        album: 's',
+        relatedPhotos: [photos.rl22, photos.sPage],
+        points: [['上海', '江湾区法院']],
+        lines: [['上海', '西安', '乘火车到西安'], ['西安', '乌鲁木齐', '搭秦腔剧团卡车进疆']]
+      },
+      {
+        year: '1958',
+        title: '范瑶珠参加自治区妇女建设社会主义积极分子大会',
+        person: '范瑶珠',
+        gen: '第一代',
+        desc: '大跃进时期，范瑶珠作为医疗系统代表参加自治区妇女积极分子大会并留影。',
+        historicalContext: '大跃进时期国家鼓励妇女参加劳动，表彰妇女积极分子，政治荣誉与个人职业成就交汇。',
+        historicalPhoto: { src: historicalPhotos.h1958, caption: '1958 年乌鲁木齐二区五街维吾尔族妇女肉孜汗当选五好模范，呼应大跃进时期表彰妇女积极分子、鼓励妇女参加社会劳动的时代主题。' },
+        quote: null,
+        album: 's',
+        relatedPhotos: [photos.sCover],
+        points: [['乌鲁木齐', '自治区表彰大会']],
+        lines: []
+      },
+      {
+        year: '1966',
+        title: '女儿孙艾纳被改名为孙文革',
+        person: '孙葛',
+        gen: '第二代',
+        desc: '文革破四旧运动中，医院工作组要求为职工子女改名，孙艾纳从此改名孙文革。',
+        historicalContext: '文革初期破四旧运动，红卫兵/工作组要求改去“封资修”色彩的名字，孩子的姓名成为政治意识形态改造的对象。',
+        historicalPhoto: { src: historicalPhotos.h1966, caption: '1966 年“破四旧”运动中，工人在梯子上更换店铺招牌，旧字号、旧路名被大批改成革命化名称。这场改名风潮也波及家庭与人名。' },
+        quote: null,
+        album: 'b',
+        relatedPhotos: [photos.bCover, photos.bPage],
+        points: [['乌鲁木齐', '医院工作组改名']],
+        lines: []
+      },
+      {
+        year: '1967.07',
+        title: '乌鲁木齐武斗，子女被送往上海/杭州',
+        person: '孙葛、孙晓舞',
+        gen: '第二代',
+        desc: '1967 年乌鲁木齐武斗升级，12 岁的孙葛带着 5 个月大的弟弟孙晓舞被送往上海。',
+        historicalContext: '1967 年 6—7 月乌鲁木齐发生严重武斗，7 月 26 日新疆医学院事件、7 月 28 日周恩来指示军队戒严制止。普通家庭在暴力升级时的求生选择。',
+        historicalPhoto: { src: historicalPhotos.h1967, caption: '1967 年北京女红卫兵乘坐卡车前往市中心参加群众大会。照片真实记录了红卫兵运动与城市动荡的大背景，对应同年乌鲁木齐武斗后子女外送避乱的家庭节点。' },
+        quote: { text: '带着我弟弟。他们老欺负他。', source: '孙葛，《家族老照片梳理完成》' },
+        album: 'b',
+        relatedPhotos: [photos.b01],
+        points: [['杭州', '孙晓舞后来转寄杭州姑姑家']],
+        lines: [['乌鲁木齐', '上海', '姐弟被送往上海寄养'], ['上海', '杭州', '孙晓舞转寄杭州']]
+      },
+      {
+        year: '1968',
+        title: '孙葛由上海返回乌鲁木齐',
+        person: '孙葛',
+        gen: '第二代',
+        desc: '文革期间非常态流动，孙葛先一步从上海返回新疆。',
+        historicalContext: '文革期间非常态的人口流动，女儿先回，儿子仍寄养在上海/杭州。',
+        historicalPhoto: { src: historicalPhotos.h1968, caption: '1968 年北大荒知青乘船抵达新建的知青点，上山下乡运动进入高潮。非常态的人口流动改变了家庭轨迹。' },
+        quote: null,
+        album: 'b',
+        relatedPhotos: [photos.b23],
+        points: [],
+        lines: [['上海', '乌鲁木齐', '孙葛返回新疆']]
+      },
+      {
+        year: '1969',
+        title: '战备疏散，范瑶珠随队赴南疆',
+        person: '范瑶珠',
+        gen: '第一代',
+        desc: '中苏边境冲突升级，范瑶珠作为医护人员参与乌鲁木齐市集中疏散城市人口工作。',
+        historicalContext: '1969 年中苏边境冲突升级：3 月珍宝岛事件、8 月铁列克提事件；全国进入战备高潮，城市人口大规模疏散。',
+        historicalPhoto: { src: historicalPhotos.h1969, caption: '1969 年“深挖洞、广积粮、不称霸”的战备运动在全国展开，群众挖掘防空工事。紧张的战备气氛催生了大规模城市疏散。' },
+        quote: null,
+        album: 'h',
+        relatedPhotos: [photos.h10],
+        points: [['喀什', '南疆安置地之一'], ['和静', '巡回医疗地']],
+        lines: [['乌鲁木齐', '喀什', '疏散安置路线'], ['乌鲁木齐', '和静', '巡回医疗路线']]
+      },
+      {
+        year: '1971',
+        title: '孙钢接孙晓舞回新疆',
+        person: '孙晓舞',
+        gen: '第二代',
+        desc: '孙钢赴上海、杭州，把已 4 岁的儿子孙晓舞接回乌鲁木齐。',
+        historicalContext: '1971 年仍处于文革期间，但局部社会秩序开始恢复，家庭在政治动荡后重新聚合。',
+        historicalPhoto: { src: historicalPhotos.h1971, caption: '1971 年的上海街景，记录文革期间社会秩序局部恢复时期的城市日常，也象征动荡后家庭重新聚合的背景。' },
+        quote: null,
+        album: 'h',
+        relatedPhotos: [],
+        points: [],
+        lines: [['上海', '乌鲁木齐', '孙晓舞从上海回疆'], ['杭州', '乌鲁木齐', '孙晓舞从杭州回疆']]
+      },
+      {
+        year: '1972',
+        title: '孙葛去吐鲁番下乡',
+        person: '孙葛',
+        gen: '第二代',
+        desc: '上山下乡运动高潮期，16 岁多的孙葛到吐鲁番接受再教育。',
+        historicalContext: '上山下乡运动高潮。1969—1976 年间约 1202 万知青下乡，她是“老三届”之后的下乡青年。',
+        historicalPhoto: { src: historicalPhotos.h1972, caption: '1970 年代知识青年在政治集会上宣誓的场景。上山下乡运动高潮期，城市青年响应号召赴农村接受再教育。' },
+        quote: null,
+        album: 'b',
+        relatedPhotos: [],
+        points: [],
+        lines: [['乌鲁木齐', '吐鲁番', '孙葛下乡路线']]
+      },
+      {
+        year: '1975',
+        title: '范瑶珠赴艾丁湖公社巡回医疗',
+        person: '范瑶珠',
+        gen: '第一代',
+        desc: '响应“把医疗卫生工作重点放到农村去”，随四人医疗小组赴吐鲁番艾丁湖公社一年。',
+        historicalContext: '1965 年“六二六指示”后，城市医务人员下乡巡回医疗成为制度；赤脚医生、合作医疗运动在 1970 年代达到高峰。',
+        historicalPhoto: { src: historicalPhotos.h1975, caption: '赤脚医生挎着药箱涉水走家串户，为农民巡回医疗。1970 年代农村合作医疗运动进入高峰。' },
+        quote: null,
+        album: 'h',
+        relatedPhotos: [photos.h14],
+        points: [],
+        lines: [['乌鲁木齐', '艾丁湖', '巡回医疗路线']]
+      },
+      {
+        year: '1976',
+        title: '孙葛赴克拉玛依任教',
+        person: '孙葛',
+        gen: '第二代',
+        desc: '孙葛从下乡返城后，被分配到克拉玛依师范学校任教。',
+        historicalContext: '克拉玛依油田是新中国第一个大油田，1970 年代油田配套教育体系建设，她从知青/培训生转为油田教育工作者。',
+        historicalPhoto: { src: historicalPhotos.h1976, caption: '1970 年代克拉玛依油田炼化区与储油罐群的航拍景象。油田配套工业与教育体系的发展，吸引知青转型为油田教育工作者。' },
+        quote: null,
+        album: 'h',
+        relatedPhotos: [photos.h15],
+        points: [],
+        lines: [['乌鲁木齐', '克拉玛依', '孙葛赴克拉玛依']]
+      },
+      {
+        year: '1990',
+        title: '江南探亲，孙钢三兄弟杭州重逢',
+        person: '范瑶珠、孙钢、孙葛、孙晓舞',
+        gen: '第一/二代',
+        desc: '1987 年两岸开放探亲后，全家回上海、杭州、绍兴探亲；孙钢与分离四五十年的兄弟重逢。',
+        historicalContext: '1987 年 10 月台湾开放居民赴大陆探亲，两岸打破自 1949 年以来 38 年隔绝；国共内战导致家族离散。',
+        historicalPhoto: { src: historicalPhotos.h1990, caption: '1987 年台湾开放居民赴大陆探亲后，一名台湾老兵回到浙江舟山老家，与阔别近四十年的亲人重逢。这张照片成为两岸离散家庭重聚的缩影。' },
+        quote: { text: '四五十年终于见到面。', source: '孙晓舞一方晚辈，《家族相册整理记录》' },
+        album: 'd',
+        relatedPhotos: [photos.d001, photos.d003, photos.d004, photos.d005],
+        points: [],
+        lines: [['乌鲁木齐', '上海', '1990 年回上海探亲'], ['乌鲁木齐', '杭州', '1990 年到杭州探亲'], ['乌鲁木齐', '绍兴', '1990 年到绍兴探亲']]
+      },
+      {
+        year: '1999',
+        title: '孙晓舞从美国回乌鲁木齐探亲',
+        person: '孙晓舞',
+        gen: '第二代',
+        desc: '改革开放后出国留学，孙晓舞从美国回乌鲁木齐探亲。',
+        historicalContext: '改革开放后出国留学与跨国移民增多，全球化带来新型家庭离散与重聚。',
+        historicalPhoto: { src: historicalPhotos.h1999, caption: '1993 年电视剧《北京人在纽约》海报。这部作品生动呈现了九十年代中国人赴美留学、打拼与跨国生活的时代图景，是改革开放后留学移民潮的文化符号。' },
+        quote: null,
+        album: 'c',
+        relatedPhotos: [photos.c001, photos.c002],
+        points: [],
+        lines: [['美国', '乌鲁木齐', '孙晓舞跨国探亲']]
+      },
+      {
+        year: '2000',
+        title: '跨国家庭团聚',
+        person: '孙晓舞、孙钢、范瑶珠等',
+        gen: '第一/二代',
+        desc: '2000 年全家在乌鲁木齐聚餐，记录全球化时代的家庭团聚。',
+        historicalContext: '照相已完全日常化，跨国家庭团聚成为新的家庭影像主题。',
+        historicalPhoto: { src: historicalPhotos.h2000, caption: '2000 年佛山一户家庭拍摄的春节全家福。进入新世纪，照相已完全日常化，家庭团聚时刻被影像忠实记录，成为跨国家庭重逢的温馨注脚。' },
+        quote: null,
+        album: 'c',
+        relatedPhotos: [photos.c001, photos.c002],
+        points: [['乌鲁木齐', '2000 年家庭聚餐']],
+        lines: []
+      }
+    ];
+
+    // 将年份字符串转为数值时间（支持 1953.09 这类月份）
+    function parseYear(yearStr) {
+      if (String(yearStr).includes('.')) {
+        const [y, m] = String(yearStr).split('.').map(Number);
+        return y + (m - 1) / 12;
+      }
+      return Number(yearStr);
+    }
+    steps.forEach(step => { step.time = parseYear(step.year); });
+
+    // 汇总每个地点的事件与照片
+    const locationEvents = {};
+    Object.keys(locations).forEach(name => locationEvents[name] = []);
+    steps.forEach(step => {
+      const places = new Set();
+      step.points.forEach(([name]) => places.add(name));
+      step.lines.forEach(([from, to]) => { places.add(from); places.add(to); });
+      places.forEach(place => {
+        if (!locationEvents[place]) locationEvents[place] = [];
+        locationEvents[place].push({
+          year: step.year,
+          title: step.title,
+          desc: step.desc,
+          person: step.person,
+          gen: step.gen,
+          photos: step.relatedPhotos || []
+        });
+      });
+    });
+
+    function toRad(d) { return d * Math.PI / 180; }
+    function toDeg(r) { return r * 180 / Math.PI; }
+
+    // 大圆插值
+    function greatCircle(from, to, segments = 64) {
+      const [lng1, lat1] = from;
+      const [lng2, lat2] = to;
+      const lon1 = toRad(lng1), la1 = toRad(lat1);
+      const lon2 = toRad(lng2), la2 = toRad(lat2);
+      const d = 2 * Math.asin(Math.sqrt(
+        Math.sin((la2 - la1) / 2) ** 2 +
+        Math.cos(la1) * Math.cos(la2) * Math.sin((lon2 - lon1) / 2) ** 2
+      ));
+      if (d < 0.001 || Number.isNaN(d)) return [[lng1, lat1], [lng2, lat2]];
+      const coords = [];
+      for (let i = 0; i <= segments; i++) {
+        const f = i / segments;
+        const A = Math.sin((1 - f) * d) / Math.sin(d);
+        const B = Math.sin(f * d) / Math.sin(d);
+        const x = A * Math.cos(la1) * Math.cos(lon1) + B * Math.cos(la2) * Math.cos(lon2);
+        const y = A * Math.cos(la1) * Math.sin(lon1) + B * Math.cos(la2) * Math.sin(lon2);
+        const z = A * Math.sin(la1) + B * Math.sin(la2);
+        const lat = toDeg(Math.atan2(z, Math.sqrt(x * x + y * y)));
+        const lng = toDeg(Math.atan2(y, x));
+        coords.push([lng, lat]);
+      }
+      return coords;
+    }
+
+    // 二次贝塞尔曲线，用于短程线避免重叠
+    function bezierCurve(from, to, bend = 0.2) {
+      const [x1, y1] = from;
+      const [x2, y2] = to;
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const len = Math.sqrt(dx * dx + dy * dy) || 1;
+      const cx = mx - (dy / len) * bend * len;
+      const cy = my + (dx / len) * bend * len;
+      const coords = [];
+      for (let i = 0; i <= 30; i++) {
+        const t = i / 30;
+        const x = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * cx + t * t * x2;
+        const y = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * cy + t * t * y2;
+        coords.push([x, y]);
+      }
+      return coords;
+    }
+
+    function routeCoords(from, to) {
+      const [flng, flat] = locations[from];
+      const [tlng, tlat] = locations[to];
+      const dist = Math.sqrt((flng - tlng) ** 2 + (flat - tlat) ** 2);
+      // 长距离用大圆弧，短距离用贝塞尔曲线
+      if (dist > 25) return greatCircle([flng, flat], [tlng, tlat]);
+      return bezierCurve([flng, flat], [tlng, tlat], 0.25);
+    }
+
+    function makePointFeature(name, props) {
+      const [lng, lat] = locations[name];
+      return {
+        type: 'Feature',
+        properties: { ...props, name },
+        geometry: { type: 'Point', coordinates: [lng, lat] }
+      };
+    }
+
+    function makeLineFeature(from, to, props) {
+      const coords = routeCoords(from, to);
+      return {
+        type: 'Feature',
+        properties: { ...props, from, to },
+        geometry: { type: 'LineString', coordinates: coords }
+      };
+    }
+
+    // 用于 L7 arc 形状的 2 点线段（起点、终点），由 L7 自动绘制弧线
+    function makeArcFeature(from, to, props) {
+      const [flng, flat] = locations[from];
+      const [tlng, tlat] = locations[to];
+      return {
+        type: 'Feature',
+        properties: { ...props, from, to },
+        geometry: { type: 'LineString', coordinates: [[flng, flat], [tlng, tlat]] }
+      };
+    }
+
+    // 生成箭头点（在线条终点）
+    function makeArrowFeature(lineFeature) {
+      const coords = lineFeature.geometry.coordinates;
+      const end = coords[coords.length - 1];
+      const prev = coords[coords.length - 4] || coords[coords.length - 2] || end;
+      return {
+        type: 'Feature',
+        properties: { ...lineFeature.properties },
+        geometry: { type: 'Point', coordinates: end },
+        _direction: [end[0] - prev[0], end[1] - prev[1]]
+      };
+    }
+
+    const stepData = steps.map((step) => {
+      const newPoints = step.points.map(([name, note]) => makePointFeature(name, {
+        year: step.year,
+        person: step.person,
+        gen: step.gen,
+        note
+      }));
+      const newLines = step.lines.map(([from, to, note]) => makeLineFeature(from, to, {
+        year: step.year,
+        person: step.person,
+        gen: step.gen,
+        note
+      }));
+      return { newPoints, newLines };
+    });
+
+    const baseStyle = {
+      version: 8,
+      sources: {
+        esri: {
+          type: 'raster',
+          tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'],
+          tileSize: 256,
+          attribution: '© Esri'
+        }
+      },
+      layers: [{
+        id: 'esri',
+        type: 'raster',
+        source: 'esri'
+      }]
+    };
+
+    const scene = new Scene({
+      id: 'map',
+      map: new MapLibre({
+        style: baseStyle,
+        center: [95, 36],
+        zoom: 3.8,
+        pitch: 0,
+        rotation: 0
+      }),
+      logoVisible: false
+    });
+
+    let pointLayer, lineLayer, labelLayer, activeLineLayer, activePointLayer, pulseLayer;
+    let currentStep = 0;
+    let currentTime = steps[0] ? steps[0].time : 1931;
+    let isPlaying = false;
+    let playTimer = null;
+
+    scene.on('loaded', () => {
+      // 历史迁徙线：极细、半透明，作为背景脉络
+      lineLayer = new LineLayer({ zIndex: 1 })
+        .source({ type: 'FeatureCollection', features: [] })
+        .shape('line')
+        .size(1.5)
+        .color('gen', (g) => colors[g] || '#8C8371')
+        .style({ opacity: 0.22 });
+
+      // 当前步骤迁徙线：曲线 + 流动动画，突出方向感
+      activeLineLayer = new LineLayer({ zIndex: 2 })
+        .source({ type: 'FeatureCollection', features: [] })
+        .shape('line')
+        .size(3)
+        .color('gen', (g) => colors[g] || '#8C8371')
+        .animate({ interval: 0.5, trailLength: 0.4, duration: 1.8 })
+        .style({ opacity: 0.92 });
+
+      pointLayer = new PointLayer({ zIndex: 4 })
+        .source({ type: 'FeatureCollection', features: [] })
+        .shape('circle')
+        .size(8)
+        .color('gen', (g) => colors[g] || '#8C8371')
+        .style({ strokeWidth: 2, stroke: '#fff', opacity: 0.85 });
+
+      pulseLayer = new PointLayer({ zIndex: 5 })
+        .source({ type: 'FeatureCollection', features: [] })
+        .shape('circle')
+        .size(20)
+        .color('gen', (g) => colors[g] || '#8C8371')
+        .style({ strokeWidth: 2, stroke: '#fff', opacity: 0.5 });
+
+      activePointLayer = new PointLayer({ zIndex: 6 })
+        .source({ type: 'FeatureCollection', features: [] })
+        .shape('circle')
+        .size(16)
+        .color(colors['当前'])
+        .style({ strokeWidth: 3, stroke: '#fff', opacity: 1 });
+
+      labelLayer = new PointLayer({ zIndex: 7 })
+        .source({ type: 'FeatureCollection', features: [] })
+        .shape('name', 'text')
+        .size(13)
+        .color('#2c241b')
+        .style({
+          textOffset: [0, -20],
+          stroke: '#fffef8',
+          strokeWidth: 3,
+          textAllowOverlap: true,
+          fontFamily: 'PingFang SC, Microsoft YaHei, Noto Sans CJK SC, serif',
+          textAnchor: 'center'
+        });
+
+      scene.addLayer(lineLayer);
+      scene.addLayer(activeLineLayer);
+      scene.addLayer(pointLayer);
+      scene.addLayer(pulseLayer);
+      scene.addLayer(activePointLayer);
+      scene.addLayer(labelLayer);
+
+      function findNearestLocation(lng, lat, thresholdDeg = 1.5) {
+        let nearest = null;
+        let minDist = Infinity;
+        Object.entries(locations).forEach(([name, [plng, plat]]) => {
+          const d = Math.sqrt((plng - lng) ** 2 + (plat - lat) ** 2);
+          if (d < minDist) { minDist = d; nearest = name; }
+        });
+        return minDist <= thresholdDeg ? nearest : null;
+      }
+
+      pointLayer.on('click', (e) => {
+        const name = e.feature && e.feature.properties && e.feature.properties.name;
+        if (name) openLocationDrawer(name);
+      });
+
+      // L7 + MapLibre 组合下 layer click 有时被 pointer-events 拦截，用容器点击兜底
+      document.getElementById('map').addEventListener('click', (e) => {
+        if (e.target.closest('.info-card') || e.target.closest('.timeline-bar') || e.target.closest('.legend')) return;
+        const rect = document.getElementById('map').getBoundingClientRect();
+        const lngLat = scene.pixelToLngLat([e.clientX - rect.left, e.clientY - rect.top]);
+        const name = findNearestLocation(lngLat.lng, lngLat.lat, 1.8);
+        if (name) openLocationDrawer(name);
+      });
+
+      document.getElementById('map').addEventListener('mousemove', (e) => {
+        const rect = document.getElementById('map').getBoundingClientRect();
+        const lngLat = scene.pixelToLngLat([e.clientX - rect.left, e.clientY - rect.top]);
+        const name = findNearestLocation(lngLat.lng, lngLat.lat, 1.2);
+        document.body.style.cursor = name ? 'pointer' : 'default';
+      });
+
+      renderTimeline();
+      goToStep(0);
+    });
+
+    function getVisibleFeatures(stepIndex) {
+      const points = [];
+      const lines = [];
+      for (let i = 0; i <= stepIndex; i++) {
+        points.push(...stepData[i].newPoints);
+        lines.push(...stepData[i].newLines);
+      }
+      return { points, lines };
+    }
+
+    function getStepIndexAtTime(time) {
+      let idx = 0;
+      for (let i = 0; i < steps.length; i++) {
+        if (steps[i].time <= time) idx = i;
+        else break;
+      }
+      return idx;
+    }
+
+    function formatTimeDisplay(time) {
+      const year = Math.floor(time);
+      const month = Math.round((time - year) * 12) + 1;
+      if (month === 1) return String(year);
+      return `${year}.${String(month).padStart(2, '0')}`;
+    }
+
+    function updateCards(index) {
+      const step = steps[index];
+
+      // 更新家族个人事件卡片
+      document.getElementById('personalYear').textContent = step.year;
+      document.getElementById('personalTitle').textContent = step.title;
+      document.getElementById('personalMeta').textContent = `人物：${step.person} · ${step.gen}`;
+      document.getElementById('personalDesc').textContent = step.desc;
+
+      const quoteSection = document.getElementById('personalQuoteSection');
+      const quoteEl = document.getElementById('personalQuote');
+      if (step.quote) {
+        quoteSection.style.display = 'block';
+        quoteEl.innerHTML = `“${step.quote.text}”<span class="source">—— ${step.quote.source}</span>`;
+      } else {
+        quoteSection.style.display = 'none';
+      }
+
+      const photoSection = document.getElementById('personalPhotoSection');
+      const photosEl = document.getElementById('personalPhotos');
+      if (step.relatedPhotos && step.relatedPhotos.length) {
+        photoSection.style.display = 'block';
+        photosEl.innerHTML = step.relatedPhotos.map(src =>
+          `<img src="${src}" alt="照片" onclick="openLightbox('${src}')">`
+        ).join('');
+      } else {
+        photoSection.style.display = 'none';
+      }
+
+      const albumSection = document.getElementById('personalAlbumSection');
+      const albumEl = document.getElementById('personalAlbum');
+      if (step.album && albumNames[step.album]) {
+        albumSection.style.display = 'block';
+        albumEl.textContent = albumNames[step.album];
+      } else {
+        albumSection.style.display = 'none';
+      }
+
+      // 更新时代背景卡片
+      document.getElementById('historyYear').textContent = step.year;
+      document.getElementById('historyContext').textContent = step.historicalContext || '—';
+
+      const historyPhotoSection = document.getElementById('historyPhotoSection');
+      const historyPhotoEl = document.getElementById('historyPhoto');
+      if (step.historicalPhoto) {
+        historyPhotoSection.style.display = 'block';
+        historyPhotoEl.innerHTML = `
+          <img src="${step.historicalPhoto.src}" alt="${step.historicalPhoto.caption}" onclick="openLightbox('${step.historicalPhoto.src}')">
+          <div class="caption">${step.historicalPhoto.caption}</div>
+        `;
+      } else {
+        historyPhotoSection.style.display = 'none';
+      }
+    }
+
+    function updateTimelineUI() {
+      const slider = document.getElementById('timeSlider');
+      if (slider) slider.value = currentTime;
+      const display = document.getElementById('timeDisplay');
+      if (display) display.textContent = formatTimeDisplay(currentTime);
+      const yearDisplay = document.getElementById('mapYearDisplay');
+      if (yearDisplay) yearDisplay.textContent = Math.floor(currentTime);
+
+      document.querySelectorAll('.time-tick').forEach((el, i) => {
+        el.classList.toggle('active', i === currentStep);
+      });
+
+      document.getElementById('prevBtn').disabled = currentStep === 0;
+      document.getElementById('nextBtn').disabled = currentStep === steps.length - 1;
+    }
+
+    function fitToFeatures(points, lines) {
+      const bbox = [180, 90, -180, -90];
+      const expand = (coord) => {
+        bbox[0] = Math.min(bbox[0], coord[0]);
+        bbox[1] = Math.min(bbox[1], coord[1]);
+        bbox[2] = Math.max(bbox[2], coord[0]);
+        bbox[3] = Math.max(bbox[3], coord[1]);
+      };
+      [...points, ...lines].forEach((f) => {
+        if (f.geometry.type === 'Point') expand(f.geometry.coordinates);
+        if (f.geometry.type === 'LineString') f.geometry.coordinates.forEach(expand);
+      });
+      if (bbox[0] < 180) {
+        const minSpan = 0.3;
+        if (bbox[2] - bbox[0] < minSpan) {
+          const midX = (bbox[0] + bbox[2]) / 2;
+          bbox[0] = midX - minSpan / 2;
+          bbox[2] = midX + minSpan / 2;
+        }
+        if (bbox[3] - bbox[1] < minSpan) {
+          const midY = (bbox[1] + bbox[3]) / 2;
+          bbox[1] = midY - minSpan / 2;
+          bbox[3] = midY + minSpan / 2;
+        }
+        scene.fitBounds(bbox, { padding: 70, maxZoom: 10 });
+      }
+    }
+
+    function updateMap(index, shouldFitBounds) {
+      const { points, lines } = getVisibleFeatures(index);
+      pointLayer.setData({ type: 'FeatureCollection', features: points });
+      lineLayer.setData({ type: 'FeatureCollection', features: lines });
+      labelLayer.setData({ type: 'FeatureCollection', features: points });
+
+      const activePoints = stepData[index].newPoints;
+      activePointLayer.setData({ type: 'FeatureCollection', features: activePoints });
+      pulseLayer.setData({ type: 'FeatureCollection', features: activePoints });
+
+      // 当前步骤使用预计算曲线 + 流动动画
+      const activeLines = stepData[index].newLines;
+      activeLineLayer.setData({ type: 'FeatureCollection', features: activeLines });
+
+      // 脉冲动画：通过周期性改变大小实现
+      startPulseAnimation(activePoints);
+
+      if (shouldFitBounds) {
+        fitToFeatures(points, lines);
+      }
+    }
+
+    function goToTime(time, shouldFitBounds = true) {
+      const minTime = steps[0].time;
+      const maxTime = steps[steps.length - 1].time;
+      currentTime = Math.max(minTime, Math.min(maxTime, time));
+      const newStepIndex = getStepIndexAtTime(currentTime);
+      const stepChanged = newStepIndex !== currentStep;
+      currentStep = newStepIndex;
+
+      updateCards(newStepIndex);
+      updateTimelineUI();
+      updateMap(newStepIndex, stepChanged && shouldFitBounds);
+      checkEnding();
+    }
+
+    function goToStep(index) {
+      goToTime(steps[index].time);
+    }
+
+    function checkEnding() {
+      const hint = document.getElementById('endingHint');
+      if (currentStep === steps.length - 1) {
+        hint.classList.add('active');
+      } else {
+        hint.classList.remove('active');
+        document.getElementById('journeyEnding').classList.remove('active');
+      }
+    }
+
+    function showEnding() {
+      document.getElementById('journeyEnding').classList.add('active');
+      document.getElementById('endingHint').classList.remove('active');
+    }
+
+    document.getElementById('endingHint').addEventListener('click', showEnding);
+
+    let pulseFrame = null;
+    function startPulseAnimation(points) {
+      if (pulseFrame) cancelAnimationFrame(pulseFrame);
+      if (!points.length) return;
+      let t = 0;
+      function animate() {
+        t += 0.08;
+        const size = 16 + Math.sin(t) * 6;
+        pulseLayer.size(size);
+        pulseLayer.style({ opacity: 0.4 + Math.sin(t) * 0.2 });
+        pulseFrame = requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    function renderTimeline() {
+      const slider = document.getElementById('timeSlider');
+      const ticks = document.getElementById('timeTicks');
+      if (!slider || !ticks) return;
+
+      slider.min = steps[0].time;
+      slider.max = steps[steps.length - 1].time;
+      slider.value = steps[0].time;
+      slider.step = 0.001;
+
+      const total = steps[steps.length - 1].time - steps[0].time;
+      ticks.innerHTML = '';
+
+      const minGapPct = 3.2;
+      let lastShownPct = -Infinity;
+
+      steps.forEach((step, i) => {
+        const leftPct = ((step.time - steps[0].time) / total) * 100;
+        const isMajor = !String(step.year).includes('.');
+
+        const tick = document.createElement('div');
+        tick.className = 'time-tick';
+        tick.style.left = `${leftPct}%`;
+        tick.title = `${step.year} · ${step.title}`;
+
+        // 标签密度控制：优先显示整数年份；次要年份在间距足够时才显示
+        const gap = leftPct - lastShownPct;
+        if (gap >= minGapPct || (isMajor && gap >= minGapPct * 0.6)) {
+          tick.textContent = step.year;
+          lastShownPct = leftPct;
+          tick.classList.add('labeled');
+        } else {
+          tick.classList.add('unlabeled');
+        }
+
+        ticks.appendChild(tick);
+      });
+
+      slider.addEventListener('input', () => {
+        goToTime(parseFloat(slider.value), false);
+      });
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentStep > 0) goToStep(currentStep - 1);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentStep < steps.length - 1) goToStep(currentStep + 1);
+    });
+
+    window.toggleCard = function(id) {
+      const card = document.getElementById(id);
+      if (!card) return;
+      card.classList.toggle('collapsed');
+      const btn = card.querySelector('.card-toggle');
+      if (btn) {
+        const lang = (typeof fanI18nDict !== 'undefined' && window.fanI18nDict && localStorage.getItem('fanfamily_lang') === 'en') ? 'en' : 'zh';
+        const key = card.classList.contains('collapsed') ? 'card.expand' : 'card.collapse';
+        btn.textContent = (window.fanI18nDict && window.fanI18nDict[key]) ? window.fanI18nDict[key][lang] : (card.classList.contains('collapsed') ? '展开' : '收起');
+        btn.dataset.i18n = key;
+      }
+    };
+
+    const playBtn = document.getElementById('playBtn');
+    playBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        stopPlay();
+      } else {
+        startPlay();
+      }
+    });
+
+    function startPlay() {
+      isPlaying = true;
+      playBtn.textContent = '⏸ 暂停';
+      const maxTime = steps[steps.length - 1].time;
+      if (currentTime >= maxTime) goToTime(steps[0].time);
+      playTimer = setInterval(() => {
+        const nextTime = currentTime + 0.15;
+        if (nextTime >= maxTime) {
+          goToTime(maxTime);
+          stopPlay();
+          setTimeout(showEnding, 700);
+        } else {
+          goToTime(nextTime, false);
+        }
+      }, 50);
+    }
+
+    function stopPlay() {
+      isPlaying = false;
+      playBtn.textContent = '▶ 播放';
+      if (playTimer) clearInterval(playTimer);
+    }
+
+    // 地点侧栏
+    function openLocationDrawer(name) {
+      const drawer = document.getElementById('locationDrawer');
+      const overlay = document.getElementById('overlay');
+      const events = locationEvents[name] || [];
+      const coord = locations[name];
+
+      document.getElementById('drawerTitle').textContent = name;
+      document.getElementById('drawerCoord').textContent = `${coord[1].toFixed(2)}°N, ${coord[0].toFixed(2)}°E`;
+
+      const eventsEl = document.getElementById('drawerEvents');
+      if (events.length) {
+        eventsEl.innerHTML = events.map(e => `
+          <div class="event-item">
+            <div class="event-year">${e.year}</div>
+            <div class="event-title">${e.title}</div>
+            <div class="event-desc">${e.desc}</div>
+          </div>
+        `).join('');
+      } else {
+        eventsEl.innerHTML = '<p style="color:var(--muted)">该地点暂无事件记录。</p>';
+      }
+
+      const allPhotos = [...new Set(events.flatMap(e => e.photos))];
+      const photosEl = document.getElementById('drawerPhotos');
+      document.getElementById('drawerPhotoSection').style.display = allPhotos.length ? 'block' : 'none';
+      photosEl.innerHTML = allPhotos.map(src =>
+        `<img src="${src}" alt="照片" onclick="openLightbox('${src}')">`
+      ).join('');
+
+      drawer.classList.add('open');
+      overlay.classList.add('active');
+    }
+
+    function closeLocationDrawer() {
+      document.getElementById('locationDrawer').classList.remove('open');
+      document.getElementById('overlay').classList.remove('active');
+    }
+
+    window.openLocationDrawer = openLocationDrawer;
+
+    document.getElementById('drawerClose').addEventListener('click', closeLocationDrawer);
+    document.getElementById('overlay').addEventListener('click', closeLocationDrawer);
+
+    // Lightbox
+    window.openLightbox = function(src) {
+      const lb = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      img.src = src;
+      lb.classList.add('active');
+    };
+    window.closeLightbox = function() {
+      document.getElementById('lightbox').classList.remove('active');
+    };
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') window.closeLightbox();
+    });
+  </script>
+  <script src="./assets/js/pjax.js"></script>
+  <script src="./assets/js/audio-controller.js"></script>
+  <script>
+    window.fanI18nDict = {
+      'brand.title': { zh: 'Fan Family · 视觉档案', en: 'Fan Family · Visual Archive' },
+      'nav.story': { zh: '故事线', en: 'Story' },
+      'nav.museum': { zh: '物件博物馆', en: 'Museum' },
+      'nav.map': { zh: '迁移地图', en: 'Migration Map' },
+      'btn.next': { zh: '下一站：同学们 →', en: 'Next: Classmates →' },
+      'ending.hint': { zh: '故事已到终点 · 点击查看收束', en: 'Story ends · Click to view conclusion' },
+      'ending.title': { zh: '二人合葬于乌鲁木齐东山生态园公墓。<br>面朝<span>东方</span>——<br>他们<span>来时的方向</span>。', en: 'They are buried together in Dongshan Ecological Park Cemetery, Urumqi.<br>Facing <span>east</span>—<br>the direction they <span>came from</span>.' },
+      'ending.years': { zh: '她 1953 年来疆，在此 66 年。<br>他 1954 年来疆，在此 66 年。', en: 'She came to Xinjiang in 1953, staying 66 years.<br>He came to Xinjiang in 1954, staying 66 years.' },
+      'ending.back': { zh: '回到封面', en: 'Back to Cover' },
+      'ending.again': { zh: '再看一次', en: 'Watch Again' },
+      'legend.title': { zh: '图例', en: 'Legend' },
+      'legend.gen1': { zh: '第一代：范瑶珠、孙钢', en: 'Gen 1: Fan Yaozhu, Sun Gang' },
+      'legend.gen2': { zh: '第二代：孙葛、孙晓舞', en: 'Gen 2: Sun Ge, Sun Xiaowu' },
+      'legend.gen3': { zh: '第三代：李宜斐', en: 'Gen 3: Li Yifei' },
+      'legend.active': { zh: '当前步骤高亮', en: 'Current step highlight' },
+      'legend.history': { zh: '历史迁徙线', en: 'Historical migration lines' },
+      'legend.current': { zh: '当前流动线', en: 'Current flowing line' },
+      'hint.text': { zh: '提示：点击地图上的地点可查看该地点的所有事件与照片', en: 'Tip: Click locations on the map to view all events and photos' },
+      'timeline.prev': { zh: '‹ 事件', en: '‹ Prev' },
+      'timeline.next': { zh: '事件 ›', en: 'Next ›' },
+      'timeline.play': { zh: '▶ 播放', en: '▶ Play' },
+      'timeline.pause': { zh: '⏸ 暂停', en: '⏸ Pause' },
+      'card.personal': { zh: '家族个人事件', en: 'Family Events' },
+      'card.history': { zh: '时代背景', en: 'Historical Context' },
+      'card.photos': { zh: '相关照片', en: 'Related Photos' },
+      'card.album': { zh: '关联相册', en: 'Related Album' },
+      'card.expand': { zh: '展开', en: 'Expand' },
+      'card.collapse': { zh: '收起', en: 'Collapse' },
+      'card.person': { zh: '人物：', en: 'Person: ' },
+      'card.gen': { zh: '第一代', en: 'Gen 1' }
+    };
+  </script>
+  <script src="./assets/js/i18n.js"></script>
+</body>
+</html>

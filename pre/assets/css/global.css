@@ -1,0 +1,152 @@
+/* Fan Family 全局统一样式 */
+:root {
+  --bg: #f7f3ec;
+  --bg-dark: #e8e0d4;
+  --ink: #2c241b;
+  --ink-light: #5a5045;
+  --paper: #fffef8;
+  --paper-trans: rgba(255, 254, 248, 0.94);
+  --accent: #8b4513;
+  --accent-light: #a65d2e;
+  --teal: #4a6b6b;
+  --teal-light: #6b8a8a;
+  --muted: #8a7f70;
+  --red: #8b4513;
+  --shadow: rgba(44, 36, 27, 0.12);
+  --shadow-deep: rgba(44, 36, 27, 0.22);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 统一顶部导航 */
+.fan-top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  background: rgba(247, 243, 236, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(139, 69, 19, 0.08);
+}
+
+.fan-top-bar > * { pointer-events: auto; }
+
+.fan-brand {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.fan-journey {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.72rem;
+}
+
+.fan-journey .step {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.fan-journey .step::after {
+  content: "→";
+  opacity: 0.2;
+  margin-left: 0.1rem;
+  font-size: 0.65rem;
+}
+
+.fan-journey .step:last-child::after { display: none; }
+.fan-journey .step:hover { color: var(--accent); }
+.fan-journey .step.active { color: var(--accent); font-weight: 600; }
+.fan-journey .step.active .dot { background: var(--accent); border-color: var(--accent); }
+.fan-journey .step.completed { color: var(--accent-light); }
+.fan-journey .step.completed .dot { background: var(--accent-light); border-color: var(--accent-light); }
+
+.fan-journey .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+}
+
+/* 统一按钮 */
+.fan-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 69, 19, 0.18);
+  background: rgba(255, 254, 248, 0.9);
+  color: var(--accent);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease), background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 12px rgba(44, 36, 27, 0.08);
+}
+
+.fan-btn:hover {
+  transform: translateY(-1px);
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(44, 36, 27, 0.12);
+}
+
+.fan-btn.primary {
+  background: var(--accent);
+  color: var(--paper);
+  border-color: var(--accent);
+}
+
+.fan-btn.primary:hover {
+  background: var(--accent-light);
+}
+
+/* 统一卡片 */
+.fan-card {
+  background: var(--paper);
+  border: 1px solid rgba(139, 69, 19, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 12px 40px var(--shadow);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+.fan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px var(--shadow-deep);
+}
+
+/* 统一页面淡入 */
+body {
+  animation: fan-fade-in 0.35s ease;
+}
+
+@keyframes fan-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .fan-top-bar { padding: 0.8rem 1rem; }
+  .fan-journey { gap: 0.4rem; font-size: 0.65rem; }
+  .fan-journey .step label { display: none; }
+  .fan-journey .step::after { margin-left: 0; }
+  .fan-brand { font-size: 0.85rem; }
+}

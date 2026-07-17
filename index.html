@@ -22,6 +22,7 @@
         <li><a href="deep-service.html" data-i18n="nav_deep_service">深度服务</a></li>
         <li><a href="find-teammate.html" data-i18n="nav_find_teammate">商务合作</a></li>
         <li><a href="#contact" data-i18n="nav_contact">联系我们</a></li>
+        <li><a href="#" id="preBtn" data-i18n="nav_pre">pre</a></li>
       </ul>
       <button class="mobile-menu-btn">&#9776;</button>
     </div>
@@ -744,5 +745,67 @@
     }
   })();
 </script>
+  <script>
+    (function() {
+      var preBtn = document.getElementById('preBtn');
+      if (!preBtn) return;
+
+      var modalHtml = `
+        <div id="preModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+          <div style="background:#1a1a1f;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:2rem;width:90%;max-width:360px;text-align:center;color:#f0f0fa;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+            <h3 style="margin:0 0 0.5rem;font-size:1.1rem;letter-spacing:0.05em;">进入预览</h3>
+            <p style="margin:0 0 1.2rem;font-size:0.85rem;color:rgba(240,240,250,0.6);">请输入访问密码</p>
+            <input type="password" id="prePassword" placeholder="Password" style="width:100%;padding:0.75rem 1rem;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#f0f0fa;font-size:1rem;text-align:center;letter-spacing:0.1em;outline:none;margin-bottom:1rem;">
+            <div style="display:flex;gap:0.6rem;justify-content:center;">
+              <button id="preCancel" style="padding:0.6rem 1.2rem;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(240,240,250,0.7);font-size:0.85rem;cursor:pointer;">取消</button>
+              <button id="preConfirm" style="padding:0.6rem 1.4rem;border-radius:8px;border:none;background:var(--apple-blue,#007aff);color:#fff;font-size:0.85rem;font-weight:600;cursor:pointer;">确认</button>
+            </div>
+            <p id="preError" style="display:none;margin:0.8rem 0 0;font-size:0.8rem;color:#ff6b6b;">密码错误</p>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+      var modal = document.getElementById('preModal');
+      var input = document.getElementById('prePassword');
+      var error = document.getElementById('preError');
+
+      function openModal() {
+        modal.style.display = 'flex';
+        input.value = '';
+        error.style.display = 'none';
+        setTimeout(function() { input.focus(); }, 100);
+      }
+
+      function closeModal() {
+        modal.style.display = 'none';
+      }
+
+      function checkPassword() {
+        if (input.value === '0717') {
+          window.location.href = 'pre/index.html';
+        } else {
+          error.style.display = 'block';
+          input.value = '';
+          input.focus();
+        }
+      }
+
+      preBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openModal();
+      });
+
+      document.getElementById('preCancel').addEventListener('click', closeModal);
+      document.getElementById('preConfirm').addEventListener('click', checkPassword);
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkPassword();
+        if (e.key === 'Escape') closeModal();
+      });
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+      });
+    })();
+  </script>
 </body>
 </html>

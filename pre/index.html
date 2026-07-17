@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>封面 · Fan Family 家庭照相史</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f3ec;
+      --paper: #fdfcf5;
+      --ink: #2c241b;
+      --ink-light: #5a5045;
+      --accent: #8b4513;
+      --accent-light: #a65d2e;
+      --red: #a12d2d;
+      --muted: #8a7f70;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.001s !important; animation-duration: 0.001s !important; }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: "Noto Serif SC", "Songti SC", "PingFang SC", "Microsoft YaHei", Georgia, serif;
+      background: var(--bg);
+      color: var(--ink);
+      cursor: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @media (pointer: coarse) {
+      html, body { cursor: auto; }
+    }
+
+    .paper-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 18% 24%, rgba(139,69,19,0.04) 0%, transparent 35%),
+        radial-gradient(circle at 82% 76%, rgba(139,69,19,0.03) 0%, transparent 30%),
+        repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(139,69,19,0.012) 3px, rgba(139,69,19,0.012) 4px),
+        repeating-linear-gradient(90deg, transparent 0, transparent 3px, rgba(139,69,19,0.009) 3px, rgba(139,69,19,0.009) 4px);
+    }
+    .paper-bg::after {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: url("./assets/photos/单张照片/J-104-01.jpg");
+      background-size: cover;
+      background-position: center;
+      opacity: 0.08;
+      filter: grayscale(100%) blur(2px);
+      pointer-events: none;
+    }
+
+    .custom-cursor {
+      position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none;
+      width: 14px; height: 14px; background: var(--red);
+      transform: translate3d(-50%, -50%, 0);
+      transition: width .2s var(--ease), height .2s var(--ease), background .2s, opacity .2s;
+      mix-blend-mode: difference;
+      border-radius: 0;
+    }
+    .custom-cursor.hidden { opacity: 0; }
+    .custom-cursor.hover { width: 40px; height: 40px; background: rgba(161,45,45,0.12); border: 1px solid var(--red); mix-blend-mode: normal; }
+    .custom-cursor.dragging { width: 10px; height: 10px; background: transparent; border: 1px solid var(--red); mix-blend-mode: normal; }
+    @media (pointer: coarse) { .custom-cursor { display: none; } }
+
+    .intro-cover {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 2rem;
+      opacity: 1; visibility: visible;
+      transition: opacity .8s var(--ease), visibility .8s;
+    }
+    .intro-cover.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .vertical-text {
+      position: absolute;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+      letter-spacing: 0.35em;
+      color: var(--accent);
+      opacity: 0.55;
+      font-family: "黄令东齐伋体", "Noto Serif SC", serif;
+    }
+
+    .intro-logo {
+      position: absolute; top: 12%; left: 50%; transform: translateX(-50%);
+      font-size: .72rem; letter-spacing: .45em; color: var(--accent); text-transform: uppercase;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 1.2s var(--ease), transform 1.2s var(--ease);
+    }
+    .intro-cover.reveal .intro-logo { opacity: 1; transform: translateY(0); transition-delay: .2s; }
+
+    .intro-text {
+      max-width: 50rem; font-size: clamp(1.05rem, 2.1vw, 1.75rem);
+      line-height: 2; letter-spacing: .18em; color: var(--ink);
+    }
+    .intro-text .word { display: inline-block; white-space: nowrap; margin: 0 .12em; }
+    .intro-text .letter {
+      display: inline-block; opacity: 0; transform: translateY(18px);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+    .intro-cover.reveal .intro-text .letter { opacity: 1; transform: translateY(0); }
+    .intro-text .dot { display: inline-block; color: var(--red); font-size: .7em; margin-left: .15em; opacity: 0; transition: opacity .6s ease; }
+    .intro-cover.reveal .intro-text .dot { opacity: 1; }
+
+    .enter-button {
+      position: absolute; bottom: 18%; left: 50%; transform: translateX(-50%);
+      background: none; border: none; padding: 0; cursor: pointer; color: inherit;
+    }
+    .enter-button .label {
+      position: relative; display: block; width: 220px; height: 60px; line-height: 60px;
+      font-size: 1.05rem; letter-spacing: .35em; text-align: center;
+    }
+    .enter-button .label .red, .enter-button .label .black {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .enter-button .label .red { color: var(--red); }
+    .enter-button .label .black { color: var(--ink); }
+    .enter-button .label .letter { display: inline-block; opacity: 0; transition: opacity .45s ease; }
+    .intro-cover.reveal .enter-button .label .red .letter { opacity: 1; }
+    .intro-cover.reveal .enter-button .label .red .letter:nth-child(1) { transition-delay: 2.2s; }
+    .intro-cover.reveal .enter-button .label .red .letter:nth-child(2) { transition-delay: 2.1s; }
+    .intro-cover.reveal .enter-button .label .red .letter:nth-child(3) { transition-delay: 2.0s; }
+    .intro-cover.reveal .enter-button .label .red .letter:nth-child(4) { transition-delay: 2.3s; }
+
+    .enter-button .icon {
+      position: absolute; top: 48px; left: 50%; transform: translateX(-50%);
+      width: 8px; height: 28px;
+    }
+    .enter-button .icon .bar {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      background: var(--red); transition: transform .6s ease, background .3s;
+    }
+    .enter-button .icon .bar-1 { top: 0; width: 1px; height: 25px; transform-origin: 50% 0; }
+    .enter-button .icon .bar-2 { top: 25px; width: 7px; height: 1px; transform-origin: 0 50%; }
+    .enter-button .icon .black .bar { background: var(--ink); }
+    .enter-button .icon .red .bar-1 { transform: translateX(-50%) scaleY(0); }
+    .enter-button .icon .red .bar-2 { transform: translateX(-50%) scaleX(0); }
+    .enter-button .icon .black .bar-1 { transform: translateX(-50%) scaleY(0); }
+    .enter-button .icon .black .bar-2 { transform: translateX(-50%) scaleX(0); }
+    .intro-cover.reveal .enter-button .icon .red .bar-1 { transform: translateX(-50%) scaleY(1); transition-delay: 2.5s; }
+    .intro-cover.reveal .enter-button .icon .red .bar-2 { transform: translateX(-50%) scaleX(1); transition-delay: 3.0s; }
+
+    .enter-button:hover .label .red .letter { opacity: 0; }
+    .enter-button:hover .label .red .letter:nth-child(1) { transition-delay: .2s; }
+    .enter-button:hover .label .red .letter:nth-child(2) { transition-delay: .1s; }
+    .enter-button:hover .label .red .letter:nth-child(3) { transition-delay: 0s; }
+    .enter-button:hover .label .red .letter:nth-child(4) { transition-delay: .2s; }
+    .enter-button:hover .label .black .letter { opacity: 1; }
+    .enter-button:hover .label .black .letter:nth-child(1) { transition-delay: .5s; }
+    .enter-button:hover .label .black .letter:nth-child(2) { transition-delay: .4s; }
+    .enter-button:hover .label .black .letter:nth-child(3) { transition-delay: .3s; }
+    .enter-button:hover .label .black .letter:nth-child(4) { transition-delay: .5s; }
+    .enter-button:hover .icon .red .bar-1 { transform: translateX(-50%) scaleY(0); transition-delay: 0s; }
+    .enter-button:hover .icon .red .bar-2 { transform: translateX(-50%) scaleX(0); transition-delay: .3s; }
+    .enter-button:hover .icon .black .bar-1 { transform: translateX(-50%) scaleY(1); transition-delay: .3s; }
+    .enter-button:hover .icon .black .bar-2 { transform: translateX(-50%) scaleX(1); transition-delay: .6s; }
+
+    .intro-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 2.2rem; font-size: .72rem; letter-spacing: .15em; color: var(--ink-light);
+    }
+    .intro-nav a { color: inherit; text-decoration: none; position: relative; }
+    .intro-nav a::after {
+      content: ""; position: absolute; left: 0; bottom: -2px; width: 100%; height: 1px;
+      background: currentColor; transform: scaleX(0); transform-origin: 0 50%; transition: transform .5s ease;
+    }
+    .intro-nav a:hover::after { transform: scaleX(1); }
+
+    .journey-stage {
+      position: fixed; inset: 0; z-index: 1;
+      opacity: 0; visibility: hidden; user-select: none;
+      transition: opacity 1s var(--ease) .3s, visibility 1s;
+    }
+    .journey-stage.visible { opacity: 1; visibility: visible; }
+
+    .stage-hint {
+      position: fixed; top: 2rem; left: 50%; transform: translateX(-50%); z-index: 10;
+      font-size: .7rem; letter-spacing: .2em; color: var(--muted); text-transform: uppercase;
+      opacity: 1; transition: opacity .6s; pointer-events: none;
+    }
+    .journey-stage.interacted .stage-hint { opacity: 0; }
+
+    .track {
+      position: absolute; top: 0; left: 0; height: 100%;
+      display: flex; align-items: center;
+      padding: 0 20vw 0 18vw;
+      will-change: transform;
+    }
+    .road-line {
+      position: absolute; left: 0; right: 0; top: 58%; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(44,36,27,.18) 6%, rgba(44,36,27,.18) 94%, transparent 100%);
+      transform: translateY(-50%);
+    }
+    .era {
+      position: relative; flex: none; width: 72vw; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    .era .year {
+      position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: .8rem; letter-spacing: .25em; color: var(--accent); opacity: .55;
+    }
+    .vehicle {
+      width: min(34vw, 420px); height: min(20vw, 260px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translateY(45px) scale(.92);
+      transition: opacity .9s var(--ease), transform 1.1s var(--ease);
+    }
+    .era.in-view .vehicle { opacity: 1; transform: translateY(0) scale(1); }
+    .vehicle img { width: 100%; height: 100%; object-fit: contain; }
+    .vehicle.flip img { transform: scaleX(-1); }
+    .vehicle svg { width: 100%; height: 100%; stroke: var(--ink); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .era-caption {
+      margin-top: 1.8rem; max-width: 320px; text-align: center;
+      font-size: clamp(.85rem, 1.3vw, 1.05rem); line-height: 1.8; color: var(--ink-light); letter-spacing: .04em;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .7s var(--ease) .15s, transform .7s var(--ease) .15s;
+    }
+    .era.in-view .era-caption { opacity: 1; transform: translateY(0); }
+
+    .final-era { width: 100vw; }
+    .final-card {
+      display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+      padding: 2rem; text-align: center;
+    }
+    .final-card h2 { font-size: clamp(1.8rem, 4vw, 3.2rem); font-weight: 700; letter-spacing: .1em; }
+    .final-card p { color: var(--ink-light); font-size: 1rem; letter-spacing: .05em; max-width: 460px; }
+    .start-link {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: 1rem 2.4rem; background: var(--accent); color: var(--paper);
+      font-size: 1rem; letter-spacing: .12em; text-decoration: none;
+      transition: background .3s, transform .3s var(--ease);
+    }
+    .start-link:hover { background: var(--accent-light); transform: translateY(-2px); }
+
+    .progress-wrap {
+      position: fixed; bottom: 2.2rem; left: 8vw; right: 8vw; z-index: 10;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .progress-bar {
+      flex: 1; height: 1px; background: rgba(44,36,27,.12); position: relative;
+    }
+    .progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--red); transition: width .08s linear; }
+    .progress-dots { display: flex; gap: .8rem; }
+    .progress-dot { width: 6px; height: 6px; border: 1px solid var(--ink-light); transition: background .3s, border-color .3s; }
+    .progress-dot.active { background: var(--red); border-color: var(--red); }
+
+    @media (max-width: 768px) {
+      .intro-text { letter-spacing: .1em; }
+      .enter-button { bottom: 16%; }
+      .enter-button .label { width: 180px; }
+      .intro-nav { padding: 1rem 1.2rem; font-size: .65rem; }
+      .era { width: 85vw; }
+      .stage-hint { top: 1.2rem; width: 80%; text-align: center; }
+      .progress-wrap { left: 5vw; right: 5vw; bottom: 1.6rem; }
+    }
+
+
+    @font-face {
+      font-family: 'QiJi';
+      src: url('assets/fonts/黄令东齐伋体_mianfeiziti.com.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    .story-stage {
+      position: fixed; inset: 0; z-index: 5;
+      background: var(--bg);
+      overflow-y: auto; overflow-x: hidden;
+      opacity: 0; visibility: hidden;
+      transition: opacity 1s var(--ease), visibility 1s;
+      cursor: auto;
+    }
+    .story-stage.visible { opacity: 1; visibility: visible; }
+    .story-stage::-webkit-scrollbar { width: 6px; }
+    .story-stage::-webkit-scrollbar-thumb { background: rgba(44,36,27,.18); border-radius: 0; }
+
+    .story-scrolly {
+      position: relative;
+      width: 100%;
+    }
+
+    .story-sticky {
+      position: sticky; top: 0; left: 0;
+      width: 100%; height: 32vh;
+      display: flex; align-items: flex-start; justify-content: center;
+      pointer-events: none; z-index: 4;
+    }
+    .story-phrase {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      text-align: center; padding: 5vh 2rem 0;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+    .story-phrase.active { opacity: 1; transform: translateY(0); }
+    .story-phrase .phrase-main {
+      font-family: 'QiJi', 'Noto Serif SC', serif;
+      font-size: clamp(3.2rem, 11vw, 7.2rem);
+      font-weight: normal;
+      line-height: 1.05;
+      letter-spacing: .08em;
+      color: var(--ink);
+      margin-bottom: .6rem;
+    }
+    .story-phrase .phrase-sub {
+      font-size: clamp(.75rem, 1.3vw, .95rem);
+      letter-spacing: .18em;
+      color: var(--muted);
+      max-width: 620px; line-height: 1.7;
+    }
+    .phrase-char {
+      display: inline-block;
+      opacity: 0;
+      transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0)) scale(.7);
+      filter: blur(4px);
+      transition: opacity .85s var(--ease), transform .85s var(--ease), filter .85s var(--ease);
+    }
+    .story-phrase.active .phrase-char {
+      opacity: 1;
+      transform: translate(0, 0) rotate(0) scale(1);
+      filter: blur(0);
+    }
+
+    .story-steps {
+      position: relative; z-index: 3;
+      margin-top: -32vh;
+      padding-bottom: 20vh;
+    }
+    .story-step {
+      position: relative;
+      min-height: 110vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start;
+      padding: 62vh 1.5rem 15vh;
+    }
+    .story-step:first-child { min-height: 120vh; padding: 0; }
+    .step-spacer { height: 100vh; }
+
+    .step-content {
+      width: min(720px, 92vw);
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 1s var(--ease), transform 1s var(--ease);
+    }
+    .story-step.in-view .step-content { opacity: 1; transform: translateY(0); }
+
+    .step-content .lead {
+      font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+      line-height: 1.9;
+      color: var(--ink);
+      letter-spacing: .04em;
+      margin-bottom: 1.5rem;
+    }
+    .step-content p {
+      font-size: clamp(1rem, 1.4vw, 1.12rem);
+      line-height: 2;
+      letter-spacing: .03em;
+      color: var(--ink-light);
+      margin-bottom: 1.2rem;
+    }
+
+    .quote-block {
+      border-left: 2px solid var(--red); padding: .6rem 0 .6rem 1.6rem; margin: 2rem 0;
+      font-style: italic; color: var(--ink); line-height: 1.9;
+    }
+    .quote-block cite {
+      display: block; margin-top: .8rem; font-style: normal; font-size: .8rem; letter-spacing: .1em; color: var(--muted);
+    }
+
+    .photo-grid {
+      display: grid; gap: 1rem; margin: 2.5rem 0;
+    }
+    .photo-grid.two { grid-template-columns: repeat(2, 1fr); }
+    .photo-grid.three { grid-template-columns: repeat(3, 1fr); }
+    .photo-grid.full { grid-template-columns: 1fr; }
+    @media (max-width: 768px) {
+      .photo-grid.two, .photo-grid.three { grid-template-columns: 1fr; }
+    }
+
+    .photo-wrap {
+      position: relative; overflow: hidden; background: rgba(44,36,27,.04);
+      border: 1px solid rgba(44,36,27,.08);
+    }
+    .photo-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 8s ease;
+    }
+    .photo-wrap:hover img { transform: scale(1.04); }
+    .photo-wrap.portrait { aspect-ratio: 4/5; }
+    .photo-wrap.landscape { aspect-ratio: 3/2; }
+    .photo-wrap.wide { aspect-ratio: 16/9; }
+    .photo-wrap figcaption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 2.5rem 1rem 1rem;
+      background: linear-gradient(to top, rgba(44,36,27,.65), transparent);
+      color: var(--paper); font-size: .78rem; letter-spacing: .06em; line-height: 1.6;
+    }
+
+    .step-content.finale {
+      text-align: center;
+      width: min(820px, 92vw);
+    }
+    .step-content.finale .finale-text {
+      font-size: clamp(1.15rem, 2vw, 1.5rem);
+      line-height: 2; letter-spacing: .05em; color: var(--ink);
+      margin-bottom: 2rem;
+    }
+    .step-content.finale .finale-line {
+      font-family: 'QiJi', 'Noto Serif SC', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      letter-spacing: .15em; color: var(--ink);
+      margin: 2.5rem 0;
+    }
+    .step-content.finale .finale-note {
+      color: var(--ink-light); font-size: clamp(1rem, 1.4vw, 1.15rem);
+      line-height: 2; letter-spacing: .03em;
+    }
+
+    .story-nav-dots {
+      position: fixed; right: 2rem; top: 50%; transform: translateY(-50%); z-index: 12;
+      display: flex; flex-direction: column; gap: .9rem;
+      opacity: 0; visibility: hidden; transition: opacity .6s, visibility .6s;
+    }
+    .story-stage.visible ~ .story-nav-dots,
+    .story-stage.visible .story-nav-dots { opacity: 1; visibility: visible; }
+    .story-nav-dots button {
+      width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--ink-light); background: transparent; cursor: pointer;
+      transition: background .3s, border-color .3s, transform .3s; padding: 0;
+    }
+    .story-nav-dots button.active { background: var(--red); border-color: var(--red); transform: scale(1.3); }
+
+    .back-to-top {
+      position: fixed; right: 2rem; bottom: 2rem; z-index: 12;
+      width: 44px; height: 44px; border: 1px solid var(--ink-light); background: var(--paper); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: var(--ink); opacity: 0; visibility: hidden;
+      transition: opacity .4s, visibility .4s, background .3s, color .3s;
+    }
+    .back-to-top.visible { opacity: 1; visibility: visible; }
+    .back-to-top:hover { background: var(--ink); color: var(--paper); }
+
+    @media (max-width: 768px) {
+      .story-phrase .phrase-main { font-size: clamp(2.6rem, 13vw, 4.5rem); }
+      .story-step { padding: 45vh 1rem 8vh; }
+      .story-step:first-child { padding: 0; }
+      .step-content { width: 100%; }
+      .story-nav-dots { right: 1rem; gap: .7rem; }
+      .back-to-top { right: 1rem; bottom: 1rem; }
+    }
+
+    .road-home-stage {
+      position: fixed; inset: 0; z-index: 5;
+      overflow-y: auto; overflow-x: hidden;
+      opacity: 0; visibility: hidden;
+      transition: opacity 1s var(--ease), visibility 1s;
+      cursor: auto;
+      background: var(--ink);
+    }
+    .road-home-stage.visible { opacity: 1; visibility: visible; }
+    .road-home-stage::-webkit-scrollbar { width: 6px; }
+    .road-home-stage::-webkit-scrollbar-thumb { background: rgba(247,243,236,.25); border-radius: 0; }
+
+    .road-home-inner {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .road-home-titles {
+      position: sticky;
+      top: 0; left: 0;
+      width: 28%;
+      height: 100vh;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 2.5vw 0 4vw;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .road-home-titles::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(44,36,27,.92) 0%, rgba(44,36,27,.68) 65%, transparent 100%);
+      z-index: -1;
+    }
+
+    .road-vehicle-display {
+      width: min(16vw, 220px);
+      height: min(11vw, 150px);
+      margin-bottom: 2.2rem;
+      opacity: 1;
+      transition: opacity .5s var(--ease), transform .5s var(--ease);
+    }
+    .road-vehicle-display img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,.45));
+    }
+    .road-vehicle-display.switching {
+      opacity: .4;
+      transform: scale(.92);
+    }
+
+    .road-main-title {
+      font-family: 'QiJi', 'Noto Serif SC', serif;
+      font-size: clamp(2rem, 3.6vw, 3.2rem);
+      color: var(--paper);
+      letter-spacing: .12em;
+      line-height: 1.25;
+      margin-bottom: 2.5rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,.35);
+    }
+
+    .road-title-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+    .road-title-item {
+      position: relative;
+      font-size: clamp(1rem, 1.6vw, 1.3rem);
+      color: rgba(253,252,245,.42);
+      letter-spacing: .08em;
+      line-height: 1.5;
+      padding-left: 1.2rem;
+      transition: color .5s var(--ease), transform .5s var(--ease);
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    .road-title-item::before {
+      content: ''; position: absolute; left: 0; top: .55em;
+      width: 5px; height: 5px;
+      background: currentColor;
+      transform: rotate(45deg);
+      transition: background .5s, transform .5s var(--ease);
+    }
+    .road-title-item.active {
+      color: var(--paper);
+      transform: translateX(10px);
+    }
+    .road-title-item.active::before {
+      background: var(--red);
+      transform: rotate(0) scale(1.35);
+    }
+    .road-title-item .year {
+      display: block;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: .68rem;
+      letter-spacing: .2em;
+      color: var(--accent-light);
+      margin-bottom: .25rem;
+      opacity: .8;
+    }
+
+    .road-slides {
+      position: relative;
+      width: 72%;
+      flex-shrink: 0;
+    }
+
+    .road-slide {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 10vh 6vw 10vh 4vw;
+    }
+    .road-slide-bg {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+    .road-slide-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(44,36,27,.55) 0%, rgba(44,36,27,.28) 50%, rgba(44,36,27,.42) 100%);
+    }
+
+    .road-slide-content {
+      position: relative;
+      z-index: 2;
+      max-width: 640px;
+      color: var(--paper);
+      padding: 2rem 2.2rem;
+      background: rgba(44,36,27,.22);
+      backdrop-filter: blur(3px);
+      border-left: 2px solid rgba(166,93,46,.55);
+      text-shadow: 0 2px 16px rgba(0,0,0,.55);
+      opacity: 0; transform: translateY(30px);
+      transition: opacity .9s var(--ease), transform .9s var(--ease);
+    }
+    .road-slide.in-view .road-slide-content {
+      opacity: 1; transform: translateY(0);
+    }
+
+    .road-slide-content .object-label {
+      display: inline-block;
+      font-size: .68rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      border-bottom: 1px solid var(--accent-light);
+      padding-bottom: .3rem;
+      margin-bottom: 1.4rem;
+    }
+    .road-slide-content h2 {
+      font-family: 'QiJi', 'Noto Serif SC', serif;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      font-weight: normal;
+      letter-spacing: .08em;
+      line-height: 1.1;
+      margin-bottom: .9rem;
+    }
+    .road-slide-content .route {
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      letter-spacing: .12em;
+      color: rgba(253,252,245,.9);
+      margin-bottom: 1.8rem;
+    }
+    .road-slide-content p {
+      font-size: clamp(1rem, 1.3vw, 1.12rem);
+      line-height: 1.95;
+      letter-spacing: .03em;
+      color: rgba(253,252,245,.82);
+      margin-bottom: 1.1rem;
+    }
+
+    .road-home-footer {
+      position: relative;
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 12vh 8vw;
+      color: var(--paper);
+      background: var(--ink);
+      z-index: 2;
+    }
+    .road-home-footer h3 {
+      font-family: 'QiJi', 'Noto Serif SC', serif;
+      font-size: clamp(1.6rem, 3vw, 2.6rem);
+      letter-spacing: .1em;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+    }
+    .road-home-footer p {
+      font-size: clamp(1rem, 1.4vw, 1.15rem);
+      line-height: 2;
+      letter-spacing: .04em;
+      color: rgba(253,252,245,.7);
+      max-width: 560px;
+      margin-bottom: 2.5rem;
+    }
+    .road-home-footer .start-link {
+      background: transparent;
+      border: 1px solid var(--paper);
+      color: var(--paper);
+    }
+    .road-home-footer .start-link:hover {
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    @media (max-width: 768px) {
+      .road-home-inner { flex-direction: column; }
+      .road-home-titles {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 6vh 1.5rem 3vh;
+      }
+      .road-main-title { margin-bottom: 1.5rem; }
+      .road-home-titles::before {
+        background: linear-gradient(180deg, rgba(44,36,27,.9) 0%, rgba(44,36,27,.7) 100%);
+      }
+      .road-title-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: .8rem 1.2rem;
+      }
+      .road-title-item {
+        padding-left: .9rem;
+        font-size: .95rem;
+      }
+      .road-title-item.active { transform: translateX(6px); }
+      .road-slides { width: 100%; }
+      .road-slide { padding: 6vh 1.5rem 10vh; }
+      .road-vehicle-display {
+        width: 120px; height: 84px;
+        margin-bottom: 1.2rem;
+      }
+      .road-home-footer { padding: 10vh 1.5rem; }
+    }
+
+    /* 音乐控制 */
+    .fanfamily-audio-toggle {
+      position: fixed;
+      top: 1.2rem;
+      right: 1.2rem;
+      z-index: 9999;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(139, 69, 19, 0.18);
+      background: rgba(247, 243, 236, 0.9);
+      backdrop-filter: blur(6px);
+      color: var(--accent);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s var(--ease), background 0.25s, box-shadow 0.25s;
+      box-shadow: 0 4px 16px rgba(44, 36, 27, 0.08);
+      pointer-events: auto;
+    }
+    .fanfamily-audio-toggle:hover { transform: scale(1.08); background: rgba(255, 254, 248, 0.96); }
+    .fanfamily-audio-toggle.playing { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+    .intro-music-btn {
+      position: absolute;
+      bottom: 28%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    .fanfamily-intro-play {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.6rem;
+      border-radius: 999px;
+      border: 1.5px solid rgba(139, 69, 19, 0.28);
+      background: rgba(255, 254, 248, 0.95);
+      backdrop-filter: blur(8px);
+      color: var(--accent);
+      font-family: "Noto Serif SC", serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: opacity 0.4s, transform 0.25s var(--ease), background 0.25s, box-shadow 0.25s;
+      box-shadow: 0 8px 30px rgba(139, 69, 19, 0.18);
+      animation: fan-breathe 2.4s ease-in-out infinite;
+    }
+    .fanfamily-intro-play:hover { transform: scale(1.06); background: #fff; box-shadow: 0 12px 40px rgba(139, 69, 19, 0.25); }
+    .fanfamily-intro-play span { font-size: 1.15rem; }
+    @keyframes fan-breathe {
+      0%, 100% { transform: scale(1); box-shadow: 0 8px 30px rgba(139, 69, 19, 0.18); }
+      50% { transform: scale(1.03); box-shadow: 0 12px 40px rgba(139, 69, 19, 0.25); }
+    }
+
+    @media (max-width: 768px) {
+      .fanfamily-audio-toggle { top: 0.8rem; right: 0.8rem; width: 36px; height: 36px; font-size: 1rem; }
+      .intro-music-btn { bottom: 26%; }
+      .fanfamily-intro-play { padding: 0.55rem 1.1rem; font-size: 0.82rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="./assets/css/global.css">
+</head>
+<body>
+  <div class="paper-bg"></div>
+  <div class="custom-cursor" id="cursor"><span></span></div>
+
+  <section class="intro-cover" id="intro">
+    <div class="intro-logo" data-i18n="logo.text">Fan Family Visual Archive</div>
+    <div class="vertical-text" data-i18n="vertical.text">迁徙 爱 记忆</div>
+    <div class="intro-text" id="introText" data-i18n="intro.text">这是 一部 关于 迁徙、 爱与 记忆 的 家族 照相史。</div>
+    <div class="intro-music-btn" data-audio-intro></div>
+    <button class="enter-button" id="enterBtn" aria-label="开始体验">
+      <span class="label">
+        <span class="red" id="redLabel" data-i18n="enter.text">进入</span>
+        <span class="black" id="blackLabel" data-i18n="enter.text">进入</span>
+      </span>
+      <span class="icon">
+        <span class="red"><span class="bar bar-1"></span><span class="bar bar-2"></span></span>
+        <span class="black"><span class="bar bar-1"></span><span class="bar bar-2"></span></span>
+      </span>
+    </button>
+    <nav class="intro-nav">
+      <a href="albums.html" data-i18n="nav.albums">章节索引</a>
+      <span data-i18n="nav.years">1946 — 2020 · 范瑶珠家族史</span>
+    </nav>
+  </section>
+
+  <main class="journey-stage" id="journey">
+    <div class="stage-hint" data-i18n="hint.stage">拖动或滚动，穿越三代人的迁徙工具</div>
+    <div class="track" id="track">
+      <div class="road-line"></div>
+
+      <article class="era" data-year="1946">
+        <div class="year">1946</div>
+        <div class="vehicle">
+          <img src="assets/vehicles/vehicle_1946_boat.png" alt="1946 江轮">
+        </div>
+        <div class="era-caption">江轮 · 16 岁独自离家</div>
+      </article>
+
+      <article class="era" data-year="1954">
+        <div class="year">1954</div>
+        <div class="vehicle flip">
+          <img src="assets/vehicles/vehicle_1954_truck.png" alt="1954 卡车">
+        </div>
+        <div class="era-caption">卡车 · 孙钢随秦腔剧团奔赴新疆</div>
+      </article>
+
+      <article class="era" data-year="1966">
+        <div class="year">1966</div>
+        <div class="vehicle flip">
+          <img src="assets/vehicles/vehicle_1967_train.png" alt="1966 蒸汽火车">
+        </div>
+        <div class="era-caption">蒸汽火车 · 载着知青穿越中国腹地</div>
+      </article>
+
+      <article class="era" data-year="1976">
+        <div class="year">1976</div>
+        <div class="vehicle">
+          <img src="assets/vehicles/vehicle_1976_bus.png" alt="1976 长途客车">
+        </div>
+        <div class="era-caption">长途客车 · 赴克拉玛依油田任教</div>
+      </article>
+
+      <article class="era" data-year="1990">
+        <div class="year">1990</div>
+        <div class="vehicle">
+          <img src="assets/vehicles/vehicle_1990_plane.png" alt="1990 飞机">
+        </div>
+        <div class="era-caption">飞机 · 台湾老兵第一次飞回大陆</div>
+      </article>
+
+      <article class="era" data-year="2020">
+        <div class="year">2020</div>
+        <div class="vehicle">
+          <img src="assets/vehicles/vehicle_2020_train.png" alt="2020 高铁">
+        </div>
+        <div class="era-caption">高铁 · 新一代在轨道上来往于故乡与远方</div>
+      </article>
+
+      <article class="era final-era">
+        <div class="final-card">
+          <h2>由此进入故事</h2>
+          <p>从一本书开始，经过三代人的迁移，最终回到他们来时的方向。</p>
+          <button class="start-link" id="enterStoryBtn" type="button">开始体验 →</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-dots" id="progressDots"></div>
+    </div>
+  </main>
+
+  <section class="road-home-stage" id="roadHome">
+    <div class="road-home-inner">
+      <aside class="road-home-titles">
+        <div class="road-vehicle-display" id="roadVehicleDisplay">
+          <img src="assets/vehicles/vehicle_1946_boat.png" alt="江轮">
+        </div>
+        <div class="road-main-title">一条回家的路</div>
+        <nav class="road-title-list" id="roadTitleList">
+          <div class="road-title-item active" data-slide="0"><span class="year">1946</span>一本书</div>
+          <div class="road-title-item" data-slide="1"><span class="year">1953</span>一张火车票</div>
+          <div class="road-title-item" data-slide="2"><span class="year">1966</span>一辆公交车</div>
+          <div class="road-title-item" data-slide="3"><span class="year">1990</span>一本相册</div>
+        </nav>
+      </aside>
+
+      <div class="road-slides" id="roadSlides">
+        <article class="road-slide" data-slide="0" data-vehicle="assets/vehicles/vehicle_1946_boat.png" data-vehicle-alt="江轮">
+          <div class="road-slide-bg" style="background-image: url('assets/photos/单张照片/RL-01-01.jpg')"></div>
+          <div class="road-slide-content">
+            <span class="object-label">物件 01</span>
+            <h2>一本书</h2>
+            <p class="route">福建建瓯 → 上海</p>
+            <p>1946年，十七岁，她出走了。身边只有一只箱子，装下一个女孩的全部家当。</p>
+            <p>她叫范瑶珠，1931年出生于福建建瓯。家里供完姐姐和哥哥读书后，再也无力负担她的学业。她不愿放弃，听说上海的大表姐读了免费的护理学校，便独自拎着箱子，从建瓯乘船到福州，再搭轮船到上海。</p>
+            <p>1948年，她进入上海伯特利高级护理助产学校。在医院实习时，她护理了一位年轻的肺结核患者孙钢。两人都喜爱文学，每次查房，她都给他带一本不同的小说，开始在书页里夹小纸条。</p>
+          </div>
+        </article>
+
+        <article class="road-slide" data-slide="1" data-vehicle="assets/vehicles/vehicle_1967_train.png" data-vehicle-alt="蒸汽火车">
+          <div class="road-slide-bg" style="background-image: url('assets/photos/单张照片/S-04-01.jpg')"></div>
+          <div class="road-slide-content">
+            <span class="object-label">物件 02</span>
+            <h2>一张火车票</h2>
+            <p class="route">上海 → 乌鲁木齐</p>
+            <p>1953年，第一个五年计划刚刚启动，新疆缺少医务人员。范瑶珠瞒着家人，也瞒着孙钢，主动报名支援边疆。</p>
+            <p>她带着箱子和大行囊，先坐火车到西安，再换乘敞篷卡车，将外衣腰带系上铁架，一路颠簸近四十天。行至甘肃，同行的人们立下誓言：“谁回来谁是逃兵。”</p>
+            <p>范瑶珠走后，孙钢从上海给她寄食物。1954年，他辞去上海的提拔机会，独自坐火车到西安，找到一支秦腔剧团，搭乘卡车追到乌鲁木齐。到乌鲁木齐后，矿区贸易公司的人当场把他“抢”走了。那年11月18日，两人在公费医疗门诊部宿舍结婚，没有礼堂，没有宴席。</p>
+          </div>
+        </article>
+
+        <article class="road-slide" data-slide="2" data-vehicle="assets/vehicles/vehicle_1976_bus.png" data-vehicle-alt="长途客车">
+          <div class="road-slide-bg" style="background-image: url('assets/photos/单张照片/B-01-01.jpg')"></div>
+          <div class="road-slide-content">
+            <span class="object-label">物件 03</span>
+            <h2>一辆公交车</h2>
+            <p class="route">乌鲁木齐 → 上海</p>
+            <p>1953年，哥哥范国帧被派往新疆灭蝗。十月中，兄妹在乌鲁木齐见了一面。新疆省农林厅以“工作需要”为由，将他强留当地。1963年，他在哈密因脑溢血去世。范瑶珠对此终生愧疚。</p>
+            <p>1966年，文化大革命开始。工作组为女儿改名孙文革，这个名字伴随了她十一年。1967年，乌鲁木齐发生武斗。范瑶珠做出决定：由未满12岁的女儿带着5个月大的弟弟，踏上前往上海的长途客车。</p>
+            <p>女儿只带了两本《白毛女》剧照封面的相册、一罐借来的奶粉和尿布，就踏上了路程。</p>
+          </div>
+        </article>
+
+        <article class="road-slide" data-slide="3" data-vehicle="assets/vehicles/vehicle_1990_plane.png" data-vehicle-alt="飞机">
+          <div class="road-slide-bg" style="background-image: url('assets/photos/单张照片/D-003-01.jpg')"></div>
+          <div class="road-slide-content">
+            <span class="object-label">物件 04</span>
+            <h2>一本相册</h2>
+            <p class="route">乌鲁木齐 → 世界</p>
+            <p>此后数年，一家人在地理上被撕裂。女儿和儿子在上海、杭州之间辗转寄养，范瑶珠留在新疆继续工作。</p>
+            <p>1976年8月，女儿被分配到克拉玛依油田，自己改名为孙葛，告别“孙文革”。那天，孙钢在全家福背面题诗：“彩霞织就锦三千，展翅雄鹰万里悬。”</p>
+            <p>文革结束后，一家人终于开始重聚。1990年春，孙钢四兄妹在杭州重逢：大哥是国民党，三弟是共产党地下党，小妹去了台湾又去了美国，孙钢留在了新疆。四个人，四种政治身份，四十一年分离，老泪纵横。</p>
+            <p>2014年，两人庆祝钻石婚。2019年范瑶珠去世，八十八岁；2020年孙钢去世，九十五岁。他们合葬在乌鲁木齐东山生态园公墓，墓碑朝东，朝着上海，朝着建瓯。</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="road-home-footer">
+      <h3>从建瓯到上海，从上海到乌鲁木齐，再从乌鲁木齐走向世界</h3>
+      <p>三代人的命运，被一本书、一辆公交车、一张火车票、一本相册串成一条线。</p>
+      <p style="max-width: 720px; margin-top: 2rem; font-style: italic; color: rgba(253,252,245,.65);">爱是十七岁独自上船。是在书页里夹进一张小纸条。是把自己的腰带系在卡车铁架上，颠颠簸簸前往新疆，四十天，不回头。是把十二岁的女儿推出门去——抱着五个月的儿子，往东走。是面朝东方。</p>
+      <a class="start-link" href="museum.html">进入物件博物馆 →</a>
+    </div>
+  </section>
+
+  <section class="story-stage" id="story">
+    <div class="story-scrolly" id="storyScrolly">
+      <div class="story-sticky" id="storySticky">
+        <div class="story-phrase active" data-step="0">
+          <span class="phrase-main">她这一生</span>
+          <span class="phrase-sub">范瑶珠 · 1931–2019</span>
+        </div>
+        <div class="story-phrase" data-step="1">
+          <span class="phrase-main">出走</span>
+          <span class="phrase-sub">1946 · 不满十七岁，独自离家</span>
+        </div>
+        <div class="story-phrase" data-step="2">
+          <span class="phrase-main">纸条</span>
+          <span class="phrase-sub">1948 · 书页间夹进小纸条</span>
+        </div>
+        <div class="story-phrase" data-step="3">
+          <span class="phrase-main">赴疆</span>
+          <span class="phrase-sub">1953 · 谁回来谁是逃兵</span>
+        </div>
+        <div class="story-phrase" data-step="4">
+          <span class="phrase-main">追随</span>
+          <span class="phrase-sub">1954 · 乘着秦腔剧团的卡车追来</span>
+        </div>
+        <div class="story-phrase" data-step="5">
+          <span class="phrase-main">婚礼</span>
+          <span class="phrase-sub">1954 · 没有礼堂，没有宴席</span>
+        </div>
+        <div class="story-phrase" data-step="6">
+          <span class="phrase-main">哥哥</span>
+          <span class="phrase-sub">1953 · 一生的愧疚</span>
+        </div>
+        <div class="story-phrase" data-step="7">
+          <span class="phrase-main">离散</span>
+          <span class="phrase-sub">1966 · 把女儿推出门去</span>
+        </div>
+        <div class="story-phrase" data-step="8">
+          <span class="phrase-main">改名</span>
+          <span class="phrase-sub">1976 · 告别孙文革</span>
+        </div>
+        <div class="story-phrase" data-step="9">
+          <span class="phrase-main">重聚</span>
+          <span class="phrase-sub">1976 · 一家人终于开始重聚</span>
+        </div>
+        <div class="story-phrase" data-step="10">
+          <span class="phrase-main">墓碑</span>
+          <span class="phrase-sub">2019 · 朝着上海的方向</span>
+        </div>
+        <div class="story-phrase" data-step="11">
+          <span class="phrase-main">什么是爱</span>
+          <span class="phrase-sub">是面朝东方</span>
+        </div>
+      </div>
+
+      <div class="story-steps" id="storySteps">
+        <article class="story-step" data-step="0">
+          <div class="step-spacer"></div>
+        </article>
+
+        <article class="story-step" data-step="1">
+          <div class="step-content">
+            <p class="lead">1946年，十七岁，她出走了。身边只有一只箱子，装下一个女孩的全部家当。</p>
+            <p>她叫范瑶珠，1931年出生于福建建瓯，在家中排行最小。社会动荡，经济紧张。家里供姐姐和哥哥读书之后，再也无力负担她的学业。父亲告知她，不再供她读大学。</p>
+            <p>她不愿放弃。听说上海的大表姐读了免费的护理学校，她便下了决心。不满十七岁，她独自拎着一只箱子，从建瓯乘船到福州，住在亲戚家，再从福州搭轮船到上海，投奔舅舅一家。</p>
+            <blockquote class="quote-block">
+              就是说那个怎么就找办法，然后去这个就难以想象。当时在没有及时通讯的情况下，然后到一个陌生的地方。
+              <cite>—— 口述史记录</cite>
+            </blockquote>
+            <p>1948年，范瑶珠进入上海伯特利高级护理助产学校。这是一所教会主办的三年制学校，穷人的孩子可以免费入学，不需要学费，毕业后由上海市卫生局统一分配工作。</p>
+            <div class="photo-grid two">
+              <figure class="photo-wrap landscape"><img src="assets/photos/单张照片/RL-01-01.jpg" alt="1951年求学肖像"><figcaption>1951年上海，范瑶珠身着护士服</figcaption></figure>
+              <figure class="photo-wrap landscape"><img src="assets/photos/单张照片/S-04-01.jpg" alt="1953年初到乌鲁木齐"><figcaption>1953年乌鲁木齐，城市风貌前的合影</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="2">
+          <div class="step-content">
+            <p class="lead">在医院实习时，范瑶珠护理一位年轻的肺结核患者：孙钢。他比她大六岁，是光华大学法律系三年级的学生。</p>
+            <p>范瑶珠和孙钢都喜爱文学。于是每次去查房，她都给他带一本不同的小说。然后，他们开始在书页里夹小纸条。</p>
+            <blockquote class="quote-block">
+              互相借小说借书看，然后在书里面夹小纸条。
+              <cite>—— 口述史记录</cite>
+            </blockquote>
+            <p>在那个没有手机，连打一通长途电话都是奢望的年代，书页间的纸条就是最私密的通信方式。她写一句，夹进书里。他读了，回一句，等下次换书时递回来。</p>
+            <p>有一次，孙钢写了一封信，称呼她为“妹妹”。范瑶珠立刻翻了脸：“不行，要摆正关系”。她追问：“你到底有几个好妹妹？”</p>
+            <div class="photo-grid full">
+              <figure class="photo-wrap wide"><img src="assets/photos/单张照片/RL-22-01.jpg" alt="1954年结婚照"><figcaption>1954年11月18日，乌鲁木齐三星照像馆，手工染色的结婚照</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="3">
+          <div class="step-content">
+            <p class="lead">1953年，范瑶珠得知新疆缺少医务人员。国家正在号召内地青年支援边疆建设，她瞒着家人，也瞒着孙钢，主动报了名。</p>
+            <p>同年九月，范瑶珠带着箱子和装满被褥的大行囊，与来自上海各医院自愿报名的医护人员一起，开启从上海到新疆的艰辛旅程。先坐火车到达西安，再换乘敞篷卡车，坐在行李上，将外衣的腰带系上敞篷卡车高处的铁架，一路颠簸。</p>
+            <blockquote class="quote-block">
+              谁回来谁是逃兵，就是一定要坚持到底的。
+              <cite>—— 赴疆医疗队行至甘肃时的集体誓约</cite>
+            </blockquote>
+            <p>范瑶珠被分配在新疆公费医疗门诊部工作，后改为乌鲁木齐市第一人民医院，任总护士长。</p>
+            <div class="photo-grid two">
+              <figure class="photo-wrap landscape"><img src="assets/photos/单张照片/S-17-01.jpg" alt="1955年工作结业合影"><figcaption>1955年省级机关保健员训练班结业合影</figcaption></figure>
+              <figure class="photo-wrap landscape"><img src="assets/photos/单张照片/S-19-02.jpg" alt="1958年妇女积极分子大会"><figcaption>1958年参加自治区妇女建设社会主义积极分子大会</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="4">
+          <div class="step-content">
+            <p class="lead">范瑶珠走后，孙钢从上海给她寄食物。然后他做了一个更彻底的决定。</p>
+            <p>1954年，上海市江湾区法院领导与孙钢谈话，准备提拔他担任更高职位。经考虑后孙钢回答，自己决定去新疆。当时没有这种个人调动的先例，组织劝其不要贸然前往，希望二人能在上海结婚，将来范瑶珠还可以调回上海工作。他坚持，最终组织上还是同意了他的选择。</p>
+            <p>当年九月，孙钢独自一人坐火车到达西安，四处寻找去新疆的人员，最终找到一个将赴新疆乌鲁木齐的秦腔剧团，搭乘他们的卡车前往乌鲁木齐。</p>
+            <p>到乌鲁木齐后，矿区贸易公司的人看见他，当场把他“抢”走了。光华大学法律系三年级。他一生的职业从此与法律无关。</p>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="5">
+          <div class="step-content">
+            <p class="lead">1954年11月18日，公费医疗门诊部的宿舍。没有礼堂，没有宴席。几张单位的办公桌拼在一起，铺上一条白床单，摆着水果和清茶。</p>
+            <p>她后来的结婚照是在三星照像馆拍的一张“染色照片”。那个年代还没有彩色胶卷普及，黑白照片上手工涂上颜色：脸颊要染红，嘴唇要涂色，衣服上的花饰要一笔一笔地描上去。</p>
+            <blockquote class="quote-block">
+              结婚是人生最快乐的一件大事……但这种幸福带有从属性。正如巴布连科的小说《幸福》中弗罗巴耶夫所说的：好像焦煤一样是一种副产物。人生最大的幸福在于为集体事业进行创造性的劳动。
+              <cite>—— 赵思聪，1954年，结婚赠言</cite>
+            </blockquote>
+            <div class="photo-grid two">
+              <figure class="photo-wrap portrait"><img src="assets/photos/单张照片/RL-22-01.jpg" alt="1954年结婚照"><figcaption>1954年11月18日，手工染色的结婚照</figcaption></figure>
+              <figure class="photo-wrap portrait"><img src="assets/photos/其他/IMG_0219.jpg" alt="结婚相册扉页"><figcaption>赵思聪在相册扉页题写的赠言</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="6">
+          <div class="step-content">
+            <p class="lead">1953年上半年，新疆发生蝗灾。范瑶珠的哥哥范国桢被组织指派协同苏联专家前往新疆灭蝗。</p>
+            <p>尚在上海准备赴疆的范瑶珠接到哥哥来信，回信告知自己马上也要去新疆，希望哥哥灭蝗结束后请个假暂不返京，兄妹两个可以在新疆见一面。十月中，他们见面了。</p>
+            <p>但这次见面彻底改变了哥哥的命运。新疆省农林厅得知范国帧的妹妹来到了乌鲁木齐，以“新疆工作需要”为由，向上级申请，将他强留当地。哥哥被分配在新疆八一农学院任教，后调往新疆省农林厅。</p>
+            <p>1963年，他在哈密因脑溢血去世。</p>
+            <blockquote class="quote-block">
+              我外婆就一直对我妈妈说，是我妈妈害了他的哥哥。
+              <cite>—— 孙女在口述史中的回忆</cite>
+            </blockquote>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="7">
+          <div class="step-content">
+            <p class="lead">1966年，文化大革命开始。工作组进驻医院，要求为子女改名。此时孙钢正在外地出差。范瑶珠感到为难。工作组成员当场为她女儿改名为孙文革。这个名字伴随了女儿十一年。</p>
+            <p>1967年2月16日，儿子出生，取名孙晓舞。仅仅几个月后，乌鲁木齐发生武斗。真枪实弹，街上流弹伤人。7月初，一直照料孙晓舞的杨奶奶由于武斗要带自己的三个外孙返回西安老家。</p>
+            <p>范瑶珠做了一个决定：将儿女托付给老人与结伴同行的邻居，由未满12岁的女儿带着5个月大的弟弟一同前往上海。</p>
+            <p>女儿只带了两本京剧《白毛女》剧照封面的相册、一罐借来的奶粉、尿布，就踏上了前往上海的路程。</p>
+            <div class="photo-grid three">
+              <figure class="photo-wrap portrait"><img src="assets/photos/单张照片/B-01-01.jpg" alt="1968年孙晓舞一岁生日照"><figcaption>1968年上海，孙晓舞一岁生日照</figcaption></figure>
+              <figure class="photo-wrap portrait"><img src="assets/photos/单张照片/B-21-01.jpg" alt="1969年杭州西湖"><figcaption>1969年杭州西湖边，范瑶珠探望孙晓舞</figcaption></figure>
+              <figure class="photo-wrap portrait"><img src="assets/photos/单张照片/B-23-01.jpg" alt="1970年初中班级合影"><figcaption>1970年孙葛初中班级合影</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="8">
+          <div class="step-content">
+            <p class="lead">1976年8月，女儿被分配到克拉玛依油田，进入克拉玛依师范学校任教。她做了一个决定——不告诉家人，自己改名为孙葛，告别了“孙文革”。</p>
+            <p>那天，孙钢在全家福背面用钢笔题了一首绝句：</p>
+            <blockquote class="quote-block">
+              彩霞织就锦三千，展翅雄鹰万里悬。同学少年多俊迈，喜君立志战油田。金刚 76年8月29日
+              <cite>—— 孙钢，题于全家福照片背面</cite>
+            </blockquote>
+            <div class="photo-grid full">
+              <figure class="photo-wrap wide"><img src="assets/photos/其他/IMG_0160.jpg" alt="红色相册"><figcaption>逃难时随身携带的《白毛女》剧照封面相册</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="9">
+          <div class="step-content">
+            <p class="lead">文革结束后，一家人终于开始重聚。范瑶珠继续在乌鲁木齐市第一人民医院中医科工作至退休，之后被返聘两年。</p>
+            <p>约1984年，外孙女李宜斐出生，家族第三代唯一的血脉。她的童年有外公外婆完整的陪伴：红山公园、博格达宾馆、北门医院家属院。1980年代，彩色胶卷开始普及，她的照片从黑白变成了彩色。</p>
+            <p>1990年春，孙钢四兄妹在杭州重聚。大哥是国民党，三弟是共产党地下党，小妹跟母亲去了台湾又去了美国，孙钢自己留在了新疆。四个人，四种政治身份，四十一年分离，见面时都已年近七十。</p>
+            <div class="photo-grid three">
+              <figure class="photo-wrap landscape"><img src="assets/photos/单张照片/L-002-01.jpg" alt="1985年家庭合影"><figcaption>1985年暑假，乌鲁木齐家中三代同堂</figcaption></figure>
+              <figure class="photo-wrap landscape"><img src="assets/photos/单张照片/J-005-02.jpg" alt="1988年全家合影"><figcaption>1988年全家合影，李宜斐头戴白色蝴蝶结</figcaption></figure>
+              <figure class="photo-wrap landscape"><img src="assets/photos/单张照片/D-003-01.jpg" alt="1990年杭州家庭聚会"><figcaption>1990年杭州家庭聚会</figcaption></figure>
+            </div>
+            <div class="photo-grid two">
+              <figure class="photo-wrap landscape"><img src="assets/photos/单张照片/D-005-01.jpg" alt="1991年三兄弟见面"><figcaption>1991年杭州，孙钢三兄弟重逢</figcaption></figure>
+              <figure class="photo-wrap landscape"><img src="assets/photos/单张照片/C-001-01.jpg" alt="2000年家庭聚餐"><figcaption>2000年乌鲁木齐，孙晓舞从美国回疆探亲</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="10">
+          <div class="step-content">
+            <p class="lead">2019年9月23日，范瑶珠在乌鲁木齐去世。八十八岁。</p>
+            <p>2020年8月3日，孙钢走了。九十五岁。从医生断言他活不过三十岁的那一天起，又过了将近七十年。</p>
+            <p>他们合葬在乌鲁木齐东山生态园公墓。</p>
+            <p>墓碑朝东。朝着上海的方向。朝着建瓯的方向。朝着他们七十多年前出发的地方。</p>
+            <div class="photo-grid full">
+              <figure class="photo-wrap wide"><img src="assets/photos/单张照片/J-006-01.jpg" alt="1983年孙钢在新居"><figcaption>1983年搬入楼房，孙钢站在新居室内</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="story-step" data-step="11">
+          <div class="step-content finale">
+            <p class="finale-text">爱是十七岁独自上船。是在书页里夹进一张小纸条。是把自己的腰带系在卡车铁架上，颠颠簸簸前往新疆，四十天，不回头。是“谁回来谁是逃兵”。是来自上海的食物。是乘着秦腔剧团的卡车追到新疆。是手工给黑白照片涂上颜色。是把十二岁的女儿推出门去——抱着五个月的儿子，往东走。</p>
+            <p class="finale-line">是面朝东方。</p>
+            <p class="finale-note">爱不是没有代价的。那个被强留在新疆、1963年死在哈密的哥哥，是她一生的痛。那个被当场改了名字、用了十一年的“孙文革”，是女儿被时代撕掉的一页。</p>
+            <p class="finale-note">而这一切——所有这些选择，所有这些代价——拼在一起，才是一个人真正活过的证据。</p>
+            <footer class="story-footer">
+              <p>据范瑶珠家族口述史录音、相册档案（272张，1946–2014）及传记整理</p>
+              <p>口述人：孙葛、李宜斐及家族亲友 · 照片来源：范瑶珠家族照片档案</p>
+              <p style="margin-top: 1.5rem;"><a href="museum.html">进入物件博物馆</a> · <a href="family_story(1).html">查看迁移地图</a></p>
+            </footer>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <nav class="story-nav-dots" id="storyDots" aria-label="故事章节导航"></nav>
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">↑</button>
+  </section>
+
+  <script>
+    (function() {
+      const intro = document.getElementById('intro');
+      const introText = document.getElementById('introText');
+      const enterBtn = document.getElementById('enterBtn');
+      const journey = document.getElementById('journey');
+      const cursor = document.getElementById('cursor');
+      const track = document.getElementById('track');
+      const progressFill = document.getElementById('progressFill');
+      const progressDots = document.getElementById('progressDots');
+
+      function splitText() {
+        const text = introText.textContent.trim();
+        introText.innerHTML = '';
+        const words = text.split(/\s+/);
+        words.forEach((word, i) => {
+          if (!word) return;
+          const wordSpan = document.createElement('span');
+          wordSpan.className = 'word';
+          word.split('').forEach((ch) => {
+            const letter = document.createElement('span');
+            letter.className = 'letter';
+            letter.textContent = ch;
+            const delay = 0.5 + Math.random() * 0.9;
+            letter.style.transitionDelay = delay + 's';
+            wordSpan.appendChild(letter);
+          });
+          const last = word.slice(-1);
+          if (i < words.length - 1 && '，。、；：？！'.indexOf(last) === -1) {
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            dot.textContent = '·';
+            wordSpan.appendChild(dot);
+          }
+          introText.appendChild(wordSpan);
+        });
+      }
+      splitText();
+
+      function splitLabel(el) {
+        const text = el.textContent.trim();
+        el.innerHTML = '';
+        text.split('').forEach(ch => {
+          const s = document.createElement('span');
+          s.className = 'letter';
+          s.textContent = ch;
+          el.appendChild(s);
+        });
+      }
+      splitLabel(document.getElementById('redLabel'));
+      splitLabel(document.getElementById('blackLabel'));
+
+      requestAnimationFrame(() => {
+        intro.classList.add('reveal');
+      });
+
+      const roadHome = document.getElementById('roadHome');
+
+      enterBtn.addEventListener('click', () => {
+        intro.classList.add('hidden');
+        if (roadHome) {
+          roadHome.classList.add('visible');
+          document.body.style.overflow = 'hidden';
+          initRoadHome();
+        } else {
+          journey.classList.add('visible');
+          initJourney();
+        }
+      });
+
+      let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+      let cursorX = mouseX, cursorY = mouseY;
+      document.addEventListener('mousemove', e => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        const target = e.target;
+        if (target.closest('a, button, .start-link, .road-title-item')) cursor.classList.add('hover');
+        else cursor.classList.remove('hover');
+      }, { passive: true });
+      document.addEventListener('mousedown', () => cursor.classList.add('dragging'));
+      document.addEventListener('mouseup', () => cursor.classList.remove('dragging'));
+      document.addEventListener('mouseleave', () => cursor.classList.add('hidden'));
+      document.addEventListener('mouseenter', () => cursor.classList.remove('hidden'));
+
+      function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.18;
+        cursorY += (mouseY - cursorY) * 0.18;
+        cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+
+      let progress = 0;
+      let targetProgress = 0;
+      let maxTranslate = 0;
+      let isDragging = false;
+      let startX = 0;
+      let startProgress = 0;
+      let velocity = 0;
+      let lastX = 0;
+      let lastTime = 0;
+      let rafId = null;
+      let journeyInited = false;
+
+      function createDots() {
+        const eras = document.querySelectorAll('.era[data-year]');
+        progressDots.innerHTML = '';
+        eras.forEach(() => {
+          const d = document.createElement('span');
+          d.className = 'progress-dot';
+          progressDots.appendChild(d);
+        });
+      }
+
+      function updateEras() {
+        const eras = document.querySelectorAll('.era');
+        const center = window.innerWidth * 0.5;
+        eras.forEach(era => {
+          const rect = era.getBoundingClientRect();
+          const eraCenter = rect.left + rect.width / 2;
+          const dist = Math.abs(center - eraCenter);
+          if (dist < window.innerWidth * 0.38) {
+            era.classList.add('in-view');
+          } else {
+            era.classList.remove('in-view');
+          }
+        });
+      }
+
+      function render() {
+        progress += (targetProgress - progress) * 0.08;
+        if (Math.abs(targetProgress - progress) < 0.0005) progress = targetProgress;
+
+        if (maxTranslate > 0) {
+          track.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
+        }
+        progressFill.style.width = (progress * 100) + '%';
+
+        const dots = progressDots.querySelectorAll('.progress-dot');
+        const total = dots.length;
+        if (total) {
+          const active = Math.min(total - 1, Math.floor(progress * total + 0.5));
+          dots.forEach((d, i) => d.classList.toggle('active', i === active));
+        }
+
+        updateEras();
+
+        if (!isDragging && Math.abs(velocity) > 0.0001) {
+          targetProgress += velocity;
+          velocity *= 0.94;
+          clamp();
+        }
+
+        if (isDragging || Math.abs(targetProgress - progress) > 0.0001 || Math.abs(velocity) > 0.0001) {
+          rafId = requestAnimationFrame(render);
+        } else {
+          rafId = null;
+        }
+      }
+
+      function clamp() {
+        targetProgress = Math.max(0, Math.min(1, targetProgress));
+      }
+
+      function scheduleRender() {
+        if (!rafId) rafId = requestAnimationFrame(render);
+      }
+
+      function onWheel(e) {
+        if (!journey.classList.contains('visible')) return;
+        e.preventDefault();
+        journey.classList.add('interacted');
+        const delta = e.deltaY || e.deltaX;
+        targetProgress += delta * 0.00055;
+        velocity = 0;
+        clamp();
+        scheduleRender();
+      }
+
+      function getClientX(e) {
+        return e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+      }
+
+      function onPointerDown(e) {
+        if (!journey.classList.contains('visible')) return;
+        isDragging = true;
+        startX = getClientX(e);
+        startProgress = targetProgress;
+        lastX = startX;
+        lastTime = performance.now();
+        velocity = 0;
+        journey.classList.add('interacted');
+        scheduleRender();
+      }
+
+      function onPointerMove(e) {
+        if (!isDragging) return;
+        const x = getClientX(e);
+        const dx = x - startX;
+        targetProgress = startProgress - dx / maxTranslate;
+        clamp();
+        const now = performance.now();
+        const dt = now - lastTime;
+        if (dt > 0) velocity = -(x - lastX) / maxTranslate / dt * 16;
+        lastX = x; lastTime = now;
+      }
+
+      function onPointerUp() {
+        if (!isDragging) return;
+        isDragging = false;
+      }
+
+      function onKey(e) {
+        if (!journey.classList.contains('visible')) return;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          targetProgress += 0.05; clamp(); scheduleRender(); journey.classList.add('interacted');
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          targetProgress -= 0.05; clamp(); scheduleRender(); journey.classList.add('interacted');
+        }
+      }
+
+      function resize() {
+        maxTranslate = Math.max(0, track.scrollWidth - window.innerWidth);
+        scheduleRender();
+      }
+
+      function initJourney() {
+        if (journeyInited) return;
+        journeyInited = true;
+        createDots();
+        resize();
+        updateEras();
+
+        window.addEventListener('wheel', onWheel, { passive: false });
+        window.addEventListener('keydown', onKey);
+        window.addEventListener('resize', resize);
+
+        const stage = document.getElementById('journey');
+        stage.addEventListener('mousedown', onPointerDown);
+        window.addEventListener('mousemove', onPointerMove);
+        window.addEventListener('mouseup', onPointerUp);
+        stage.addEventListener('touchstart', onPointerDown, { passive: false });
+        window.addEventListener('touchmove', onPointerMove, { passive: false });
+        window.addEventListener('touchend', onPointerUp);
+
+        scheduleRender();
+      }
+
+      // Story stage navigation and scroll animations
+      const storyStage = document.getElementById('story');
+      const enterStoryBtn = document.getElementById('enterStoryBtn');
+      const storyDots = document.getElementById('storyDots');
+      const backToTop = document.getElementById('backToTop');
+
+      if (enterStoryBtn && storyStage) {
+        enterStoryBtn.addEventListener('click', () => {
+          journey.classList.remove('visible');
+          cursor.classList.add('hidden');
+          setTimeout(() => {
+            storyStage.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+            splitPhraseChars();
+            buildStoryDots();
+            initStoryObservers();
+            storyStage.scrollTo({ top: 0, behavior: 'instant' });
+          }, 600);
+        });
+      }
+
+      function splitPhraseChars() {
+        document.querySelectorAll('.phrase-main').forEach(el => {
+          const text = el.textContent.trim();
+          el.innerHTML = '';
+          text.split('').forEach((ch, i) => {
+            if (ch === ' ') {
+              el.appendChild(document.createTextNode(' '));
+              return;
+            }
+            const span = document.createElement('span');
+            span.className = 'phrase-char';
+            span.textContent = ch;
+            const dirX = i % 2 === 0 ? -1 : 1;
+            const dirY = i % 3 === 0 ? -1 : 1;
+            const tx = dirX * (45 + Math.random() * 85);
+            const ty = dirY * (35 + Math.random() * 75);
+            const rot = (Math.random() - 0.5) * 70;
+            span.style.setProperty('--tx', tx + 'px');
+            span.style.setProperty('--ty', ty + 'px');
+            span.style.setProperty('--rot', rot + 'deg');
+            span.style.transitionDelay = (i * 0.045) + 's';
+            el.appendChild(span);
+          });
+        });
+      }
+
+      function buildStoryDots() {
+        if (!storyDots) return;
+        storyDots.innerHTML = '';
+        const steps = document.querySelectorAll('.story-step');
+        steps.forEach((step, i) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.setAttribute('aria-label', '第' + (i + 1) + '幕');
+          btn.addEventListener('click', () => {
+            step.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+          storyDots.appendChild(btn);
+        });
+      }
+
+      function initStoryObservers() {
+        const steps = document.querySelectorAll('.story-step');
+        const phrases = document.querySelectorAll('.story-phrase');
+        const dots = storyDots ? storyDots.querySelectorAll('button') : [];
+        let currentIdx = -1;
+
+        function updateActive() {
+          const container = storyStage;
+          const center = container.scrollTop + container.clientHeight / 2;
+          let nearest = 0;
+          let minDist = Infinity;
+
+          steps.forEach((step, i) => {
+            const rect = step.getBoundingClientRect();
+            const stepCenter = rect.top + rect.height / 2 + container.scrollTop;
+            const dist = Math.abs(stepCenter - center);
+            if (dist < minDist) {
+              minDist = dist;
+              nearest = i;
+            }
+          });
+
+          if (nearest === currentIdx) return;
+          currentIdx = nearest;
+
+          steps.forEach((step, i) => step.classList.toggle('in-view', i === nearest));
+          phrases.forEach((p, i) => p.classList.toggle('active', i === nearest));
+          dots.forEach((d, i) => d.classList.toggle('active', i === nearest));
+        }
+
+        storyStage.addEventListener('scroll', updateActive, { passive: true });
+        updateActive();
+      }
+
+      if (storyStage && backToTop) {
+        storyStage.addEventListener('scroll', () => {
+          const y = storyStage.scrollTop;
+          backToTop.classList.toggle('visible', y > window.innerHeight * 0.6);
+        }, { passive: true });
+
+        backToTop.addEventListener('click', () => {
+          storyStage.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      // Road Home stage scroll handling
+      const roadTitleList = document.getElementById('roadTitleList');
+      const roadSlides = document.querySelectorAll('.road-slide');
+      const roadTitles = document.querySelectorAll('.road-title-item');
+      const roadVehicleDisplay = document.getElementById('roadVehicleDisplay');
+      const roadVehicleImg = roadVehicleDisplay ? roadVehicleDisplay.querySelector('img') : null;
+      let roadHomeInited = false;
+      let currentRoadSlide = -1;
+
+      function updateRoadVehicle(index) {
+        if (!roadVehicleImg || !roadSlides[index]) return;
+        const slide = roadSlides[index];
+        const src = slide.getAttribute('data-vehicle');
+        const alt = slide.getAttribute('data-vehicle-alt') || '';
+        if (!src || roadVehicleImg.getAttribute('src') === src) return;
+        roadVehicleDisplay.classList.add('switching');
+        setTimeout(() => {
+          roadVehicleImg.src = src;
+          roadVehicleImg.alt = alt;
+          roadVehicleDisplay.classList.remove('switching');
+        }, 250);
+      }
+
+      function updateRoadActive() {
+        if (!roadHome) return;
+        const center = roadHome.clientHeight / 2;
+        let nearest = 0;
+        let minDist = Infinity;
+        roadSlides.forEach((slide, i) => {
+          const rect = slide.getBoundingClientRect();
+          const slideCenter = rect.top + rect.height / 2;
+          const dist = Math.abs(slideCenter - center);
+          if (dist < minDist) {
+            minDist = dist;
+            nearest = i;
+          }
+        });
+        if (nearest === currentRoadSlide) return;
+        currentRoadSlide = nearest;
+        roadSlides.forEach((slide, i) => slide.classList.toggle('in-view', i === nearest));
+        roadTitles.forEach((t, i) => t.classList.toggle('active', i === nearest));
+        updateRoadVehicle(nearest);
+      }
+
+      function initRoadHome() {
+        if (roadHomeInited) return;
+        roadHomeInited = true;
+        roadHome.scrollTo({ top: 0, behavior: 'instant' });
+        updateRoadActive();
+        roadHome.addEventListener('scroll', updateRoadActive, { passive: true });
+
+        roadTitles.forEach((title, i) => {
+          title.addEventListener('click', () => {
+            const slide = roadSlides[i];
+            if (slide) {
+              const target = slide.offsetTop - roadHome.clientHeight / 2 + slide.offsetHeight / 2;
+              roadHome.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+            }
+          });
+        });
+      }
+
+    })();
+  </script>
+  <script src="./assets/js/pjax.js"></script>
+  <script src="./assets/js/audio-controller.js"></script>
+  <script>
+    window.fanI18nDict = {
+      'logo.text': { zh: 'Fan Family Visual Archive', en: 'Fan Family Visual Archive' },
+      'intro.text': { zh: '这是 一部 关于 迁徙、 爱与 记忆 的 家族 照相史。', en: 'This is a family photo history about migration, love, and memory.' },
+      'music.play': { zh: '播放音乐', en: 'Play Music' },
+      'enter.text': { zh: '进入', en: 'Enter' },
+      'nav.albums': { zh: '章节索引', en: 'Chapters' },
+      'nav.years': { zh: '1946 — 2020 · 范瑶珠家族史', en: '1946 — 2020 · Fan Yaozhu Family History' },
+      'vertical.text': { zh: '迁徙 爱 记忆', en: 'Migration Love Memory' },
+      'hint.stage': { zh: '拖动或滚动，穿越三代人的迁徙工具', en: 'Drag or scroll to travel through three generations of migration' }
+    };
+  </script>
+  <script src="./assets/js/i18n.js"></script>
+</body>
+</html>

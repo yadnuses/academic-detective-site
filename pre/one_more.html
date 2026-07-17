@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One More Thing | Fan Family</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Noto Serif SC", serif;
+    }
+
+    .stage {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 45%, rgba(120, 120, 130, 0.22), transparent 55%);
+      opacity: 0;
+      animation: fadeInGlow 1.6s ease forwards 0.4s;
+    }
+
+    @keyframes fadeInGlow {
+      to { opacity: 1; }
+    }
+
+    .line {
+      font-size: clamp(2.2rem, 8vw, 6.5rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Noto Sans SC", sans-serif;
+    }
+
+    .line:nth-child(2) { animation-delay: 0.18s; }
+    .line:nth-child(3) { animation-delay: 0.36s; }
+
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cta {
+      margin-top: 3.5rem;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards 1.2s;
+    }
+
+    .cta a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 999px;
+      background: transparent;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      border: 1.5px solid rgba(255,255,255,0.6);
+      transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .cta a:hover {
+      transform: scale(1.04);
+      background: #fff;
+      color: #000;
+      box-shadow: 0 0 28px rgba(255,255,255,0.28);
+    }
+
+    .hint {
+      position: fixed;
+      bottom: 2rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      opacity: 0;
+      animation: rise 0.9s ease forwards 1.6s;
+    }
+
+    .back {
+      position: fixed;
+      top: 1.4rem;
+      left: 1.6rem;
+      z-index: 10;
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+      opacity: 0;
+      animation: rise 0.8s ease forwards 1.8s;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .back:hover { color: #fff; }
+  </style>
+  <link rel="stylesheet" href="./assets/css/global.css">
+</head>
+<body>
+  <a href="migration_timeline.html" class="back">← 返回迁移地图</a>
+  <div class="glow"></div>
+  <div class="stage">
+    <div class="line">One more thing.</div>
+    <div class="line">还有一件</div>
+    <div class="line">重要的事。</div>
+    <div class="cta">
+      <a href="classmates.html">
+        <span>遇见同学们</span>
+        <span>→</span>
+      </a>
+    </div>
+  </div>
+  <div class="hint">点击按钮，看看这个夏天我们来自哪里</div>
+  <script src="./assets/js/pjax.js"></script>
+  <script src="./assets/js/audio-controller.js"></script>
+</body>
+</html>

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>封面之下：Fan Family 家庭照相史</title>
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --ink: #2c241b;
+      --paper: #fffef8;
+      --accent: #8b4513;
+      --muted: #7a6f5b;
+      --shadow: rgba(44, 36, 27, 0.15);
+      --shelf: #d4c4a8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Serif SC", "Songti SC", "STSong", Georgia, serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+    }
+
+    header {
+      padding: 2rem 1.5rem 1rem;
+      text-align: center;
+      background: linear-gradient(to bottom, #e8dfc9, var(--bg));
+      border-bottom: 1px solid #d9d0bb;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin-top: 0.5rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 1.5rem;
+      gap: 2rem;
+    }
+
+    /* 书架侧边栏 */
+    .shelf {
+      width: 260px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .shelf-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+      padding-left: 0.5rem;
+    }
+
+    .album-spine {
+      position: relative;
+      height: 72px;
+      border-radius: 4px 10px 10px 4px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      box-shadow: 3px 3px 8px var(--shadow);
+      overflow: hidden;
+    }
+
+    .album-spine:hover {
+      transform: translateX(6px);
+      box-shadow: 5px 5px 14px var(--shadow);
+    }
+
+    .album-spine.active {
+      transform: translateX(12px);
+      box-shadow: 6px 6px 18px rgba(0,0,0,0.25);
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .album-spine::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      background: rgba(255,255,255,0.25);
+    }
+
+    .spine-title {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .spine-year {
+      font-size: 0.75rem;
+      opacity: 0.9;
+      margin-top: 0.15rem;
+    }
+
+    /* 内容区 */
+    .content {
+      flex: 1;
+      background: var(--paper);
+      border-radius: 8px;
+      box-shadow: 0 4px 24px var(--shadow);
+      padding: 2.5rem;
+      min-height: 600px;
+      position: relative;
+    }
+
+    .intro {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+      padding-top: 3rem;
+    }
+
+    .intro h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .intro p {
+      line-height: 1.9;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+    }
+
+    .album-detail {
+      display: none;
+    }
+
+    .album-detail.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-header {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #e5e0d4;
+    }
+
+    .cover-display {
+      width: 180px;
+      height: 240px;
+      border-radius: 4px 12px 12px 4px;
+      flex-shrink: 0;
+      box-shadow: 6px 6px 18px var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 1rem;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-display img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+    }
+
+    .cover-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-text h3 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .cover-text .year {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      opacity: 0.95;
+    }
+
+    .detail-meta {
+      flex: 1;
+    }
+
+    .detail-meta h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.7rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .meta-item {
+      background: #f8f6f0;
+      padding: 0.7rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .meta-item strong {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.2rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section h3 {
+      font-size: 1.15rem;
+      border-left: 3px solid var(--accent);
+      padding-left: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .section p {
+      line-height: 1.85;
+      margin: 0.6rem 0;
+    }
+
+    .quote {
+      background: #f8f6f0;
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: #3d3226;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .quote .source {
+      display: block;
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-style: normal;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .photo-card {
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px var(--shadow);
+      transition: transform 0.2s;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+    }
+
+    .photo-caption {
+      padding: 0.7rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    .lightbox-close:hover { opacity: 1; }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .back-btn:hover {
+      background: #6b3410;
+    }
+
+    @media (max-width: 900px) {
+      main { flex-direction: column; }
+      .shelf {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .album-spine {
+        width: calc(50% - 0.5rem);
+        height: 60px;
+      }
+      .detail-header { flex-direction: column; }
+      .cover-display { width: 100%; height: 200px; }
+    }
+  </style>
+  <link rel="stylesheet" href="./assets/css/global.css">
+</head>
+<body>
+  <header class="fan-top-bar">
+    <a href="index.html" class="fan-brand" data-i18n="brand.title">Fan Family · 视觉档案</a>
+    <nav class="fan-journey">
+      <a href="index.html" class="step"><span class="dot"></span><label data-i18n="nav.cover">封面</label></a>
+      <a href="albums.html" class="step active"><span class="dot"></span><label data-i18n="nav.albums">相册</label></a>
+      <a href="story.html" class="step"><span class="dot"></span><label data-i18n="nav.story">故事线</label></a>
+      <a href="museum.html" class="step"><span class="dot"></span><label data-i18n="nav.museum">物件博物馆</label></a>
+      <a href="migration_timeline.html" class="step"><span class="dot"></span><label data-i18n="nav.map">迁移地图</label></a>
+    </nav>
+  </header>
+  <header>
+    <h1 data-i18n="header.title">封面之下</h1>
+    <div class="subtitle">一个中国家庭的照相史 · 1948—2000</div>
+  </header>
+
+  <main>
+    <aside class="shelf">
+      <div class="shelf-label" data-i18n="shelf.label">点击相册查看故事</div>
+      <div class="album-spine active" style="background: linear-gradient(135deg, #7d4a5c, #5c3544);" data-id="intro">
+        <div>
+          <div class="spine-title">研究总览</div>
+          <div class="spine-year">1948—2000</div>
+        </div>
+      </div>
+      <div class="album-spine" style="background: linear-gradient(135deg, #7d5a66, #a57d88);" data-id="s">
+        <div>
+          <div class="spine-title">S 相册</div>
+          <div class="spine-year">1953—1979 · 结婚纪念</div>
+        </div>
+      </div>
+      <div class="album-spine" style="background: linear-gradient(135deg, #7d5252, #a57777);" data-id="b">
+        <div>
+          <div class="spine-title">B 相册</div>
+          <div class="spine-year">1964—1973 · 白毛女</div>
+        </div>
+      </div>
+      <div class="album-spine" style="background: linear-gradient(135deg, #4a6b5c, #7da08c);" data-id="h">
+        <div>
+          <div class="spine-title">H 相册</div>
+          <div class="spine-year">1952—1980 · 西湖</div>
+        </div>
+      </div>
+      <div class="album-spine" style="background: linear-gradient(135deg, #5c7a56, #8fa885);" data-id="l">
+        <div>
+          <div class="spine-title">L 相册</div>
+          <div class="spine-year">1985 · 风景</div>
+        </div>
+      </div>
+      <div class="album-spine" style="background: linear-gradient(135deg, #d4a88c, #b88570);" data-id="d">
+        <div>
+          <div class="spine-title">D 相册</div>
+          <div class="spine-year">1990—1991 · 狗狗相册</div>
+        </div>
+      </div>
+      <div class="album-spine" style="background: linear-gradient(135deg, #6b8299, #95a8bf);" data-id="c">
+        <div>
+          <div class="spine-title">C 相册</div>
+          <div class="spine-year">2000 · 跨地域团聚</div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="content">
+      <!-- 总览 -->
+      <div class="intro active" id="intro">
+        <h2 data-i18n="intro.title">从封面切入一部家庭照相史</h2>
+        <p>这是一份基于 Fan Family 数据集的可视化研究报告。数据集包含 10 个相册批次、200 余张照片及 11 份口述历史 transcript，记录了一个中国家庭从江南到边疆、再从边疆回望江南的迁徙史。</p>
+        <p>每一本相册的封面都是时代的视觉符号：S 相册的缎面牡丹、B 相册的《白毛女》、H 相册的西湖三潭印月、D 相册的小狗图案。这些封面像一层"皮肤"，包裹着家庭在不同时代的私人记忆。</p>
+        <p>点击左侧书架上的相册，查看那个时代的故事、引语与照片。</p>
+        <div class="back-btn" onclick="showAlbum('s')">从 S 相册开始</div>
+      </div>
+
+      <!-- S 相册 -->
+      <div class="album-detail" id="s">
+        <div class="detail-header">
+          <div class="cover-display" style="background: linear-gradient(135deg, #7d5a66, #a57d88);">
+            <div class="cover-text">
+              <h3>S 相册</h3>
+              <div class="year">结婚纪念相册<br>1953—1979</div>
+            </div>
+          </div>
+          <div class="detail-meta">
+            <h2>爱情、迁徙与边疆建设</h2>
+            <p>红色缎面牡丹花纹封面，扉页有范瑶珠好友赵思聪于 1954 年所赠结婚赠言。这本相册最完整地记录了一对上海青年如何在 1950 年代奔赴新疆，并在边疆组建家庭。</p>
+            <div class="meta-grid">
+              <div class="meta-item"><strong>时间</strong>1953—1979</div>
+              <div class="meta-item"><strong>地点</strong>乌鲁木齐、北京、上海、天池</div>
+              <div class="meta-item"><strong>核心人物</strong>范瑶珠、孙葛、孙钢</div>
+              <div class="meta-item"><strong>照片数</strong>87 张</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>时代故事</h3>
+          <p>1951 年，范瑶珠从上海伯特利高级护理助产学校毕业。1953 年，她瞒着家人报名去新疆。孙钢在上海江安区法院工作，得知后放弃一切追随而去，甚至搭上了一支秦腔剧团的卡车。</p>
+          <p>这本相册里的照片多为正式肖像、工作合影、政治荣誉照。照片是一种仪式：求学、结婚、工作、被评为"妇女建设社会主义积极分子"。照相馆标识"FLY 飛一"、手工上色结婚照、省级机关保健员训练班结业合影，都是这个时代家庭摄影的典型形态。</p>
+        </div>
+
+        <div class="quote">
+          "人的一辈子一晃就过去了，我能记住的都是他们最后一个。"
+          <span class="source">—— 李宜斐，《外婆老照片与家族往事》[00:31:19]</span>
+        </div>
+
+        <div class="quote">
+          "谁回来谁是逃兵，就是一定要坚持到底的。"
+          <span class="source">—— 孙晓舞/孙葛，《外婆老照片与家族往事》[00:38:42]</span>
+        </div>
+
+        <div class="section">
+          <h3>代表性照片</h3>
+          <div class="photo-grid">
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/RL-01-01.jpg" alt="范瑶珠护士求学肖像" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1951 年，范瑶珠护士求学肖像。白色护士服象征新中国职业女性的独立身份。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/RL-22-01.jpg" alt="1954 年结婚照" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1954 年，范瑶珠与孙钢在乌鲁木齐的结婚照，手工上色。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/其他/IMG_0218.jpg" alt="S 相册封面" onclick="openLightbox(this.src)">
+              <div class="photo-caption">S 相册封面：紫红色缎面牡丹花纹，典型的 1950 年代婚礼相册。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/其他/IMG_0219.jpg" alt="S 相册扉页" onclick="openLightbox(this.src)">
+              <div class="photo-caption">S 相册扉页：1954 年赵思聪赠言，引用苏联作家关于"幸福"的论述。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B 相册 -->
+      <div class="album-detail" id="b">
+        <div class="detail-header">
+          <div class="cover-display" style="background: linear-gradient(135deg, #7d5252, #a57777);">
+            <div class="cover-text">
+              <h3>B 相册</h3>
+              <div class="year">白毛女封面<br>1964—1973</div>
+            </div>
+          </div>
+          <div class="detail-meta">
+            <h2>政治符号、家庭分离与童年</h2>
+            <p>两本封面都是《白毛女》剧照的相册，原都标注为 B 系列。里面装着文革年代的家庭记忆：改名运动、红卫兵袖章、子女寄养、下乡知青。</p>
+            <div class="meta-grid">
+              <div class="meta-item"><strong>时间</strong>1964—1973</div>
+              <div class="meta-item"><strong>地点</strong>上海、乌鲁木齐、杭州</div>
+              <div class="meta-item"><strong>核心人物</strong>孙晓舞、孙葛、范瑶珠</div>
+              <div class="meta-item"><strong>照片数</strong>54 张（B1+B2）</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>时代故事</h3>
+          <p>1967 年，乌鲁木齐发生严重武斗。范瑶珠安排 12 岁的女儿孙葛带着 5 个月大的弟弟孙晓舞逃往上海。孙晓舞先后被寄养在上海邻居家和杭州姑姑家。1969 年，孙葛从上海返回新疆；1970 年学校复课；1972 年孙葛下乡。</p>
+          <p>这本相册里，政治符号无处不在：毛主席像章、红卫兵袖章、军装式服装。但照片真正记录的，是一个家庭在时代动荡中被迫分离、又努力维系亲情的日常。</p>
+        </div>
+
+        <div class="quote">
+          "白毛女像封面儿相册就是 B 开头的相册。"
+          <span class="source">—— 李宜斐，《文革家庭相册讲解》[00:01:33]</span>
+        </div>
+
+        <div class="quote">
+          "69 年时，那个时候他一个人在这儿。"
+          <span class="source">—— 孙葛，《文革家庭相册讲解》[00:25:43]</span>
+        </div>
+
+        <div class="quote">
+          "带着我弟弟。他们老欺负他。"
+          <span class="source">—— 孙葛，《家族老照片梳理完成》[00:13:16]</span>
+        </div>
+
+        <div class="section">
+          <h3>代表性照片</h3>
+          <div class="photo-grid">
+            <div class="photo-card">
+              <img src="./assets/photos/其他/IMG_0460.jpg" alt="B 相册封面" onclick="openLightbox(this.src)">
+              <div class="photo-caption">B 相册封面：《白毛女》剧照，红色塑料线圈装订。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/其他/IMG_0461.jpg" alt="B 相册扉页" onclick="openLightbox(this.src)">
+              <div class="photo-caption">B 相册扉页：毛主席语录，政治符号进入私人相册空间。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/B-01-01.jpg" alt="孙晓舞一岁生日" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1968 年，孙晓舞一岁生日照，拍摄于上海。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/B-23-01.jpg" alt="初中班级合影" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1970 年，孙葛初中班级合影，像章与袖章密集。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- H 相册 -->
+      <div class="album-detail" id="h">
+        <div class="detail-header">
+          <div class="cover-display" style="background: linear-gradient(135deg, #4a6b5c, #7da08c);">
+            <div class="cover-text">
+              <h3>H 相册</h3>
+              <div class="year">西湖三潭印月<br>1952—1980</div>
+            </div>
+          </div>
+          <div class="detail-meta">
+            <h2>江南风景与边疆工作</h2>
+            <p>封面是西湖三潭印月，里面却是范瑶珠在乌鲁木齐、北京、吐鲁番、安宁渠等地的医疗工作与家庭变迁。这是 Fan Family 中最具"空间错位"感的一本相册。</p>
+            <div class="meta-grid">
+              <div class="meta-item"><strong>时间</strong>1952—1980</div>
+              <div class="meta-item"><strong>地点</strong>乌鲁木齐、北京、吐鲁番、上海</div>
+              <div class="meta-item"><strong>核心人物</strong>孙钢、范瑶珠、孙葛</div>
+              <div class="meta-item"><strong>照片数</strong>19 张</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>时代故事</h3>
+          <p>H 相册跨越 1952 年至 1980 年，记录了范瑶珠从青年护士到边疆医疗骨干的成长轨迹。相册里有她在市立第一传染病院的工作照、西医学中医培训班纪念、下乡巡回医疗、创办护士培训班。</p>
+          <p>西湖三潭印月的封面构成了一种隐喻：相册的主人始终带着江南的审美记忆，在边疆的土地上建立事业与家庭。每一次翻看相册，都是一次从新疆向江南的回望。</p>
+        </div>
+
+        <div class="quote">
+          "文革就是把一批人的整个精神面貌刷成另一个样子。"
+          <span class="source">—— 范瑶珠，《家庭相册整理记录》[00:08:40]</span>
+        </div>
+
+        <div class="quote">
+          "忍耐的中年人太唏嘘了。"
+          <span class="source">—— 李宜斐，《家庭相册整理记录》[00:14:25]</span>
+        </div>
+
+        <div class="section">
+          <h3>代表性照片</h3>
+          <div class="photo-grid">
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/H-10-01.jpg" alt="西医学中医培训班" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1971 年，范瑶珠西医学中医培训班纪念。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/H-14-01.jpg" alt="下乡巡回医疗" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1978 年，吐鲁番艾丁湖，巡回医疗。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/H-15-01.jpg" alt="孙钢上海工作照" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1952 年，孙钢在上海江安区法院门口。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L 相册 -->
+      <div class="album-detail" id="l">
+        <div class="detail-header">
+          <div class="cover-display" style="background: linear-gradient(135deg, #5c7a56, #8fa885);">
+            <div class="cover-text">
+              <h3>L 相册</h3>
+              <div class="year">风景封面<br>1985</div>
+            </div>
+          </div>
+          <div class="detail-meta">
+            <h2>改革开放后的家庭休闲</h2>
+            <p>整理者说："这本相册封面是一张风景照，我们就命名为 L 开头。"L 相册记录了 1985 年暑假家庭团聚：孙葛一家从克拉玛依回到乌鲁木齐，成员们游览人民大会堂、国际饭店、虎跑泉、灵隐寺。</p>
+            <div class="meta-grid">
+              <div class="meta-item"><strong>时间</strong>1985</div>
+              <div class="meta-item"><strong>地点</strong>乌鲁木齐、上海、杭州</div>
+              <div class="meta-item"><strong>核心人物</strong>孙葛、孙晓舞、李宜斐</div>
+              <div class="meta-item"><strong>照片数</strong>5 张</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>时代故事</h3>
+          <p>1980 年代，彩色胶卷普及，家庭摄影从照相馆走向日常生活。L 相册里的照片姿态放松、色彩鲜艳：家中的六人合影、人民大会堂前的侧身坐姿、国际饭店前的游客照。</p>
+          <p>这本相册标志着照相功能的重要转变：它不再只是记录人生大事，而是捕捉家庭团聚的日常瞬间。风景封面也反映了改革开放后旅游文化的兴起。</p>
+        </div>
+
+        <div class="section">
+          <h3>代表性照片</h3>
+          <div class="photo-grid">
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/L-002-01.jpg" alt="1985 暑假家庭合影" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1985 年暑假，六人在家中客厅合影，色彩鲜艳的 1980 年代家庭生活。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/L-003-01.jpg" alt="人民大会堂前" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1985 年，孙葛与李俊在人民大会堂前，姿态随意开放。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/L-005-01.jpg" alt="上海国际饭店" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1985 年寒假，孙晓舞重返上海、杭州，国际饭店前留影。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D 相册 -->
+      <div class="album-detail" id="d">
+        <div class="detail-header">
+          <div class="cover-display" style="background: linear-gradient(135deg, #d4a88c, #b88570);">
+            <div class="cover-text">
+              <h3>D 相册</h3>
+              <div class="year">狗狗相册<br>1990—1991</div>
+            </div>
+          </div>
+          <div class="detail-meta">
+            <h2>重返江南与世纪重聚</h2>
+            <p>家人叫它"天天是小狗的这本相册"，封面是一只小狗图案。里面记录的是 1990 年后范家回到上海探亲，并前往杭州、绍兴等地。这是家族离散数十年后最重要的一次重聚。</p>
+            <div class="meta-grid">
+              <div class="meta-item"><strong>时间</strong>1990—1991</div>
+              <div class="meta-item"><strong>地点</strong>上海、杭州、绍兴</div>
+              <div class="meta-item"><strong>核心人物</strong>范瑶珠表姐、范瑶珠、孙钢</div>
+              <div class="meta-item"><strong>照片数</strong>12 张</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>时代故事</h3>
+          <p>1990 年春天，范家一家到上海浦东峨山路表姐家探亲。随后前往杭州，孙钢与分别四五十年的兄弟姐妹终于重逢；1991 年 5 月 2 日，三兄弟在杭州再次合影。</p>
+          <p>这本相册是 Fan Family 故事的高潮之一：从 1950 年代的政治迁徙，到 1990 年代的经济开放后返乡，照片里的笑容、餐桌、江南园林，都是对"分离"主题的一次温柔回应。</p>
+        </div>
+
+        <div class="quote">
+          "四五十年终于见到面。"
+          <span class="source">—— 孙晓舞一方晚辈，《家族相册整理记录》[00:08:24]</span>
+        </div>
+
+        <div class="quote">
+          "阿布没有来。"
+          <span class="source">—— 李宜斐，《家族相册整理记录》[00:17:39]</span>
+        </div>
+
+        <div class="section">
+          <h3>代表性照片</h3>
+          <div class="photo-grid">
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/D-001-01.jpg" alt="上海探亲" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1990 年，上海浦东峨山路表姐家。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/D-003-01.jpg" alt="杭州家庭聚会" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1990 年，杭州园林前家庭聚会。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/D-004-01.jpg" alt="绍兴祖孙三代" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1990 年，绍兴王羲之故居，祖孙三代。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/D-005-01.jpg" alt="三兄弟见面" onclick="openLightbox(this.src)">
+              <div class="photo-caption">1991 年，孙钢三兄弟杭州重逢。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C 相册 -->
+      <div class="album-detail" id="c">
+        <div class="detail-header">
+          <div class="cover-display" style="background: linear-gradient(135deg, #6b8299, #95a8bf);">
+            <div class="cover-text">
+              <h3>C 相册</h3>
+              <div class="year">跨地域团聚<br>2000</div>
+            </div>
+          </div>
+          <div class="detail-meta">
+            <h2>全球化时代的家庭聚餐</h2>
+            <p>C 相册只有 4 张照片，记录 2000 年孙晓舞从美国留学归来，在乌鲁木齐高层家属楼 1308 的家庭聚餐。这是 Fan Family 照相史的最新篇章：分离不再源于政治运动，而源于全球化背景下的个人发展选择。</p>
+            <div class="meta-grid">
+              <div class="meta-item"><strong>时间</strong>2000</div>
+              <div class="meta-item"><strong>地点</strong>乌鲁木齐</div>
+              <div class="meta-item"><strong>核心人物</strong>孙晓舞、孙钢、范瑶珠</div>
+              <div class="meta-item"><strong>照片数</strong>4 张</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>时代故事</h3>
+          <p>2000 年，照相已经完全日常化。不需要照相馆，不需要庄重姿态，家庭聚餐时随手一拍，就是最重要的家庭影像。餐桌上的菜肴、举杯的动作、背景的挂钟与餐边柜，构成了 21 世纪中国家庭的典型视觉。</p>
+          <p>C 相册样本虽小，但它代表了一个重要转折：家庭摄影从"记录人生大事"彻底转向"记录日常生活"，而团聚本身成为跨国家庭最核心的仪式。</p>
+        </div>
+
+        <div class="section">
+          <h3>代表性照片</h3>
+          <div class="photo-grid">
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/C-001-01.jpg" alt="跨地域团聚聚餐" onclick="openLightbox(this.src)">
+              <div class="photo-caption">2000 年，孙晓舞从美国回乌鲁木齐探亲，家庭聚餐举杯。</div>
+            </div>
+            <div class="photo-card">
+              <img src="./assets/photos/单张照片/C-001-02.jpg" alt="家人合影" onclick="openLightbox(this.src)">
+              <div class="photo-caption">2000 年，高层家属楼客厅合影。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="放大查看">
+  </div>
+
+  <script>
+    function showAlbum(id) {
+      // 更新 spine 激活状态
+      document.querySelectorAll('.album-spine').forEach(spine => {
+        spine.classList.toggle('active', spine.dataset.id === id);
+      });
+
+      // 隐藏所有内容
+      document.querySelectorAll('.intro, .album-detail').forEach(el => {
+        el.classList.remove('active');
+      });
+
+      // 显示目标内容
+      const target = document.getElementById(id);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      // 滚动到内容区顶部
+      document.querySelector('.content').scrollTop = 0;
+    }
+
+    document.querySelectorAll('.album-spine').forEach(spine => {
+      spine.addEventListener('click', () => showAlbum(spine.dataset.id));
+    });
+
+    function openLightbox(src) {
+      const lb = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      img.src = src;
+      lb.classList.add('active');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+
+    // ESC 关闭 lightbox
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+  <script src="./assets/js/pjax.js"></script>
+  <script src="./assets/js/audio-controller.js"></script>
+  <script>
+    window.fanI18nDict = {
+      'brand.title': { zh: 'Fan Family · 视觉档案', en: 'Fan Family · Visual Archive' },
+      'nav.cover': { zh: '封面', en: 'Cover' },
+      'nav.albums': { zh: '相册', en: 'Albums' },
+      'nav.story': { zh: '故事线', en: 'Story' },
+      'nav.museum': { zh: '物件博物馆', en: 'Museum' },
+      'nav.map': { zh: '迁移地图', en: 'Migration Map' },
+      'header.title': { zh: '封面之下', en: 'Under the Cover' },
+      'header.sub': { zh: '一个中国家庭的照相史 · 1948—2000', en: "A Chinese Family's Photo History · 1948—2000" },
+      'shelf.label': { zh: '点击相册查看故事', en: 'Click an album to view its story' },
+      'intro.title': { zh: '从封面切入一部家庭照相史', en: 'Entering a Family Photo History from the Cover' },
+      'btn.start': { zh: '从 S 相册开始', en: 'Start with Album S' }
+    };
+  </script>
+  <script src="./assets/js/i18n.js"></script>
+</body>
+</html>
